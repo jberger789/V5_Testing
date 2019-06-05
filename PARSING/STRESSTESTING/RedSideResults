@@ -1,0 +1,49 @@
+#!/bin/bash
+
+# This script will grep red-side results from file in order of test (Stress-ng, DD, IPERF, IPMI Tool)
+
+rm -rf RedResults.txt
+
+#Stress-ng Results
+echo '
+====================================================================================
+' >> RedResults.txt
+echo 'STRESS_NG RESULTS' >> RedResults.txt
+cat messages.txt | grep "red-1 stress-ng:" | tee -a RedResults.txt
+
+#DD Results
+echo '
+====================================================================================
+' >> RedResults.txt
+echo 'DD RESULTS' >> RedResults.txt
+cat messages.txt | grep "DD" | tee -a RedResults.txt
+
+#Stream_c Results
+echo '
+====================================================================================
+' >> RedResults.txt
+echo 'STREAM_C RESULTS' >> RedResults.txt
+cat messages.txt | grep "STREAM_C" | tee -a RedResults.txt
+
+#IPERF Results
+echo '
+====================================================================================
+' >> RedResults.txt
+echo 'IPERF RESULTS' >> RedResults.txt
+cat messages.txt | grep "IPERF_CLIENT_200_20" | tee -a RedResults.txt
+
+#IPMI Tools Results
+echo '
+====================================================================================
+' >> RedResults.txt
+echo 'IPMI TOOLS RESULTS' >> RedResults.txt
+cat messages.txt | grep "IPMITOOL" | tee -a RedResults.txt
+
+
+
+
+
+
+
+cat messages.txt | grep "black-1 root" | tee BlackResults.txt
+

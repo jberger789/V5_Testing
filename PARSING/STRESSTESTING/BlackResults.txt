@@ -1,0 +1,165 @@
+Jun  4 15:45:04 black-1 root: network config complete
+Jun  4 15:45:05 black-1 root: USB mount complete
+Jun  4 15:45:05 black-1 root: test start
+Jun  4 15:45:05 black-1 root: 192.168.2.2 iperf server up on fiber
+Jun  4 15:45:05 black-1 root: 192.168.200.50 iperf server up on eno2
+Jun  4 15:45:05 black-1 root: ------------------------------------------------------------
+Jun  4 15:45:05 black-1 root: Server listening on UDP port 5001
+Jun  4 15:45:05 black-1 root: Binding to local address 192.168.2.2
+Jun  4 15:45:05 black-1 root: Receiving 1470 byte datagrams
+Jun  4 15:45:05 black-1 root: UDP buffer size:  208 KByte (default)
+Jun  4 15:45:05 black-1 root: ------------------------------------------------------------
+Jun  4 15:45:05 black-1 root: ------------------------------------------------------------
+Jun  4 15:45:05 black-1 root: Server listening on UDP port 5001
+Jun  4 15:45:05 black-1 root: Binding to local address 192.168.200.50
+Jun  4 15:45:05 black-1 root: Receiving 1470 byte datagrams
+Jun  4 15:45:05 black-1 root: UDP buffer size:  208 KByte (default)
+Jun  4 15:45:05 black-1 root: ------------------------------------------------------------
+Jun  4 15:45:05 black-1 root: CPU Temp         | 45.000     | degrees C  | ok    | 5.000     | 5.000     | 10.000    | 90.000    | 95.000    | 95.000
+Jun  4 15:45:05 black-1 root: PCH Temp         | 49.000     | degrees C  | ok    | 5.000     | 5.000     | 10.000    | 85.000    | 90.000    | 105.000
+Jun  4 15:45:05 black-1 root: System Temp      | 39.000     | degrees C  | ok    | 5.000     | 5.000     | 10.000    | 80.000    | 85.000    | 90.000
+Jun  4 15:45:05 black-1 root: Peripheral Temp  | 49.000     | degrees C  | ok    | 5.000     | 5.000     | 10.000    | 80.000    | 85.000    | 90.000
+Jun  4 15:45:05 black-1 root: MB_10G Temp      | 57.000     | degrees C  | ok    | 5.000     | 5.000     | 10.000    | 95.000    | 100.000   | 105.000
+Jun  4 15:45:05 black-1 root: VRMCpu Temp      | 44.000     | degrees C  | ok    | 5.000     | 5.000     | 10.000    | 95.000    | 100.000   | 105.000
+Jun  4 15:45:05 black-1 root: VRMAB Temp       | 44.000     | degrees C  | ok    | 5.000     | 5.000     | 10.000    | 95.000    | 100.000   | 105.000
+Jun  4 15:45:05 black-1 root: VRMDE Temp       | 38.000     | degrees C  | ok    | 5.000     | 5.000     | 10.000    | 95.000    | 100.000   | 105.000
+Jun  4 15:45:05 black-1 root: FAN1             | 5500.000   | RPM        | ok    | 300.000   | 500.000   | 700.000   | 25300.000 | 25400.000 | 25500.000
+Jun  4 15:45:05 black-1 root: FAN2             | 5600.000   | RPM        | ok    | 300.000   | 500.000   | 700.000   | 25300.000 | 25400.000 | 25500.000
+Jun  4 15:45:05 black-1 root: FANA             | 4900.000   | RPM        | ok    | 300.000   | 500.000   | 700.000   | 25300.000 | 25400.000 | 25500.000
+Jun  4 15:45:05 black-1 root: DIMMA1 Temp      | 33.000     | degrees C  | ok    | 5.000     | 5.000     | 10.000    | 80.000    | 85.000    | 90.000
+Jun  4 15:45:05 black-1 root: DIMMB1 Temp      | na         |            | na    | na        | na        | na        | na        | na        | na
+Jun  4 15:45:05 black-1 root: DIMMD1 Temp      | na         |            | na    | na        | na        | na        | na        | na        | na
+Jun  4 15:45:05 black-1 root: DIMME1 Temp      | na         |            | na    | na        | na        | na        | na        | na        | na
+Jun  4 15:45:05 black-1 root: 12V              | 12.598     | Volts      | ok    | 10.166    | 10.294    | 10.742    | 12.918    | 13.302    | 13.430
+Jun  4 15:45:05 black-1 root: 5VCC             | 5.120      | Volts      | ok    | 4.160     | 4.280     | 4.520     | 5.600     | 5.720     | 5.810
+Jun  4 15:45:05 black-1 root: 3.3VCC           | 3.248      | Volts      | ok    | 2.738     | 2.823     | 2.976     | 3.707     | 3.775     | 3.843
+Jun  4 15:45:05 black-1 root: VBAT             | 0x4        | discrete   | 0x04ff| na        | na        | na        | na        | na        | na
+Jun  4 15:45:05 black-1 root: Vcpu             | 1.799      | Volts      | ok    | 1.241     | 1.259     | 1.394     | 1.898     | 2.087     | 2.105
+Jun  4 15:45:05 black-1 root: VDimmAB          | 1.206      | Volts      | ok    | 0.996     | 1.026     | 1.086     | 1.350     | 1.374     | 1.398
+Jun  4 15:45:05 black-1 root: VDimmDE          | 1.206      | Volts      | ok    | 0.996     | 1.026     | 1.086     | 1.350     | 1.374     | 1.398
+Jun  4 15:45:05 black-1 root: 5VSB             | 5.063      | Volts      | ok    | 4.283     | 4.343     | 4.553     | 5.453     | 5.603     | 5.663
+Jun  4 15:45:05 black-1 root: 3.3VSB           | 3.203      | Volts      | ok    | 2.739     | 2.819     | 2.979     | 3.699     | 3.763     | 3.843
+Jun  4 15:45:05 black-1 root: P1V8_PCH         | 1.805      | Volts      | ok    | 1.490     | 1.535     | 1.598     | 1.994     | 2.057     | 2.093
+Jun  4 15:45:05 black-1 root: PVNN_PCH         | 0.906      | Volts      | ok    | 0.752     | 0.759     | 0.850     | 0.997     | 1.095     | 1.109
+Jun  4 15:45:05 black-1 root: P1V05_PCH        | 1.066      | Volts      | ok    | 0.870     | 0.898     | 0.947     | 1.199     | 1.220     | 1.248
+Jun  4 15:45:05 black-1 root: Chassis Intru    | 0x1        | discrete   | 0x0100| na        | na        | na        | na        | na        | na
+Jun  4 15:45:05 black-1 root: MB_NVMeSSD Temp  | na         |            | na    | na        | na        | na        | na        | na        | na
+Jun  4 15:45:16 black-1 root: -------------------------------------------------------------
+Jun  4 15:45:16 black-1 root: STREAM version $Revision: 5.10 $
+Jun  4 15:45:16 black-1 root: -------------------------------------------------------------
+Jun  4 15:45:16 black-1 root: This system uses 8 bytes per array element.
+Jun  4 15:45:16 black-1 root: -------------------------------------------------------------
+Jun  4 15:45:16 black-1 root: Array size = 10000000 (elements), Offset = 0 (elements)
+Jun  4 15:45:16 black-1 root: Memory per array = 76.3 MiB (= 0.1 GiB).
+Jun  4 15:45:16 black-1 root: Total memory required = 228.9 MiB (= 0.2 GiB).
+Jun  4 15:45:16 black-1 root: Each kernel will be executed 10 times.
+Jun  4 15:45:16 black-1 root: The *best* time for each kernel (excluding the first iteration)
+Jun  4 15:45:16 black-1 root: will be used to compute the reported bandwidth.
+Jun  4 15:45:16 black-1 root: -------------------------------------------------------------
+Jun  4 15:45:16 black-1 root: Number of Threads requested = 24
+Jun  4 15:45:16 black-1 root: Number of Threads counted = 24
+Jun  4 15:45:16 black-1 root: -------------------------------------------------------------
+Jun  4 15:45:16 black-1 root: Your clock granularity/precision appears to be 1 microseconds.
+Jun  4 15:45:16 black-1 root: Each test below will take on the order of 10781 microseconds.
+Jun  4 15:45:16 black-1 root:   (= 10781 clock ticks)
+Jun  4 15:45:16 black-1 root: Increase the size of the arrays if this shows that
+Jun  4 15:45:16 black-1 root: you are not getting at least 20 clock ticks per test.
+Jun  4 15:45:16 black-1 root: -------------------------------------------------------------
+Jun  4 15:45:16 black-1 root: WARNING -- The above is only a rough guideline.
+Jun  4 15:45:16 black-1 root: For best results, please be sure you know the
+Jun  4 15:45:16 black-1 root: precision of your system timer.
+Jun  4 15:45:16 black-1 root: -------------------------------------------------------------
+Jun  4 15:45:16 black-1 root: Function    Best Rate MB/s  Avg time     Min time     Max time
+Jun  4 15:45:16 black-1 root: Copy:           10680.9     0.015001     0.014980     0.015025
+Jun  4 15:45:16 black-1 root: Scale:          10289.3     0.015565     0.015550     0.015585
+Jun  4 15:45:16 black-1 root: Add:            11643.2     0.020666     0.020613     0.020752
+Jun  4 15:45:16 black-1 root: Triad:          11666.9     0.020602     0.020571     0.020631
+Jun  4 15:45:16 black-1 root: -------------------------------------------------------------
+Jun  4 15:45:16 black-1 root: Solution Validates: avg error less than 1.000000e-13 on all three arrays
+Jun  4 15:45:16 black-1 root: -------------------------------------------------------------
+Jun  4 15:45:19 black-1 root: 1+0 records in
+Jun  4 15:45:19 black-1 root: 1+0 records out
+Jun  4 15:45:19 black-1 root: 1073741824 bytes (1.1 GB) copied, 2.6394 s, 407 MB/s
+Jun  4 15:45:34 black-1 root: 1+0 records in
+Jun  4 15:45:34 black-1 root: 1+0 records out
+Jun  4 15:45:34 black-1 root: 262144000 bytes (262 MB) copied, 15.0876 s, 17.4 MB/s
+Jun  4 15:45:38 black-1 root: MB/s
+Jun  4 15:45:38 black-1 root: /dev/sda:
+Jun  4 15:45:45 black-1 root: Timing cached reads:   14876 MB in  1.99 seconds = 7471.42 MB/sec
+Jun  4 15:45:48 black-1 root: Timing buffered disk reads: 1470 MB in  3.00 seconds = 489.78 MB/sec
+Jun  4 15:45:51 black-1 root: B/sec
+Jun  4 15:45:51 black-1 root: /dev/sdb:
+Jun  4 15:45:58 black-1 root: Timing cached reads:   14168 MB in  1.99 seconds = 7113.80 MB/sec
+Jun  4 15:46:01 black-1 root: Timing buffered disk reads:  32 MB in  3.04 seconds =  10.52 MB/sec
+Jun  4 15:46:01 black-1 root: ------------------------------------------------------------
+Jun  4 15:46:01 black-1 root: Client connecting to 192.168.3.2, UDP port 5001
+Jun  4 15:46:01 black-1 root: Binding to local address 192.168.3.1
+Jun  4 15:46:01 black-1 root: Sending 1470 byte datagrams, IPG target: 1.18 us (kalman adjust)
+Jun  4 15:46:01 black-1 root: UDP buffer size:  208 KByte (default)
+Jun  4 15:46:01 black-1 root: ------------------------------------------------------------
+Jun  4 15:46:01 black-1 root: [  3] local 192.168.3.1 port 55210 connected with 192.168.3.2 port 5001
+Jun  4 15:46:06 black-1 root: [ ID] Interval       Transfer     Bandwidth
+Jun  4 15:46:06 black-1 root: [  3]  0.0- 5.0 sec  3.35 GBytes  5.76 Gbits/sec
+Jun  4 15:46:11 black-1 root: [  3]  5.0-10.0 sec  3.35 GBytes  5.76 Gbits/sec
+Jun  4 15:46:15 black-1 root: [  3] local 192.168.2.2 port 5001 connected with 192.168.2.1 port 41711
+Jun  4 15:46:16 black-1 root: [  3] 10.0-15.0 sec  3.35 GBytes  5.75 Gbits/sec
+Jun  4 15:46:20 black-1 root: [ ID] Interval       Transfer     Bandwidth        Jitter   Lost/Total Datagrams
+Jun  4 15:46:20 black-1 root: [  3]  0.0- 5.0 sec  3.23 GBytes  5.54 Gbits/sec   0.007 ms 40473/2397592 (1.7%)
+Jun  4 15:46:21 black-1 root: [  3] 15.0-20.0 sec  3.33 GBytes  5.72 Gbits/sec
+Jun  4 15:46:24 black-1 root: [  3]  0.0-20.0 sec  13.4 GBytes  5.75 Gbits/sec
+Jun  4 15:46:24 black-1 root: [  3] Sent 9776761 datagrams
+Jun  4 15:46:24 black-1 root: ------------------------------------------------------------
+Jun  4 15:46:24 black-1 root: Client connecting to 192.168.200.20, UDP port 5001
+Jun  4 15:46:24 black-1 root: Binding to local address 192.168.200.50
+Jun  4 15:46:24 black-1 root: Sending 1470 byte datagrams, IPG target: 1.18 us (kalman adjust)
+Jun  4 15:46:24 black-1 root: UDP buffer size:  208 KByte (default)
+Jun  4 15:46:24 black-1 root: ------------------------------------------------------------
+Jun  4 15:46:24 black-1 root: [  3] local 192.168.200.50 port 49506 connected with 192.168.200.20 port 5001
+Jun  4 15:46:25 black-1 root: [  3]  5.0-10.0 sec  3.25 GBytes  5.59 Gbits/sec   0.006 ms 41922/2416976 (1.7%)
+Jun  4 15:46:29 black-1 root: [ ID] Interval       Transfer     Bandwidth
+Jun  4 15:46:29 black-1 root: [  3]  0.0- 5.0 sec  3.18 GBytes  5.47 Gbits/sec
+Jun  4 15:46:30 black-1 root: [  3] 10.0-15.0 sec  3.20 GBytes  5.51 Gbits/sec   0.007 ms 58110/2398680 (2.4%)
+Jun  4 15:46:34 black-1 root: [  3]  5.0-10.0 sec  3.30 GBytes  5.67 Gbits/sec
+Jun  4 15:46:35 black-1 root: [  3]  0.0-20.0 sec  12.9 GBytes  5.54 Gbits/sec   0.006 ms 193190/9620332 (2%)
+Jun  4 15:46:37 black-1 root: [  3] local 192.168.200.50 port 5001 connected with 192.168.200.20 port 38225
+Jun  4 15:46:39 black-1 root: [  3] 10.0-15.0 sec  3.31 GBytes  5.69 Gbits/sec
+Jun  4 15:46:42 black-1 root: [ ID] Interval       Transfer     Bandwidth        Jitter   Lost/Total Datagrams
+Jun  4 15:46:42 black-1 root: [  3]  0.0- 5.0 sec  3.12 GBytes  5.36 Gbits/sec   0.008 ms 29386/2309520 (1.3%)
+Jun  4 15:46:44 black-1 root: [  3] 15.0-20.0 sec  3.30 GBytes  5.67 Gbits/sec
+Jun  4 15:46:44 black-1 root: [  3]  0.0-20.0 sec  13.1 GBytes  5.63 Gbits/sec
+Jun  4 15:46:44 black-1 root: [  3] Sent 9566335 datagrams
+Jun  4 15:46:44 black-1 root: [  3] Server Report:
+Jun  4 15:46:44 black-1 root: [  3]  0.0-20.0 sec  12.5 GBytes  5.35 Gbits/sec   0.003 ms 466502/9566335 (4.9%)
+Jun  4 15:46:44 black-1 root: CPU Temp         | 54.000     | degrees C  | ok    | 5.000     | 5.000     | 10.000    | 90.000    | 95.000    | 95.000
+Jun  4 15:46:44 black-1 root: PCH Temp         | 56.000     | degrees C  | ok    | 5.000     | 5.000     | 10.000    | 85.000    | 90.000    | 105.000
+Jun  4 15:46:44 black-1 root: System Temp      | 40.000     | degrees C  | ok    | 5.000     | 5.000     | 10.000    | 80.000    | 85.000    | 90.000
+Jun  4 15:46:44 black-1 root: Peripheral Temp  | 50.000     | degrees C  | ok    | 5.000     | 5.000     | 10.000    | 80.000    | 85.000    | 90.000
+Jun  4 15:46:44 black-1 root: MB_10G Temp      | 58.000     | degrees C  | ok    | 5.000     | 5.000     | 10.000    | 95.000    | 100.000   | 105.000
+Jun  4 15:46:44 black-1 root: VRMCpu Temp      | 51.000     | degrees C  | ok    | 5.000     | 5.000     | 10.000    | 95.000    | 100.000   | 105.000
+Jun  4 15:46:44 black-1 root: VRMAB Temp       | 45.000     | degrees C  | ok    | 5.000     | 5.000     | 10.000    | 95.000    | 100.000   | 105.000
+Jun  4 15:46:44 black-1 root: VRMDE Temp       | 38.000     | degrees C  | ok    | 5.000     | 5.000     | 10.000    | 95.000    | 100.000   | 105.000
+Jun  4 15:46:44 black-1 root: FAN1             | 6300.000   | RPM        | ok    | 300.000   | 500.000   | 700.000   | 25300.000 | 25400.000 | 25500.000
+Jun  4 15:46:44 black-1 root: FAN2             | 6400.000   | RPM        | ok    | 300.000   | 500.000   | 700.000   | 25300.000 | 25400.000 | 25500.000
+Jun  4 15:46:44 black-1 root: FANA             | 5200.000   | RPM        | ok    | 300.000   | 500.000   | 700.000   | 25300.000 | 25400.000 | 25500.000
+Jun  4 15:46:44 black-1 root: DIMMA1 Temp      | 38.000     | degrees C  | ok    | 5.000     | 5.000     | 10.000    | 80.000    | 85.000    | 90.000
+Jun  4 15:46:44 black-1 root: DIMMB1 Temp      | na         |            | na    | na        | na        | na        | na        | na        | na
+Jun  4 15:46:44 black-1 root: DIMMD1 Temp      | na         |            | na    | na        | na        | na        | na        | na        | na
+Jun  4 15:46:44 black-1 root: DIMME1 Temp      | na         |            | na    | na        | na        | na        | na        | na        | na
+Jun  4 15:46:44 black-1 root: 12V              | 12.534     | Volts      | ok    | 10.166    | 10.294    | 10.742    | 12.918    | 13.302    | 13.430
+Jun  4 15:46:44 black-1 root: 5VCC             | 5.120      | Volts      | ok    | 4.160     | 4.280     | 4.520     | 5.600     | 5.720     | 5.810
+Jun  4 15:46:44 black-1 root: 3.3VCC           | 3.265      | Volts      | ok    | 2.738     | 2.823     | 2.976     | 3.707     | 3.775     | 3.843
+Jun  4 15:46:44 black-1 root: VBAT             | 0x4        | discrete   | 0x04ff| na        | na        | na        | na        | na        | na
+Jun  4 15:46:44 black-1 root: Vcpu             | 1.790      | Volts      | ok    | 1.241     | 1.259     | 1.394     | 1.898     | 2.087     | 2.105
+Jun  4 15:46:44 black-1 root: VDimmAB          | 1.206      | Volts      | ok    | 0.996     | 1.026     | 1.086     | 1.350     | 1.374     | 1.398
+Jun  4 15:46:44 black-1 root: VDimmDE          | 1.206      | Volts      | ok    | 0.996     | 1.026     | 1.086     | 1.350     | 1.374     | 1.398
+Jun  4 15:46:44 black-1 root: 5VSB             | 5.063      | Volts      | ok    | 4.283     | 4.343     | 4.553     | 5.453     | 5.603     | 5.663
+Jun  4 15:46:44 black-1 root: 3.3VSB           | 3.203      | Volts      | ok    | 2.739     | 2.819     | 2.979     | 3.699     | 3.763     | 3.843
+Jun  4 15:46:44 black-1 root: P1V8_PCH         | 1.805      | Volts      | ok    | 1.490     | 1.535     | 1.598     | 1.994     | 2.057     | 2.093
+Jun  4 15:46:44 black-1 root: PVNN_PCH         | 0.906      | Volts      | ok    | 0.752     | 0.759     | 0.850     | 0.997     | 1.095     | 1.109
+Jun  4 15:46:44 black-1 root: P1V05_PCH        | 1.066      | Volts      | ok    | 0.870     | 0.898     | 0.947     | 1.199     | 1.220     | 1.248
+Jun  4 15:46:44 black-1 root: Chassis Intru    | 0x1        | discrete   | 0x0100| na        | na        | na        | na        | na        | na
+Jun  4 15:46:44 black-1 root: MB_NVMeSSD Temp  | na         |            | na    | na        | na        | na        | na        | na        | na
+Jun  4 15:46:44 black-1 root: test complete
+Jun  4 15:46:47 black-1 root: [  3]  5.0-10.0 sec  3.20 GBytes  5.50 Gbits/sec   0.002 ms 80649/2419708 (3.3%)
+Jun  4 15:46:52 black-1 root: [  3] 10.0-15.0 sec  3.28 GBytes  5.64 Gbits/sec   0.006 ms 46996/2445408 (1.9%)
+Jun  4 15:46:57 black-1 root: [  3]  0.0-20.0 sec  12.9 GBytes  5.54 Gbits/sec   0.003 ms 203922/9619614 (2.1%)
