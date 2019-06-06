@@ -5,6 +5,7 @@ MESSAGE_TAGS = ['IPMITOOL','stress-ng', 'STREAM_C', 'DD_TEST_SDA', 'DD_TEST_SDB'
 	'IPERF_SERVER_2.2', 'IPERF_SERVER_3.2', 'IPERF_SERVER_200.20', 'IPERF_CLIENT_2.1', 'IPERF_CLIENT_200.20', 
 	'IPERF_SERVER_200.50', 'IPERF_CLIENT_3.1', 'IPERF_CLIENT_200.50']
 
+IPMI_OUTPUT = ['value','units','status','lo_norec','lo_crit','lo_nocrit','up_nocrit','up_crit','up_norec']
 #########################################################
 
 def ClearPastData():
@@ -50,9 +51,10 @@ def SplitLogFile():
 
 #########################################################
 
-def ParseTestData(unit_num, side, tag):
+def ParseTestData(unit_num, side, tag, data_dict):
 	raw_data = 'Unit_'+unit_num+'/'+side+'/'+tag+'.txt'
 	with open(raw_data) as f:
+		
 		if tag == 'STREAM_C':
 			re_stream_c = re.compile(r"""
 				(?P<mon>\b\w\w\w\b)\s+(?P<day>\b\d{1,2}\b)\s+(?P<hr>\d\d):(?P<min>\d\d):(?P<sec>\d\d)
@@ -116,15 +118,19 @@ def ParseTestData(unit_num, side, tag):
 				m = re_ipmi.search(line)
 				if m:
 					sensor_list.append(m.group('sensor'))
+					for label in IPMI_OUTPUT:
+						data_dict[m.group('sensor')+'_'+label]  = (m.group(label))
+					"""	
 					data_dict[m.group('sensor')+'_value']  = (m.group('value'))
 					data_dict[m.group('sensor')+'_units']  = (m.group('units'))
 					data_dict[m.group('sensor')+'_status']  = (m.group('status'))
 					data_dict[m.group('sensor')+'_lo_norec']  = (m.group('lo_norec'))
 					data_dict[m.group('sensor')+'_lo_crit']  = (m.group('lo_crit'))
 					data_dict[m.group('sensor')+'_lo_nocrit']  = (m.group('lo_nocrit'))
-					data_dict[m.group('sensor')+'_up_norec']  = (m.group('up_norec'))
-					data_dict[m.group('sensor')+'_up_crit']  = (m.group('up_crit'))
 					data_dict[m.group('sensor')+'_up_nocrit']  = (m.group('up_nocrit'))
+					data_dict[m.group('sensor')+'_up_crit']  = (m.group('up_crit'))
+					data_dict[m.group('sensor')+'_up_norec']  = (m.group('up_norec'))
+					"""
 
 			print(side+'-'+unit_num+" IPMI Data:")
 			#print(data_dict)
@@ -141,11 +147,94 @@ def ParseTestData(unit_num, side, tag):
 					print("High Crit     : " + str(data_dict[user_in+"_up_crit"])+" "+str(data_dict[user_in+"_units"]))
 					print("High NoRec    : " + str(data_dict[user_in+"_up_norec"])+" "+str(data_dict[user_in+"_units"]))
 
+		elif ((tag == 'DD_TEST_SDB') or (tag == 'DD_TEST_SDA')):
+			re_dd_test = re.compile(r"""
+				(?P<mon>\b\w\w\w\b)\s+(?P<day>\b\d{1,2}\b)\s+(?P<hr>\d\d):(?P<min>\d\d):(?P<sec>\d\d)
+				:\s+
+				(
+				(?P<records_in>[\d]+[+][\d]+)
+				|
+				(?P<records_out>[\d]+[+][\d]+)
+				|
+				((?P<bytes_copied>\b[\d]+\b).*\(.+\).*(?P<duration>\b\d+[.]\d+)\s+s,\s*(?P<rate>\d+([.]\d*)?))
+				)
+			""", re.VERBOSE)
+			#data_dict = {}
+			for line in f:
+				m = re_dd_test.search(line)
+				dd_groups = ['records_in','records_out','bytes_copied','duration','rate']
+				if m:
+					for g in dd_groups:
+						if (m.group(g)):
+							data_dict[tag+'_'+g] = (m.group(g))
+
+			#print(data_dict)
+			print(side+'-'+unit_num+" DD Data:")
+			user_in = ""
+			while user_in != "exit":
+				user_in = input("What device?\n")
+				if user_in != "exit":
+					print("Took "+str(data_dict["DD_TEST_"+user_in+"_duration"])+" s to copy "
+						+str(data_dict["DD_TEST_"+user_in+"_bytes_copied"])+" bytes\nat a rate of "
+						+str(data_dict["DD_TEST_"+user_in+"_rate"])+" MB/s")
+
+		elif tag == 'stress-ng':
+			re_stress_ng = re.compile(r"""
+				(?P<mon>\b\w\w\w\b)\s+(?P<day>\b\d{1,2}\b)\s+(?P<hr>\d\d):(?P<min>\d\d):(?P<sec>\d\d)
+				:.*\s+
+				(?P<count>\d+(,\d+)*)
+				\s+
+				(?P<variable>(\s?\b\w+\b)+)
+				\s+
+				(?P<rate>\d+[.]\d+)
+				\s+
+				(?P<units>[MBK]?/sec)
+				\s*
+				([(]\s*(?P<extra>.*)[)])?
+				\s*$
+			""", re.VERBOSE)
+			#data_dict = {}
+			stress_ng_groups = ['count','variable','rate','units','extra']
+			for line in f:
+				m = re_stress_ng.search(line)
+				if m:
+					for g in stress_ng_groups:
+						if g != 'variable':
+							data_dict[m.group('variable')+'_'+g]  = (m.group(g))
+					"""	
+					data_dict[m.group('sensor')+'_value']  = (m.group('value'))
+					data_dict[m.group('sensor')+'_units']  = (m.group('units'))
+					data_dict[m.group('sensor')+'_status']  = (m.group('status'))
+					data_dict[m.group('sensor')+'_lo_norec']  = (m.group('lo_norec'))
+					data_dict[m.group('sensor')+'_lo_crit']  = (m.group('lo_crit'))
+					data_dict[m.group('sensor')+'_lo_nocrit']  = (m.group('lo_nocrit'))
+					data_dict[m.group('sensor')+'_up_nocrit']  = (m.group('up_nocrit'))
+					data_dict[m.group('sensor')+'_up_crit']  = (m.group('up_crit'))
+					data_dict[m.group('sensor')+'_up_norec']  = (m.group('up_norec'))
+					"""
+
+			print(side+'-'+unit_num+" stress-ng Data:")
+			print(data_dict)
+			user_in = ""
+			while user_in != "exit":
+				user_in = input("What info would you like to see the data for?\n")
+				if user_in != "exit":
+					print(data_dict[user_in+'_count']+' '+user_in)
+					print("at a rate of "+ data_dict[user_in+'_rate']+' '+data_dict[user_in+'_units'])
+					if (data_dict[user_in+'_extra'] != None):
+						print("("+data_dict[user_in+'_extra']+")")
+
+
+	return data_dict
 
 ClearPastData()
 SplitLogFile()
-ParseTestData("1", "Black", "IPMITOOL")
-
+#ParseTestData("1", "black", "IPMITOOL")
+data_dict = {}
+#data_dict = ParseTestData("1", "black", "DD_TEST_SDA",data_dict)
+#print(data_dict)
+#data_dict = ParseTestData("1", "black", "DD_TEST_SDB",data_dict)
+data_dict = ParseTestData("1", "black", "stress-ng", data_dict)
 
 
 
