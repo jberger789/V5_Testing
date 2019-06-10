@@ -87,8 +87,13 @@ class Side(object):
 
 	def add_data(self,testtag,datagram):
 		if datagram.id not in self.data[testtag]:
-			self.data[testtag][datagram.id] = []
-		self.data[testtag][datagram.id].append(datagram)
+			self.data[testtag][datagram.id] = {}
+			self.data[testtag][datagram.id][datagram.time_stamp] = datagram
+		for t in self.data[testtag][datagram.id]:
+			if str(t) == str(datagram.time_stamp):
+				if self.data[testtag][datagram.id][t].add_data(datagram):
+					return
+		self.data[testtag][datagram.id][datagram.time_stamp] = (datagram)
 
 	def view_data(self,test):
 		user_in = ""
@@ -98,8 +103,8 @@ class Side(object):
 			if user_in == "options" or user_in == 'o':
 				print("The options are " + ", ".join(list(cur_test_dict)))
 			elif user_in in cur_test_dict:
-				for dp in cur_test_dict[user_in]:
-						print(str(dp.time_stamp)+": "+str(dp.data_dict))
+				for time_stamp in cur_test_dict[user_in]:
+						print(str(time_stamp)+": "+str(cur_test_dict[user_in][time_stamp].data_dict))
 
 class Test(object):
 	def __init__(self,tag=None,call=None,re_string=None,key_tag=None,data_info=None,json_file_name=None):
@@ -135,6 +140,16 @@ class Test_Datagram(object):
 		self.data_dict = {}
 		for i in range(0,len(test.data_info)):
 			self.data_dict[test.data_info[i]] = data[i]
+
+	def add_data(self,datagram):
+		def_out = False
+		for key in self.data_dict:
+			if self.data_dict[key] == None and datagram.data_dict[key] != None:
+				self.data_dict[key] = datagram.data_dict[key]
+				def_out = True
+			elif self.data_dict[key] != None and datagram.data_dict[key] != None and self.data_dict[key] != datagram.data_dict[key]:
+				return False
+		return def_out
 
 class Time_Stamp(object):
 	def __init__(self,mon,day,hr,minu,sec):
