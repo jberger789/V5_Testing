@@ -42,7 +42,7 @@ class Log(object):
 					cur_test = self.tests[m.group('tag')]
 					#print(m.group('drive'))
 					cur_test.add_key(m.group(cur_test.key_tag))
-					cur_time = Time_Stamp(m.group("mon"),m.group("day"),m.group("hr"),m.group("min"),m.group("sec"))
+					cur_time = Time_Stamp(m.group('mon'),m.group("day"),m.group("hr"),m.group("min"),m.group("sec"))
 					self.units[m.group('unit')].sides[m.group('side')].add_data(cur_test.tag, cur_test.generate_datagram(
 						m.group(cur_test.key_tag),cur_time,(list(map(lambda val: m.group(val), cur_test.data_info)))))
 
@@ -218,11 +218,15 @@ stream_c_re = r"""
 			"""
 
 hdparm_re = r"""
-	_(?P<Dive>SD[AB])
-	.*(?P<read_type>(cached)|(buffered\sdisk))
-	.*(?P<size>\d+)[M]
-	.*(?P<timing>\d+[.]\d+).*
-	(?P<read_rate>\d+[.]\d+).*
+	_(?P<Drive>SD[AB])
+	:\s+
+	Timing\s(?P<read_type>(cached)|(buffered disk))\sreads:
+	\s+
+	(?P<size>\d+)\s[M]B
+	\s+
+	in\s+(?P<timing>\d+[.]\d+)\sseconds\s=
+	\s+
+	(?P<read_rate>\d+[.]\d+)\s[M]B/sec
 """
 
 #test_list = {}
