@@ -1,0 +1,38 @@
+{
+	"tag": "IPMITOOL",
+	"call": null,
+	"re_string": [
+		":\\s+",
+		"(?P<sensor>\\b[\\w.]+\\b(\\s\\b\\w+\\b)?)",
+		"\\s+\\|\\s+",
+		"(?P<value>\\b[\\w.]+\\b)",
+		"\\s+\\|\\s+",
+		"(?P<units>(\\b[\\w]+\\b)(\\s\\b[\\w]+\\b)?)",
+		"\\s*\\|\\s+",
+		"(?P<status>\\b[\\w]+\\b)",
+		"\\s*\\|\\s+",
+		"(?P<lo_norec>(\\d+[.]\\d+)|(na))",
+		"\\s+\\|\\s+",
+		"(?P<lo_crit>(\\d+[.]\\d+)|(na))",
+		"\\s+\\|\\s+",
+		"(?P<lo_nocrit>(\\d+[.]\\d+)|(na))",
+		"\\s+\\|\\s+",
+		"(?P<up_nocrit>(\\d+[.]\\d+)|(na))",
+		"\\s+\\|\\s+",
+		"(?P<up_crit>(\\d+[.]\\d+)|(na))",
+		"\\s+\\|\\s+",
+		"(?P<up_norec>(\\d+[.]\\d+)|(na))"
+	],
+	"key_tag": "sensor",
+	"data_info": [
+		"value",
+		"units",
+		"status",
+		"lo_norec",
+		"lo_crit",
+		"lo_nocrit",
+		"up_nocrit",
+		"up_crit",
+		"up_norec"
+	]
+}

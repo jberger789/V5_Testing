@@ -1,0 +1,26 @@
+{
+	"tag": "STREAM_C",
+	"call": null,
+	"re_string": [
+		"",
+		":\\s+",
+		".*",
+		"(?P<function>\\b\\w+\\b)",
+		":\\s+",
+		"(?P<rate>\\d+[.]\\d+)",
+		"\\s+",
+		"(?P<avg_t>\\d+[.]\\d+)",
+		"\\s+",
+		"(?P<min_t>\\d+[.]\\d+)",
+		"\\s+",
+		"(?P<max_t>\\d+[.]\\d+)",
+		""
+	],
+	"key_tag": "function",
+	"data_info": [
+		"rate",
+		"avg_t",
+		"min_t",
+		"max_t"
+	]
+}

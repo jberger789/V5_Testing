@@ -1,0 +1,24 @@
+{
+	"tag": "HDPARM",
+	"call": null,
+	"re_string": [
+		"",
+		"_(?P<drive>SD[AB])",
+		":\\s+",
+		"Timing\\s(?P<read_type>(cached)|(buffered\\sdisk))\\sreads:",
+		"\\s+",
+		"(?P<size>\\d+)\\s[M]B",
+		"\\s+",
+		"in\\s+(?P<timing>\\d+[.]\\d+)\\sseconds\\s=",
+		"\\s+",
+		"(?P<read_rate>\\d+[.]\\d+)\\s[M]B/sec",
+		""
+	],
+	"key_tag": "drive",
+	"data_info": [
+		"read_type",
+		"size",
+		"timing",
+		"read_rate"
+	]
+}
