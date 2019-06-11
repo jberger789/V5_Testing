@@ -10,8 +10,6 @@ class test_json(json.JSONEncoder):
 		else:
 			return json.JSONEncoder.default(self, o)
 
-
-
 class Log(object):
 	def __init__(self,filename,units):
 		self.message_file_name = filename
@@ -105,6 +103,7 @@ class Side(object):
 			elif user_in in cur_test_dict:
 				for time_stamp in cur_test_dict[user_in]:
 						print(str(time_stamp)+": "+str(cur_test_dict[user_in][time_stamp].data_dict))
+						#print(str(time_stamp)+":"+lambda key: return (key+str()
 
 class Test(object):
 	def __init__(self,tag=None,call=None,re_string=None,key_tag=None,data_info=None,json_file_name=None):
@@ -134,18 +133,29 @@ class Test(object):
 		return Test_Datagram(self,key,time,datum)
 
 class Test_Datagram(object):
-	def __init__(self,test,key,time,data):
+	def __init__(self,test,key_tag,time,data):
 		self.time_stamp = time
-		self.id = key
+		self.id = key_tag
 		self.data_dict = {}
 		for i in range(0,len(test.data_info)):
-			self.data_dict[test.data_info[i]] = data[i]
+			try:
+				self.data_dict[test.data_info[i]] = eval(data[i])
+			except (SyntaxError, NameError) as e:
+				self.data_dict[test.data_info[i]] = (data[i])
+			except TypeError:
+				if (data[i]) == None:
+					self.data_dict[test.data_info[i]] = None
 
 	def add_data(self,datagram):
 		def_out = False
 		for key in self.data_dict:
 			if self.data_dict[key] == None and datagram.data_dict[key] != None:
-				self.data_dict[key] = datagram.data_dict[key]
+				try:
+					self.data_dict[key] = eval(datagram.data_dict[key])
+				except (SyntaxError, NameError) as e:
+					self.data_dict[key] = (datagram.data_dict[key])
+				except TypeError:
+					self.data_dict[key] = (datagram.data_dict[key])
 				def_out = True
 			elif self.data_dict[key] != None and datagram.data_dict[key] != None and self.data_dict[key] != datagram.data_dict[key]:
 				return False
@@ -171,7 +181,7 @@ def return_or2(l):
 
 datalog = Log('test_messages',['1'])
 for tag in MESSAGE_TAGS:
-	datalog.add_test(Test(json_file_name=tag+".json"))
+	datalog.add_test(Test(json_file_name="Tests/"+tag+".json"))
 
 datalog.extract_data()
 datalog.view_data()
