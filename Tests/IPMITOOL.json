@@ -25,6 +25,7 @@
 	],
 	"key_tag": "sensor",
 	"data_info": [
+		"sensor",
 		"value",
 		"units",
 		"status",
@@ -34,5 +35,17 @@
 		"up_nocrit",
 		"up_crit",
 		"up_norec"
+	],
+	"data_types": [
+		"str",
+		"float",
+		"str",
+		"str",
+		"float",
+		"float",
+		"float",
+		"float",
+		"float",
+		"float"
 	]
 }

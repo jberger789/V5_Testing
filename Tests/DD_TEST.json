@@ -2,22 +2,29 @@
 	"tag": "DD_TEST",
 	"call": null,
 	"re_string": [
-		"",
 		"_(?P<drive>SD[AB])",
 		":\\s+",
 		"(((?P<records_in>[\\d]+[+][\\d]+)\\srecords\\sin$)",
 		"|",
 		"((?P<records_out>[\\d]+[+][\\d]+)\\srecords\\sout$)",
 		"|",
-		"((?P<bytes_copied>\\b[\\d]+\\b).*\\(.+\\).*(?P<duration>\\b\\d+[.]\\d+)\\s+s,\\s*(?P<rate>\\d+([.]\\d*)?)))",
-		""
+		"((?P<bytes_copied>\\b[\\d]+\\b).*\\(.+\\).*(?P<duration>\\b\\d+[.]\\d+)\\s+s,\\s*(?P<rate>\\d+([.]\\d*)?)))"
 	],
 	"key_tag": "drive",
 	"data_info": [
+		"drive",
 		"records_in",
 		"records_out",
 		"bytes_copied",
 		"duration",
 		"rate"
+	],
+	"data_types": [
+		"str",
+		"int",
+		"int",
+		"int",
+		"float",
+		"float"
 	]
 }
