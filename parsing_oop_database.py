@@ -55,18 +55,24 @@ class Log(object):
 			for line in log_file:
 				# Check if it appears to be a relevant log message
 				match_start = re_prefix.search(line)
-				if (match_start != None): # i.e. if the start of the log message does match our regular expression 're_prefix'
+				if (match_start != None): 	# i.e. if the start of the log message does match our regular expression 're_prefix'
+
 					# Figure out which test it is associated with	
-					cur_test = self.tests[match_start.group('tag')]									
+					cur_test = self.tests[match_start.group('tag')]							
+
 					# Then interpret the line (starting from the end of the 'start') with the appropriate regular expression
 					m2 = cur_test.re.match(line[19+len(match_start.group('side'))+len(cur_test.tag):])
+
 					if (m2 != None): # If that matches too, then:
 						table = db[match_start.group('tag')]
 						next_row = {}
+
 						next_row['unit'] = match_start.group('unit')
 						next_row['side'] = match_start.group('side')
 						next_row['time_stamp'] = make_datetime(match_start)
+
 						row = table.find_one(unit=next_row['unit'],side=next_row['side'],time_stamp=next_row['time_stamp'])
+
 						for i in range(0,len(cur_test.data_info)):
 							key = cur_test.data_info[i]
 							if ((m2.group(key)) == 'na'):
@@ -75,25 +81,12 @@ class Log(object):
 								next_row[key] = eval(m2.group(key))
 							else:
 								next_row[key] = (m2.group(key))
-						temp_row = next_row
+
 						if row != None:
-							update = True
-							for key in row:
-								if key != 'id':
-									if row[key] == next_row[key] or (row[key] != None and next_row[key] == None):
-										temp_row[key] = row[key]
-									elif row[key] == None and next_row[key] != None:
-										temp_row[key] = temp_row[key]
-									else:	
-										update = False
-						else:
-							update = False
-						if update:
-							next_row = temp_row
-							next_row['id'] = row['id']
-							table.upsert(next_row,['id'])
+							table.upsert(return_full_row(row,next_row),['id'])
 						else:
 							table.insert(next_row)
+
 
 """	def view_data(self):
 		user_in = ""
@@ -128,6 +121,7 @@ class Test(object):
 				self.data_types = json_dict['data_types']
 
 def make_datetime(match_obj):
+	"""Given a match object that contains groups with date/time info, return a corresponding python datetime object"""
 	return datetime(date.today().year, MONTHS[(match_obj.group('mon'))], int(match_obj.group('day')),
 		int(match_obj.group('hr')), int(match_obj.group('min')), int(match_obj.group('sec')))
 
@@ -140,6 +134,21 @@ def return_options(options_list):
 def return_help():
 	return("Type '(h)elp' to bring up this prompt, '(o)ptions' for a list of viable responses,\n"
 		"'go back' to return to the previous prompt, or 'exit' to end the program")
+
+					
+def return_full_row(row_match, new_row):
+	update = True
+	temp_row = {}
+	for key in row_match:
+		if key != 'id':
+			if row_match[key] == new_row[key] or (row_match[key] != None and new_row[key] == None):
+				temp_row[key] = row_match[key]
+			elif row_match[key] == None and new_row[key] != None:
+				temp_row[key] = new_row[key]
+			else:	
+				return new_row
+	temp_row['id'] = row_match['id']
+	return temp_row
 
 db = dataset.connect('sqlite:///test_results.db')
 
