@@ -11,20 +11,12 @@
 		"((?P<bytes_copied>\\b[\\d]+\\b).*\\(.+\\).*(?P<duration>\\b\\d+[.]\\d+)\\s+s,\\s*(?P<rate>\\d+([.]\\d*)?)))"
 	],
 	"key_tag": "drive",
-	"data_info": [
-		"drive",
-		"records_in",
-		"records_out",
-		"bytes_copied",
-		"duration",
-		"rate"
-	],
-	"data_types": [
-		"str",
-		"int",
-		"int",
-		"int",
-		"float",
-		"float"
-	]
+	"data_info": {
+		"drive": "str",
+		"records_in": "int",
+		"records_out": "int",
+		"bytes_copied": "int",
+		"duration": "float",
+		"rate": "float"
+	}
 }

@@ -24,28 +24,16 @@
 		"(?P<up_norec>(\\d+[.]\\d+)|(na))"
 	],
 	"key_tag": "sensor",
-	"data_info": [
-		"sensor",
-		"value",
-		"units",
-		"status",
-		"lo_norec",
-		"lo_crit",
-		"lo_nocrit",
-		"up_nocrit",
-		"up_crit",
-		"up_norec"
-	],
-	"data_types": [
-		"str",
-		"float",
-		"str",
-		"str",
-		"float",
-		"float",
-		"float",
-		"float",
-		"float",
-		"float"
-	]
+	"data_info": {
+		"sensor": "str",
+		"value": "float",
+		"units": "str",
+		"status": "str",
+		"lo_norec": "float",
+		"lo_crit": "float",
+		"lo_nocrit": "float",
+		"up_nocrit": "float",
+		"up_crit": "float",
+		"up_norec": "float"
+	}
 }

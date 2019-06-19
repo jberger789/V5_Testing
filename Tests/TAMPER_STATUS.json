@@ -1,0 +1,22 @@
+{
+	"tag": "TAMPER_STATUS",
+	"call": null,
+	"re_string": [
+		":\\s+",
+		"((",
+		"(?P<val_1>\\d+)",
+		",",
+		"(?P<val_2>\\d+)",
+		",",
+		"(?P<val_3>\\d+)",
+		")",
+		"|",
+		"(.*$))"
+	],
+	"key_tag": "",
+	"data_info": {
+		"val_1": "int",
+		"val_2": "int",
+		"val_3": "int"
+	}
+}

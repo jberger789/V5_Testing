@@ -13,18 +13,11 @@
 		"(?P<read_rate>\\d+[.]\\d+)\\s[M]B/sec"
 	],
 	"key_tag": "drive",
-	"data_info": [
-		"drive",
-		"read_type",
-		"size",
-		"timing",
-		"read_rate"
-	],
-	"data_types": [
-		"str",
-		"str",
-		"int",
-		"float",
-		"float"
-	]
+	"data_info": {
+		"drive": "str",
+		"read_type": "str",
+		"size": "int",
+		"timing": "float",
+		"read_rate": "float"
+	}
 }

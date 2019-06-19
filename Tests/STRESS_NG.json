@@ -1,0 +1,25 @@
+{
+	"tag": "STRESS_NG",
+	"call": null,
+	"re_string": [
+		":\\sstress-ng:\\s",
+		"info:\\s{2}\\[\\d{5}\\]\\s+",
+		"(?P<count>\\d{1,3}(,\\d{3})*)",
+		"\\s",
+		"(?P<variable>(\\s?\\b\\w+\\b)+)",
+		"\\s+",
+		"(?P<rate>\\d+[.]\\d+)",
+		"\\s+",
+		"(?P<units>[MBK]?/sec)",
+		"\\s*",
+		"([(]\\s*(?P<extra>.*)[)])?.*$"
+	],
+	"key_tag": "variable",
+	"data_info": {
+		"count": "int",
+		"variable": "str",
+		"rate": "float",
+		"units": "str",
+		"extra": "str"
+	}
+}

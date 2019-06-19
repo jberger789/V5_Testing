@@ -1,0 +1,12 @@
+{
+  "tag": "FIBER_FPGA_TEMP",
+	"call": null,
+	"re_string": [
+		"_(?P<fpga_side>[23]\\.5):\\s+\\#011DIODE\\srev1\\sTemp\\s=\\s(?P<temp>\\d+)\\sdegrees\\sC\\s*$"
+	],
+	"key_tag": "",
+	"data_info": {
+		"fpga_side": "float",
+		"temp": "int"
+	}
+}

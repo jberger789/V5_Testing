@@ -37,34 +37,19 @@
 		")"
 	],
 	"key_tag": "role",
-	"data_info": [
-		"role",
-		"address",
-		"PID",
-		"interval_start",
-		"interval_end",
-		"transfer_amount",
-		"transfer_units",
-		"bandwith",
-		"jitter",
-		"lost_datagrams",
-		"total_datagrams",
-		"loss_percentage",
-		"out_of_order_datagrams"
-	],
-	"data_types": [
-		"str",
-		"str",
-		"str",
-		"float",
-		"float",
-		"float",
-		"str",
-		"float",
-		"float",
-		"int",
-		"int",
-		"float",
-		"int"
-	]
+	"data_info": {
+		"role": "str",
+		"address": "str",
+		"PID": "str",
+		"interval_start": "float",
+		"interval_end": "float",
+		"transfer_amount": "float",
+		"transfer_units": "str",
+		"bandwith": "float",
+		"jitter": "float",
+		"lost_datagrams": "int",
+		"total_datagrams": "int",
+		"loss_percentage": "float",
+		"out_of_order_datagrams": "int"
+	}
 }

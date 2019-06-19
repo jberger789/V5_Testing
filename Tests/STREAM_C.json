@@ -15,18 +15,11 @@
 		"(?P<max_t>\\d+[.]\\d+)"
 	],
 	"key_tag": "function",
-	"data_info": [
-		"function",
-		"rate",
-		"avg_t",
-		"min_t",
-		"max_t"
-	],
-	"data_types": [
-		"str",
-		"float",
-		"float",
-		"float",
-		"float"
-	]
+	"data_info": {
+		"function": "str",
+		"rate": "float",
+		"avg_t": "float",
+		"min_t": "float",
+		"max_t": "float"
+	}
 }
