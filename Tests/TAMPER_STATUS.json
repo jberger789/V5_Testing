@@ -4,19 +4,19 @@
 	"re_string": [
 		":\\s+",
 		"((",
-		"(?P<val_1>\\d+)",
+		"(?P<voltage>\\d+)",
 		",",
-		"(?P<val_2>\\d+)",
+		"(?P<tamper_events>\\d+)",
 		",",
-		"(?P<val_3>\\d+)",
+		"(?P<other>\\d+)",
 		")",
 		"|",
 		"(.*$))"
 	],
 	"key_tag": "",
 	"data_info": {
-		"val_1": "int",
-		"val_2": "int",
-		"val_3": "int"
+		"voltage": "int",
+		"tamper_events": "int",
+		"other": "int"
 	}
 }
