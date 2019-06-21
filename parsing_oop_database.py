@@ -6,10 +6,8 @@ MESSAGE_TAGS = ['STRESS_NG','IPMITOOL', 'STREAM_C', 'DD_TEST', 'HDPARM', 'IPERF'
 #MESSAGE_TAGS = ['stress-ng', 'STREAM_C', 'DD_TEST', 'HDPARM', 'IPERF','USB_PASSMARK','TAMPER_STATUS','FIBER_FPGA_TEMP']
 #MESSAGE_TAGS = ['USB_PASSMARK']
 MONTHS = {'Jan': 1, 'Feb': 2, 'Mar': 3, 'Apr': 4, 'May': 5, 'Jun': 6, 'Jul': 7, 'Aug': 8, 'Sep': 9, 'Oct': 10, 'Nov': 11, 'Dec': 12}
-#MESSAGE_FILE_NAME = 'messages_multiday_test'
-#MESSAGE_FILE_NAME = 'CLEAN.txt'
-#MESSAGE_FILE_NAME = 'messages_friday_test_full_setup'
-MESSAGE_FILE_NAME = 'BLACKCLEAN.txt'
+MAIN_MESSAGE_FILE = "messages_overnight_Jun21"
+MESSAGE_FILE_NAMES = ['BLACKCLEAN.txt','REDCLEAN.txt']
 
 class test_json(json.JSONEncoder):
 	def default(self, o):
@@ -220,8 +218,8 @@ def return_full_row(row_match, new_row):
 	temp_row['id'] = row_match['id']
 	return temp_row
 
-def get_line_count():
-	p = subprocess.Popen(['wc', '-l', MESSAGE_FILE_NAME], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+def get_line_count(file):
+	p = subprocess.Popen(['wc', '-l', file], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 	result, err = p.communicate()
 	if p.returncode != 0:
 		raise IOError(err)
@@ -229,16 +227,29 @@ def get_line_count():
 
 #db = dataset.connect('sqlite:///test_results.db')
 #db = dataset.connect('mysql://jberger:open.local.box@10.1.11.21/test_results')
-print(datetime.today())
+# print("{} Start: {}".format(MESSAGE_FILE_NAME,datetime.today()))
 db = dataset.connect('mysql://guest:password@localhost/test_results')
 
-line_count = get_line_count()
+# line_count = get_line_count(MESSAGE_FILE_NAME)
 
-#datalog = Log('test_messages',['1'])
-datalog = Log(MESSAGE_FILE_NAME,['1'])
-for tag in MESSAGE_TAGS:
-	datalog.add_test(Test(json_file_name="Tests/"+tag+".json"))
+os.system("./TEST.sh {}".format(MAIN_MESSAGE_FILE))
 
-datalog.extract_data()
-print(datetime.today())
+datalog = Log('test_messages',['1'])
+for msg_file in MESSAGE_FILE_NAMES:
+	print("{} Start: {}".format(msg_file,datetime.today()))
+	line_count = get_line_count(msg_file)
+	datalog = Log(msg_file,['1'])
+	for tag in MESSAGE_TAGS:
+		datalog.add_test(Test(json_file_name="Tests/"+tag+".json"))
+
+	datalog.extract_data()
+	print("{} End: {}".format(msg_file,datetime.today()))
+
+
+# datalog = Log(MESSAGE_FILE_NAME,['1'])
+# for tag in MESSAGE_TAGS:
+# 	datalog.add_test(Test(json_file_name="Tests/"+tag+".json"))
+
+# datalog.extract_data()
+# print("{} End: {}".format(MESSAGE_FILE_NAME,datetime.today()))
 #datalog.view_data()
