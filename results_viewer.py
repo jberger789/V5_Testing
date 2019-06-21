@@ -21,8 +21,26 @@ TEST_UNITS = {
 SIDES = ['black','red']
 DB = dataset.connect('mysql://guest:password@localhost/test_results')
 
+def test_run_select():
+	user_in = ''
+	test_list = DB['TESTS'].find()
+	rows = []
+	ops = []
+	for z in test_list:
+		rows.append(z)
+		ops.append(str(z['id']))
+	while user_in != 'exit':
+		user_in = input("Which test run would you like to see results for?\n")
+		if user_in == 'h' or user_in == 'help':
+			print("Enter 'options' for a list of valid responses, or 'exit' to stop the program")
+		elif user_in == 'o' or user_in == 'options':
+			print("The options are:\n"+"\n".join(list(map(lambda r: "Test {}: {} - {}".format(r['id'],r['start_time'],r['end_time']),rows))))
+		elif  user_in in ops:
+			test_select(rows[eval(user_in)-1]['start_time'],rows[eval(user_in)-1]['end_time'])
 
-def test_select():
+
+
+def test_select(start_time,end_time):
 	user_in = ''
 	while user_in != 'exit':
 		user_in = input("Which test would you like to see results for?\n")
@@ -35,14 +53,14 @@ def test_select():
 		elif user_in in MESSAGE_TAGS.values():
 			user_in = graph_select(user_in)
 		elif eval(user_in) in MESSAGE_TAGS:
-			graph_select(MESSAGE_TAGS[eval(user_in)])
+			graph_select(MESSAGE_TAGS[eval(user_in)],start_time,end_time)
 		else:
 			if user_in != 'exit':
 				print("That is not a valid response, check your spelling or type 'help' for assistance")
 
 
 
-def graph_select(test_key):
+def graph_select(test_key,start_time,end_time):
 	user_in = ''
 	while user_in != 'go back' and user_in != 'return':
 		if TEST_OPTIONS[test_key] != 'SPECIAL':
@@ -59,7 +77,7 @@ def graph_select(test_key):
 						TEST_OPTIONS[test_key][2],test_key,TEST_OPTIONS[test_key][0],user_in)).next()[TEST_OPTIONS[test_key][2]]
 				else:
 					tmp_units = TEST_UNITS[test_key]
-				generate_graph(test_key,user_in,tmp_units)
+				generate_graph(test_key,user_in,tmp_units,start_time,end_time)
 			elif user_in == 'exit':
 				return user_in
 		elif test_key == 'IPERF':
@@ -71,7 +89,7 @@ def graph_select(test_key):
 				print("The options are " + ", ".join(options))
 			elif user_in in options:
 				tmp_units = ''
-				gen_IPERF_graph(user_in)
+				gen_IPERF_graph(user_in,start_time,end_time)
 			elif user_in == 'exit':
 				return user_in
 		elif test_key == 'TAMPER_STATUS':
@@ -83,19 +101,19 @@ def graph_select(test_key):
 				print("The options are " + ", ".join(options))
 			elif user_in in options:
 				tmp_units = ''
-				gen_TAMPER_graph(user_in)
+				gen_TAMPER_graph(user_in,start_time,end_time)
 			elif user_in == 'exit':
 				return user_in
 		else:
 			pass
 
 
-def generate_graph(test_key,sel_opt,units):
+def generate_graph(test_key,sel_opt,units,start_time,end_time):
 	results = []
 	x=[]
 	y=[]
 	for s in SIDES:
-		results.append(DB.query("SELECT * FROM {} WHERE side='{}' AND `{}`='{}';".format(test_key,s,TEST_OPTIONS[test_key][0],sel_opt)))
+		results.append(DB.query("SELECT * FROM {} WHERE side='{}' AND `{}`='{}' AND (time_stamp >= '{}' AND time_stamp <= '{}');".format(test_key,s,TEST_OPTIONS[test_key][0],sel_opt,start_time,end_time)))
 		x.append([])
 		y.append([])
 	
@@ -117,7 +135,7 @@ def generate_graph(test_key,sel_opt,units):
 
 	plt.show()
 
-def gen_IPERF_graph(sel_opt):
+def gen_IPERF_graph(sel_opt,start_time,end_time):
 	results = {}
 	x={}
 	y={}
@@ -129,7 +147,7 @@ def gen_IPERF_graph(sel_opt):
 		y[s] = {}
 		for ip in ips[s]:
 		#print("SELECT time_stamp,role,address,{} FROM IPERF WHERE side='{}' AND role='{}' AND (address='{}' OR address='{}') AND {} IS NOT NULL;".format(sel_opt,s,role,ip1,ip2,sel_opt))
-			results[s][ip]=(DB.query("SELECT time_stamp,role,address,{} FROM IPERF WHERE PID='SUM' AND side='{}' AND (role='CLIENT' OR role='SERVER') AND (address='{}') AND {} IS NOT NULL;".format(sel_opt,s,ip,sel_opt)))
+			results[s][ip]=(DB.query("SELECT time_stamp,role,address,{} FROM IPERF WHERE PID='SUM' AND side='{}' AND (role='CLIENT' OR role='SERVER') AND (address='{}') AND {} IS NOT NULL  AND (time_stamp >= '{}' AND time_stamp <= '{}');".format(sel_opt,s,ip,sel_opt,start_time,end_time)))
 			x[s][ip]=[]
 			y[s][ip]=[]
 	
@@ -145,14 +163,14 @@ def gen_IPERF_graph(sel_opt):
 		plt.title("IPERF {}.x: {}".format(ips[s][ind].split('.')[0],sel_opt))
 		plt.show()
 
-def gen_TAMPER_graph(sel_opt):
+def gen_TAMPER_graph(sel_opt,start_time,end_time):
 	results = {}
 	x={}
 	y={}
 	max_by_op = {'voltage': 3500, 'tamper_events': 1000, 'other': 10}
 	for s in SIDES:
 		#print("SELECT time_stamp,role,address,{} FROM IPERF WHERE side='{}' AND role='{}' AND (address='{}' OR address='{}') AND {} IS NOT NULL;".format(sel_opt,s,role,ip1,ip2,sel_opt))
-		results[s]=(DB.query("SELECT time_stamp,{} FROM TAMPER_STATUS WHERE side='{}' AND {} IS NOT NULL;".format(sel_opt,s,sel_opt)))
+		results[s]=(DB.query("SELECT time_stamp,{} FROM TAMPER_STATUS WHERE side='{}' AND {} IS NOT NULL AND (time_stamp >= '{}' AND time_stamp <= '{}');".format(sel_opt,s,sel_opt,start_time,end_time)))
 		x[s]=[]
 		y[s]=[]
 	
@@ -171,7 +189,7 @@ def gen_TAMPER_graph(sel_opt):
 
 
 
-test_select()
+test_run_select()
 
 
 
