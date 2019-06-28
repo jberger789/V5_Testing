@@ -14,7 +14,11 @@
 		"\\s*",
 		"([(]\\s*(?P<extra>.*)[)])?.*$"
 	],
-	"key_tag": "variable",
+	"data_key": "variable",
+	"data_tag": "rate",
+	"key_list": null,
+	"units_key": "units",
+	"units_dict": null,
 	"data_info": {
 		"count": "int",
 		"variable": "str",

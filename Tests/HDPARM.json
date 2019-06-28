@@ -10,14 +10,19 @@
 		"\\s+",
 		"in\\s+(?P<timing>\\d+[.]\\d+)\\sseconds\\s=",
 		"\\s+",
-		"(?P<read_rate>\\d+[.]\\d+)\\s[M]B/sec"
+		"(?P<read_rate>\\d+[.]\\d+)\\s(?P<units>[M]B/sec)"
 	],
-	"key_tag": "drive",
+	"data_key": "read_type",
+	"data_tag": "read_rate",
+	"key_list": null,
+	"units_key": "units",
+	"units_dict": null,
 	"data_info": {
 		"drive": "str",
 		"read_type": "str",
 		"size": "int",
 		"timing": "float",
-		"read_rate": "float"
+		"read_rate": "float",
+		"units": "str"
 	}
 }

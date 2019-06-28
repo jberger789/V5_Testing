@@ -14,7 +14,11 @@
 		"\\s+",
 		"(?P<max_t>\\d+[.]\\d+)"
 	],
-	"key_tag": "function",
+	"data_key": "function",
+	"data_tag": "rate",
+	"key_list": null,
+	"units_key": "MB/s",
+	"units_dict": null,
 	"data_info": {
 		"function": "str",
 		"rate": "float",

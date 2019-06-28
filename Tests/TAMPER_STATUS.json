@@ -11,12 +11,17 @@
 		"(?P<other>\\d+)",
 		")",
 		"|",
-		"(.*$))"
+		"(?P<error>.*$))"
 	],
-	"key_tag": "",
+	"data_key": null,
+	"data_tag": null,
+	"key_list": ["voltage","tamper_events","other"],
+	"units_key": null,
+	"units_dict": {"voltage": "V","tamper_events": "# of events","other": " "},
 	"data_info": {
 		"voltage": "int",
 		"tamper_events": "int",
-		"other": "int"
+		"other": "int",
+		"error": "str"
 	}
 }

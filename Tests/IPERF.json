@@ -20,6 +20,7 @@
 		"(",
 		"(?P<bandwidth>\\d+[.]\\d+)",
 		"\\s+Gbits/sec\\s+",
+		"(",
 		"(?P<jitter>\\d+[.]\\d+)",
 		"\\s+ms\\s+",
 		"(?P<lost_datagrams>\\d+)",
@@ -27,6 +28,7 @@
 		"(?P<total_datagrams>\\d+)",
 		"\\s+",
 		"[(](?P<loss_percentage>\\d+[.]\\d+)[%][)]",
+		")?",
 		")?",
 		")",
 		"|",
@@ -36,7 +38,11 @@
 		")",
 		")"
 	],
-	"key_tag": "role",
+	"data_key": null,
+	"data_tag": null,
+	"key_list": ["bandwidth", "loss_percentage", "out_of_order_datagrams"],
+	"units_key": null,
+	"units_dict": {"bandwidth": "Gbits/sec","loss_percentage": "%","out_of_order_datagrams": "datagrams"},
 	"data_info": {
 		"role": "str",
 		"address": "str",

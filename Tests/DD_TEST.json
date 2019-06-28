@@ -10,7 +10,11 @@
 		"|",
 		"((?P<bytes_copied>\\b[\\d]+\\b).*\\(.+\\).*(?P<duration>\\b\\d+[.]\\d+)\\s+s,\\s*(?P<rate>\\d+([.]\\d*)?)))"
 	],
-	"key_tag": "drive",
+	"data_key": "drive",
+	"data_tag": "rate",
+	"key_list": null,
+	"units_key": null,
+	"units_dict": null,
 	"data_info": {
 		"drive": "str",
 		"records_in": "int",

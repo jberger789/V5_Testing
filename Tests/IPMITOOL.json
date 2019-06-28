@@ -7,7 +7,7 @@
 		"\\s+\\|\\s+",
 		"(?P<value>\\b[\\w.]+\\b)",
 		"\\s+\\|\\s+",
-		"(?P<units>(\\b[\\w]+\\b)(\\s\\b[\\w]+\\b)?)",
+		"(?P<units>(\\b[\\w]+\\b)(\\s\\b[\\w]+\\b)?)?\\s*",
 		"\\s*\\|\\s+",
 		"(?P<status>\\b[\\w]+\\b)",
 		"\\s*\\|\\s+",
@@ -23,7 +23,11 @@
 		"\\s+\\|\\s+",
 		"(?P<up_norec>(\\d+[.]\\d+)|(na))"
 	],
-	"key_tag": "sensor",
+	"data_key": "sensor",
+	"data_tag": "value",
+	"key_list": null,
+	"units_key": "units",
+	"units_dict": null,
 	"data_info": {
 		"sensor": "str",
 		"value": "float",

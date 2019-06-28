@@ -9,7 +9,7 @@
 		")",
 		"|",
 		"(",
-		"Set\\sUSB3\\s(?P<benchmark_type2>error\\scounter)\\sconfig\\s*$",
+		"Set\\sUSB3\\s(?P<benchmark_type2>error)\\scounter\\sconfig\\s*$",
 		")",
 		"|",
 		"(",
@@ -30,7 +30,11 @@
 		")",
 		")"
 	],
-	"key_tag": "benchmark_type",
+	"data_key": "benchmark_type",
+	"data_tag": "avg_rate",
+	"key_list": null,
+	"units_key": null,
+	"units_dict": {"error": "# of errors", "Read": "Mbits/s", "Write": "Mbits/s"},
 	"data_info": {
 		"benchmark_type": "str",
 		"avg_rate": "float",
