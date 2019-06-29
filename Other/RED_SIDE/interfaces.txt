@@ -1,0 +1,10 @@
+RED SIDE INTERFACES
+
+#ETHERNET
+eno1 - bottom ethernet nic (upside down plug - to switch for rsyslog)
+eno2 - top ethernet nic (rightside up plug - pinned together for iperf test)
+
+#FIBER
+enp23s0f0 - RX diode - 192.168.3.2
+enp23s0f1 - TX diode - 192.168.2.1
+

@@ -1,0 +1,36 @@
+[
+	r"""
+	_(?P<role>(CLIENT)|(SERVER))
+	_(?P<address>\d+[.]\d+):
+	\s+
+	\[\s*(?P<ID>(\d+)|(\w+))\]
+	\s+
+	(?P<interval_start>\d+[.]\d+)
+	-\s*
+	(?P<interval_end>\d+[.]\d+)
+	\s+sec\s+"""
+	(
+	(
+	(?P<transfer_amount>\d+([.]\d+)?)
+	\s+
+	(?P<transfer_units>[GM]Bytes)
+	\s+
+	(
+	(?P<bandwith>\d+[.]\d+)
+	\s+Gbits/sec\s+
+	(?P<jitter>\d+[.]\d+)
+	\s+ms\s+
+	(?P<lost_datagrams>\d+)
+	/
+	(?P<total_datagrams>\d+)
+	\s+
+	[(](?P<loss_percentage>\d+[.]\d+)[%][)]
+	)?
+	)
+	|
+	(
+	(?P<out_of_order_datagrams>\d+)
+	\sdatagrams\sreceived\sout-of-order
+	)
+	)"""
+]
