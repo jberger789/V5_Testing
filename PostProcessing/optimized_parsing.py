@@ -2,10 +2,10 @@ import re, os, json, dataset, subprocess
 from datetime import date, datetime
 
 SIDES = {'black': "BLK",'red': "RED"}
-#MESSAGE_TAGS = ['STRESS_NG','IPMITOOL', 'STREAM_C', 'DD_TEST', 'HDPARM', 'IPERF','USB_PASSMARK','TAMPER_STATUS','FIBER_FPGA_TEMP', 'PING_TEST','UPTIME']
+MESSAGE_TAGS = ['STRESS_NG','IPMITOOL', 'STREAM_C', 'DD_TEST', 'HDPARM', 'IPERF','USB_PASSMARK','TAMPER_STATUS','FIBER_FPGA_TEMP', 'PING_TEST','UPTIME']
 #MESSAGE_TAGS = ['STRESS_NG','IPMITOOL', 'STREAM_C', 'DD_TEST', 'HDPARM', 'IPERF','TAMPER_STATUS','FIBER_FPGA_TEMP', 'PING_TEST']
 #MESSAGE_TAGS = ['stress-ng', 'STREAM_C', 'DD_TEST', 'HDPARM', 'IPERF','USB_PASSMARK','TAMPER_STATUS','FIBER_FPGA_TEMP']
-MESSAGE_TAGS = ['UPTIME']
+#MESSAGE_TAGS = ['UPTIME']
 #MESSAGE_TAGS = ['DD_TEST']
 MONTHS = {'Jan': 1, 'Feb': 2, 'Mar': 3, 'Apr': 4, 'May': 5, 'Jun': 6, 'Jul': 7, 'Aug': 8, 'Sep': 9, 'Oct': 10, 'Nov': 11, 'Dec': 12}
 #MAIN_MESSAGE_FILE = "messages_overnight_Jun21"

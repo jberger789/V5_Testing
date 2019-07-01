@@ -350,7 +350,7 @@ class Test(object):
 
 def autogenerate_graphs(start_time,end_time):
 	print("Start: {}".format(datetime.datetime.today()))
-	"""test_data_graphs = {
+	test_data_graphs = {
 	"STRESS_NG": ['Instructions','CPU Cycles'],
 	"IPMITOOL": ['CPU Temp', 'FAN1', 'FAN2', 'FANA', '5VCC', '5VSB', '3.3VCC', '3.3VSB', '12V'],
 	"STREAM_C": ['Add','Copy'],
@@ -359,8 +359,7 @@ def autogenerate_graphs(start_time,end_time):
 	"TAMPER_STATUS": ['voltage'],
 	"PING_TEST": ['packet_loss','total_time','average'],
 	"UPTIME": ['load_avg']
-	}"""
-	test_data_graphs = {"UPTIME": ['load_avg'],"FIBER_FPGA_TEMP": ['2.5','3.5']}
+	}
 	for test in test_data_graphs:
 		for option in test_data_graphs[test]:
 			if test == 'IPERF':
