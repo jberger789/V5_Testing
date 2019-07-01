@@ -2,14 +2,16 @@ import re, os, json, dataset, subprocess
 from datetime import date, datetime
 
 SIDES = {'black': "BLK",'red': "RED"}
-MESSAGE_TAGS = ['STRESS_NG','IPMITOOL', 'STREAM_C', 'DD_TEST', 'HDPARM', 'IPERF','USB_PASSMARK','TAMPER_STATUS','FIBER_FPGA_TEMP']
+#MESSAGE_TAGS = ['STRESS_NG','IPMITOOL', 'STREAM_C', 'DD_TEST', 'HDPARM', 'IPERF','USB_PASSMARK','TAMPER_STATUS','FIBER_FPGA_TEMP', 'PING_TEST','UPTIME']
+#MESSAGE_TAGS = ['STRESS_NG','IPMITOOL', 'STREAM_C', 'DD_TEST', 'HDPARM', 'IPERF','TAMPER_STATUS','FIBER_FPGA_TEMP', 'PING_TEST']
 #MESSAGE_TAGS = ['stress-ng', 'STREAM_C', 'DD_TEST', 'HDPARM', 'IPERF','USB_PASSMARK','TAMPER_STATUS','FIBER_FPGA_TEMP']
-#MESSAGE_TAGS = ['STRESS_NG','IPMITOOL', 'STREAM_C', 'DD_TEST', 'HDPARM', 'IPERF','TAMPER_STATUS','FIBER_FPGA_TEMP']
+MESSAGE_TAGS = ['UPTIME']
 #MESSAGE_TAGS = ['DD_TEST']
 MONTHS = {'Jan': 1, 'Feb': 2, 'Mar': 3, 'Apr': 4, 'May': 5, 'Jun': 6, 'Jul': 7, 'Aug': 8, 'Sep': 9, 'Oct': 10, 'Nov': 11, 'Dec': 12}
 #MAIN_MESSAGE_FILE = "messages_overnight_Jun21"
-MAIN_MESSAGE_FILES = ["../Results/messages_overnight_Jun28"]
+MAIN_MESSAGE_FILES = ["../Results/messages-20190630","../Results/messages"]
 MESSAGE_FILE_NAMES = {'tmp/BLACKCLEAN.txt': "Black Results",'tmp/REDCLEAN.txt': "Red Results"}
+#MESSAGE_FILE_NAMES = {'tmp/REDCLEAN.txt': "Red Results"}
 DB_ADDRESS = 'mysql://guest:password@localhost/test_results'
 DB = dataset.connect(DB_ADDRESS)
 
@@ -116,6 +118,7 @@ def parse_line(line,log_file,cur_test,l_num,re_prefix,recur_count):
 				min_rate = 1000.0
 				for i in range(0,16):
 					l = log_file.readline()
+					#print(l)
 					m_tmp = cur_test.re.match(l[19+len(match_start.group('side'))+len(cur_test.tag):])
 					tmp_rate = eval(m_tmp.group('transfer_rate'))
 					transfer_rate = transfer_rate+tmp_rate
@@ -128,7 +131,10 @@ def parse_line(line,log_file,cur_test,l_num,re_prefix,recur_count):
 					next_row['avg_rate'] = transfer_rate/16.0
 					next_row['max_rate'] = max_rate
 					next_row['min_rate'] = min_rate
-		elif (cur_test.tag == 'DD_TEST'):
+					if (m_tmp.group('transfer_count')=='1024' and not i == 15):
+						print("USB_PASSMARK Error at line [{}]".format(l))
+						break
+			"""elif (cur_test.tag == 'DD_TEST'):
 			for x in range(0,3):
 				for k in cur_test.data_info:
 					if ((cur_test.data_info[k] == 'int') or (cur_test.data_info[k] == 'float')) and ((m2.group(k)) != None) and (cur_test.data_info[k] != 'str'):
@@ -137,8 +143,17 @@ def parse_line(line,log_file,cur_test,l_num,re_prefix,recur_count):
 						next_row[k] = (m2.group(k))
 				l = log_file.readline()
 				m2 = cur_test.re.search(l)
+			l_num += 2.0"""
+		elif (cur_test.num_lines > 1):
+			for x in range(0,cur_test.num_lines):
+				for k in cur_test.data_info:
+					if ((cur_test.data_info[k] == 'int') or (cur_test.data_info[k] == 'float')) and ((m2.group(k)) != None) and (cur_test.data_info[k] != 'str'):
+						next_row[k] = eval(m2.group(k))
+					elif k not in next_row and m2.group(k)!= None:
+						next_row[k] = (m2.group(k))
+				l = log_file.readline()
+				m2 = cur_test.re.search(l)
 			l_num += 2.0
-
 		else:
 			for key in cur_test.data_info:
 				if ((m2.group(key)) == 'na'):
@@ -150,6 +165,16 @@ def parse_line(line,log_file,cur_test,l_num,re_prefix,recur_count):
 		if (recur_count > 200):
 			return([(next_row)])
 		l = log_file.readline()
+		if (cur_test.num_extra_lines > 0):
+			tmp_i = cur_test.num_extra_lines
+			while tmp_i > 0:
+				extra_match = cur_test.extra_re.match(l[19+len(match_start.group('side'))+len(cur_test.tag):])
+				if (extra_match != None):
+					for datum in cur_test.extra_data:
+						next_row[datum] = extra_match.group(datum)
+					l = log_file.readline()
+					l_num+=1.0
+				tmp_i -= 1
 		l_num+=1.0
 		perc = l_num/line_count
 		print('\r'+str(perc*100)+'% Complete                        ', end='')
@@ -169,7 +194,13 @@ class Test(object):
 				self.re = re.compile('\n'.join(json_dict['re_string']),re.VERBOSE)
 				self.key_tag = json_dict['data_key']
 				self.data_info = json_dict['data_info']
-				#self.num_data_lines = json_dict['num_data_lines']
+				self.num_lines = json_dict['num_lines']
+				if (json_dict['extra_lines']):
+					self.num_extra_lines = json_dict['num_extra_lines']
+					self.extra_re = re.compile('\n'.join(json_dict['extra_re']),re.VERBOSE)
+					self.extra_data = json_dict['extra_data']
+				else:
+					self.num_extra_lines = json_dict['num_extra_lines'] = 0
 				#self.data_types = json_dict['data_types']
 
 def make_datetime(match_obj):
