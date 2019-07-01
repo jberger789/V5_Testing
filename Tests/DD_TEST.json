@@ -22,5 +22,9 @@
 		"bytes_copied": "int",
 		"duration": "float",
 		"rate": "float"
-	}
+	},
+	"num_lines": 3,
+	"extra_lines": false,
+	"num_extra_lines": 0,
+	"extra_re": null
 }

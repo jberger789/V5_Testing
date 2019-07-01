@@ -25,5 +25,9 @@
 		"rate": "float",
 		"units": "str",
 		"extra": "str"
-	}
+	},
+	"num_lines": 1,
+	"extra_lines": false,
+	"num_extra_lines": 0,
+	"extra_re": null
 }

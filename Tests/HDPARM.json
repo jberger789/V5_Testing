@@ -24,5 +24,9 @@
 		"timing": "float",
 		"read_rate": "float",
 		"units": "str"
-	}
+	},
+	"num_lines": 1,
+	"extra_lines": false,
+	"num_extra_lines": 0,
+	"extra_re": null
 }

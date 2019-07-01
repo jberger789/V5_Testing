@@ -39,5 +39,9 @@
 		"up_nocrit": "float",
 		"up_crit": "float",
 		"up_norec": "float"
-	}
+	},
+	"num_lines": 1,
+	"extra_lines": false,
+	"num_extra_lines": 0,
+	"extra_re": null
 }
