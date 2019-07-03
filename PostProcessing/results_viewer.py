@@ -11,7 +11,7 @@ TEST_OPTIONS = {
 	'HDPARM': ['read_type','read_rate',None],
 	'IPERF': '',
 	'USB_PASSMARK': ['benchmark_type','avg_rate',None],
-	'TAMPER_STATUS': 'SPECIAL',
+	'TAMPER_STATUS': '',
 	'FIBER_FPGA_TEMP': ['fpga_side','temp',None]
 }
 TEST_UNITS = {
@@ -38,9 +38,11 @@ def test_run_select():
 	while user_in != 'exit':
 		user_in = input("Which test run would you like to see results for?\n")
 		if user_in == 'h' or user_in == 'help':
-			print("Enter 'options' for a list of valid responses, or 'exit' to stop the program")
+			print(return_help)
+			#print("Enter 'options' for a list of valid responses, or 'exit' to stop the program")
 		elif user_in == 'o' or user_in == 'options':
-			print("The options are:\n"+"\n".join(list(map(lambda r: "Test {}: {} - {}".format(r['id'],r['start_time'],r['end_time']),rows))))
+			print(return_options((f"Test {r['id']}: {r['start_time']} - {r['end_time']}" for r in rows),'\n'))
+			#print("The options are:\n"+"\n".join(list(map(lambda r: "Test {}: {} - {}".format(r['id'],r['start_time'],r['end_time']),rows))))
 		elif  user_in in ops:
 			test_select(rows[eval(user_in)-1]['start_time'],rows[eval(user_in)-1]['end_time'])
 
@@ -51,11 +53,13 @@ def test_select(start_time,end_time):
 	while user_in != 'exit':
 		user_in = input("Which test would you like to see results for?\n")
 		if user_in == 'h' or user_in == 'help':
-			print("Enter 'options' for a list of valid responses, or 'exit' to stop the program")
+			print(return_help)
+			#print("Enter 'options' for a list of valid responses, or 'exit' to stop the program")
 		elif user_in == 'o' or user_in == 'options':
-			print("The options are:")
-			for k in MESSAGE_TAGS:
-				print("{}: {}".format(k,MESSAGE_TAGS[k]))
+			print(return_options((f"{k}: {MESSAGE_TAGS[k]}" for k in MESSAGE_TAGS),'\n'))
+			#print("The options are:")
+			#for k in MESSAGE_TAGS:
+			#	print("{}: {}".format(k,MESSAGE_TAGS[k]))
 		elif user_in == 's' or user_in == 'save':
 			autogenerate_graphs(start_time,end_time)
 		elif user_in == 't':
@@ -83,34 +87,21 @@ def graph_select(test_key,start_time,end_time):
 		ops = cur_test.key_list
 		op_name = "values"
 	while user_in != 'go back' and user_in != 'return':
-		if TEST_OPTIONS[test_key] != 'SPECIAL':
-			user_in = input("Which {} would you like to see results for?\n".format(op_name))
-			if user_in == 'h' or user_in == 'help':
-				print("Enter 'options' for a list of valid responses, or 'go back' to return to test selection")
-				print(ops)
-			elif user_in == 'o' or user_in == 'options':
-				print("The options are \n" + " || ".join(ops))
-			elif user_in in ops:
-				if cur_test.tag == 'IPERF':
-					gen_IPERF_graph(user_in,start_time,end_time)
-				else:
-					generate_graph(cur_test,user_in,start_time,end_time)
-			elif user_in == 'exit':
-				return user_in
-		elif test_key == 'TAMPER_STATUS':
-			user_in = input("Which results would you like to see?\n")
-			options = ['voltage','tamper_events','other']
-			if user_in == 'h' or user_in == 'help':
-				print("Enter 'options' for a list of valid responses, or 'go back' to return to test selection")
-			elif user_in == 'o' or user_in == 'options':
-				print("The options are " + ", ".join(options))
-			elif user_in in options:
-				tmp_units = ''
-				gen_TAMPER_graph(user_in,start_time,end_time)
-			elif user_in == 'exit':
-				return user_in
-		else:
-			pass
+		user_in = input("Which {} would you like to see results for?\n".format(op_name))
+		if user_in == 'h' or user_in == 'help':
+			print(return_help)
+			#print("Enter 'options' for a list of valid responses, or 'go back' to return to test selection")
+		elif user_in == 'o' or user_in == 'options':
+			print(return_options(ops,' || '))
+		elif user_in in ops:
+			if cur_test.tag == 'IPERF':
+				gen_IPERF_graph(user_in,start_time,end_time)
+			else:
+				generate_graph(cur_test,user_in,start_time,end_time)
+		elif user_in == 'exit':
+			return user_in
+	else:
+		pass
 
 def get_data(cur_test,sel_opt,start_time,end_time, where_addendum = ""):
 	x,y={},{}
@@ -153,6 +144,9 @@ def generate_graph(cur_test,sel_opt,start_time,end_time,max_y=None, where_addend
 	units = determine_units(cur_test,sel_opt)
 	x,y=get_data(cur_test,sel_opt,start_time,end_time,where_addendum)
 	x_tmp, y_tmp = map_time2temp(x,y)
+	#print(x)
+	if cur_test.tag == 'TAMPER_STATUS':
+		max_y = 3500
 	if max_y == None:
 		if len(y['RED']) > 0:
 			max_y = max(y['RED'])*2.5 + 5
@@ -206,27 +200,27 @@ def gen_IPERF_graph(sel_opt,start_time,end_time,stf=False):
 		one_and_three_fig(x[i],y[i],upper_info,x_tmp[i],y_tmp[i],lower_info,{'tag': 'IPERF '+i,'test_opt': sel_opt})
 		plt.show()"""
 
-def gen_TAMPER_graph(sel_opt,start_time,end_time):
-	results = {}
-	x={}
-	y={}
-	max_by_op = {'voltage': 3500, 'tamper_events': 1000, 'other': 10}
-	for s in SIDES:
-		#print("SELECT time_stamp,role,address,{} FROM IPERF WHERE side='{}' AND role='{}' AND (address='{}' OR address='{}') AND {} IS NOT NULL;".format(sel_opt,s,role,ip1,ip2,sel_opt))
-		results[s]=(DB.query("SELECT time_stamp,{} FROM TAMPER_STATUS WHERE side='{}' AND {} IS NOT NULL AND (time_stamp >= '{}' AND time_stamp <= '{}');".format(sel_opt,s,sel_opt,start_time,end_time)))
-		x[s]=[]
-		y[s]=[]
+# def gen_TAMPER_graph(sel_opt,start_time,end_time):
+# 	results = {}
+# 	x={}
+# 	y={}
+# 	max_by_op = {'voltage': 3500, 'tamper_events': 1000, 'other': 10}
+# 	for s in SIDES:
+# 		#print("SELECT time_stamp,role,address,{} FROM IPERF WHERE side='{}' AND role='{}' AND (address='{}' OR address='{}') AND {} IS NOT NULL;".format(sel_opt,s,role,ip1,ip2,sel_opt))
+# 		results[s]=(DB.query("SELECT time_stamp,{} FROM TAMPER_STATUS WHERE side='{}' AND {} IS NOT NULL AND (time_stamp >= '{}' AND time_stamp <= '{}');".format(sel_opt,s,sel_opt,start_time,end_time)))
+# 		x[s]=[]
+# 		y[s]=[]
 	
-	for s in SIDES:
-		for r in results[s]:
-			x[s].append(r['time_stamp'])
-			y[s].append(r[sel_opt])
-		plt.plot(x[s], y[s], color=SIDES[s],linewidth=1)
-	plt.ylim(0,max_by_op[sel_opt])
-	plt.xlabel('Time')
-	plt.ylabel(sel_opt)
-	plt.title("TAMPER_STATUS: {}".format(sel_opt))
-	plt.show()
+# 	for s in SIDES:
+# 		for r in results[s]:
+# 			x[s].append(r['time_stamp'])
+# 			y[s].append(r[sel_opt])
+# 		plt.plot(x[s], y[s], color=SIDES[s],linewidth=1)
+# 	plt.ylim(0,max_by_op[sel_opt])
+# 	plt.xlabel('Time')
+# 	plt.ylabel(sel_opt)
+# 	plt.title("TAMPER_STATUS: {}".format(sel_opt))
+# 	plt.show()
 
 
 def map_time2temp(times,data):
@@ -251,20 +245,20 @@ def map_time2temp(times,data):
 def gen_temp_graph(start_time,end_time):
 	temperatures = ['ambient','intake','outtake']
 	x,y = {},{}
+
 	for loc in temperatures:
 		x[loc],y[loc] = {},{}
 		for s in SIDES:
 			x[loc][s] = []
 			y[loc][s] = []
-	for s in SIDES:
-		results=(DB.query("SELECT * FROM TEMPERATURES WHERE side='{}' AND `{}` IS NOT NULL AND (time_stamp >= '{}' AND time_stamp <= '{}');".format(s,loc,start_time,end_time)))
-		for r in results:
-			for loc in temperatures:
-				x[loc][s].append(r['time_stamp'])
-				y[loc][s].append(r[loc])
 
-	#print(x)
-	#print(y)
+	results=(DB.query("SELECT * FROM TEMPERATURES WHERE (time_stamp >= '{}' AND time_stamp <= '{}');".format(start_time,end_time)))
+	for r in results:
+		s = r['side']
+		for loc in temperatures:
+			x[loc][s].append(r['time_stamp'])			
+			y[loc][s].append(r[loc])
+
 	info = {'xlabel': "time",'ylabel': "Temperature", 'yunits': '°C','ylim': 100,'fmt': '-'}
 	fig_info = {'tag': "Temperature", 'test_opt': ""}
 
@@ -290,7 +284,10 @@ def one_and_three_fig(upperx,uppery,upper_info,lowerx,lowery,lower_info,fig_info
 	axb[lower_ind].set_ylabel(lower_info['ylabel'])
 	for key in lowerx:
 		for s in SIDES:
-			my_plotter(axb[lower_ind],lowerx[key][s],lowery[key][s],lower_info['fmt'],{'color':SIDES[s]})
+			if (len(lowerx[key][s]) > 0 and len(lowerx[key][s]) > 0):
+				#print(lowery[key][s])
+				#print(lowerx[key][s])
+				my_plotter(axb[lower_ind],lowerx[key][s],lowery[key][s],lower_info['fmt'],{'color':SIDES[s]})
 		axb[lower_ind].set_xlabel('{}: ({}) {}'.format(lower_info['xlabel'],key,lower_info['xunits']))
 		axb[lower_ind].set_ylim(0,lower_info['ylim'])
 		lower_ind+=1
@@ -333,6 +330,14 @@ def tricolor_fig(x,y,info, fig_info):
 def my_plotter(ax,xdata,ydata,fmt, param_dict):
 	out = ax.plot(xdata, ydata, fmt, **param_dict)
 	return out
+
+
+def return_options(options_list,sep_char):
+	return("The options are \n" + sep_char.join(list(options_list)))
+
+def return_help():
+	return("Type '(h)elp' to bring up this prompt, '(o)ptions' for a list of viable responses,\n"
+		"'go back' to return to the previous prompt, or 'exit' to end the program")
 
 class Test(object):
 	def __init__(self,json_file_name):

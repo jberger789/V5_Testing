@@ -6,10 +6,10 @@ MESSAGE_TAGS = ['STRESS_NG','IPMITOOL', 'STREAM_C', 'DD_TEST', 'HDPARM', 'IPERF'
 #MESSAGE_TAGS = ['STRESS_NG','IPMITOOL', 'STREAM_C', 'DD_TEST', 'HDPARM', 'IPERF','TAMPER_STATUS','FIBER_FPGA_TEMP', 'PING_TEST']
 #MESSAGE_TAGS = ['stress-ng', 'STREAM_C', 'DD_TEST', 'HDPARM', 'IPERF','USB_PASSMARK','TAMPER_STATUS','FIBER_FPGA_TEMP']
 #MESSAGE_TAGS = ['UPTIME']
-#MESSAGE_TAGS = ['DD_TEST']
+#MESSAGE_TAGS = ['UPTIME']
 MONTHS = {'Jan': 1, 'Feb': 2, 'Mar': 3, 'Apr': 4, 'May': 5, 'Jun': 6, 'Jul': 7, 'Aug': 8, 'Sep': 9, 'Oct': 10, 'Nov': 11, 'Dec': 12}
 #MAIN_MESSAGE_FILE = "messages_overnight_Jun21"
-MAIN_MESSAGE_FILES = ["../Results/messages-20190630","../Results/messages"]
+MAIN_MESSAGE_FILES = ["../Results/messages_thermal_1","../Results/messages_thermal_2"]
 MESSAGE_FILE_NAMES = {'tmp/BLACKCLEAN.txt': "Black Results",'tmp/REDCLEAN.txt': "Red Results"}
 #MESSAGE_FILE_NAMES = {'tmp/REDCLEAN.txt': "Red Results"}
 DB_ADDRESS = 'mysql://guest:password@localhost/test_results'
@@ -25,9 +25,14 @@ class test_json(json.JSONEncoder):
 class Log(object):
 	def __init__(self,filename,units):
 		"""Create a Log object associated with a log messages file"""
-		self.message_file_name = filename 							# Save the name of the messages file
+		# Save the name of the messages file
+		self.message_file_name = filename
+		self.log_file = open(self.message_file_name)
 		self.units = units
-		self.tests = {}												# Set up a dictionary for tests in this log
+		# Set up a dictionary for tests in this log
+		self.tests = {}		
+		self.get_line_count()
+		self.cur_line_num = 0.0
 
 	def add_test(self,test):
 		"""Associate a new test with this log"""
@@ -44,34 +49,63 @@ class Log(object):
 				test_table.create_column(key, DB.types.string)
 		self.tests[test.tag] = test
 
-	def extract_data(self):
-		"""Read and interpret data from the log messages file given"""
-		# Define the regular expression for capturing the start of relevant log messages:
-		re_prefix = re.compile(r"""																		# ===================================================
+	def get_line_count(self):
+		p = subprocess.Popen(['wc', '-l', self.message_file_name], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+		result, err = p.communicate()
+		if p.returncode != 0:
+			raise IOError(err)
+		self.line_count = float(result.strip().split()[0])
+		#print(f"Line Count = {self.line_count}")
+
+	def show_progress(self):
+		perc = self.cur_line_num/self.line_count
+		print('\r'+str(perc*100)+'% Complete                        ', end='')
+
+	def set_re_prefix(self):
+		self.re_prefix = re.compile(r"""																# ===================================================
 			(?P<mon>\b\w\w\w\b)\s+(?P<day>\b\d{1,2}\b)\s+(?P<hr>\d\d):(?P<min>\d\d):(?P<sec>\d\d)		# =   <Gets the date and time of the log message>   =
 			\s																							# = ----------------------------------------------- =
 			(?P<side>"""+return_or(SIDES)+r""")															# =       <Gets the side of the log message>        =
 			-																							# = ----------------------------------------------- =
 			(?P<unit>"""+return_or(self.units)+r""")													# =    <Gets the unit number of the log message>    =
 			\s+																							# = ----------------------------------------------- =
-			(?P<tag>"""+return_or(list(map(lambda t: t.tag,  list(self.tests.values()))))+r""")			# = <Determines which test the log message is from> =
-			""",re.VERBOSE)																				# ===================================================
-		# Open the log file:
-		with open(self.message_file_name) as log_file:
-			l_num = 0.0
+			(?P<tag>"""+return_or(test.tag for test in self.tests.values())+r""")						# = <Determines which test the log message is from> =
+			""",re.VERBOSE)		
+			# 				re.compile(r"""																# ===================================================
+			# (?P<mon>\b\w\w\w\b)\s+(?P<day>\b\d{1,2}\b)\s+(?P<hr>\d\d):(?P<min>\d\d):(?P<sec>\d\d)		# =   <Gets the date and time of the log message>   =
+			# \s																							# = ----------------------------------------------- =
+			# (?P<side>"""+return_or(SIDES)+r""")															# =       <Gets the side of the log message>        =
+			# -																							# = ----------------------------------------------- =
+			# (?P<unit>"""+return_or(self.units)+r""")													# =    <Gets the unit number of the log message>    =
+			# \s+																							# = ----------------------------------------------- =
+			# (?P<tag>"""+return_or(list(map(lambda t: t.tag,  list(self.tests.values()))))+r""")			# = <Determines which test the log message is from> =
+			# """,re.VERBOSE)																				# ===================================================
 
-			for line in log_file:
-				l_num+=1.0
-				# Check if it appears to be a relevant log message
-				match_start = re_prefix.search(line)
+	def extract_data(self):
+		"""Read and interpret data from the log messages file given"""
+		# Define the regular expression for capturing the start of relevant log messages:
+		self.set_re_prefix()
+		# Open the log file:
+		#with open(self.message_file_name) as log_file:
+		if True:
+			for line in self.log_file:																# for each line in the log file:
+				self.cur_line_num +=1.0																	# Increment the line count
+				match_start = self.re_prefix.search(line) 												# Check if the line has a valid test prefix
+				# if it does:
 				if (match_start != None):
-					cur_test = self.tests[match_start.group('tag')]
-					tmp_insert = parse_line(line,log_file,cur_test,l_num,re_prefix,0)
+					cur_test = self.tests[match_start.group('tag')]				# Set the current test according to the tag found
+					tmp_insert = self.parse_line(line,cur_test,0)		# Convert the line into row data, recursively
 					if tmp_insert != []:
 						table = DB[cur_test.tag]
+						#print(len(tmp_insert))
 						#table.insert_many(tmp_insert)
+						#print(insert_ignore_many_query(cur_test,tmp_insert))
+						#if len(tmp_insert) == 1:
+							#print(tmp_insert)
+							#print("----------------------------------")
 						try:
 							try:
+								#print(insert_ignore_many_query(cur_test,tmp_insert))
 								DB.query(insert_ignore_many_query(cur_test,tmp_insert))
 							except OperationalError:
 								print(tmp_insert)
@@ -80,108 +114,108 @@ class Log(object):
 							print(tmp_insert)
 							input(" ")
 						#except sqlalchemy.exc.IntegrityError:
-					l_num += len(tmp_insert)
-					if (cur_test.tag == 'DD_TEST'):
-						l_num += len(tmp_insert)*2			
-			perc = line_count/line_count
-			print('\r'+str(perc*100)+'% Complete                        ', end='')
-			print(' ')
-
-
-
-def parse_line(line,log_file,cur_test,l_num,re_prefix,recur_count):
-	# Figure out which test it is associated with
-	# Then interpret the line (starting from the end of the 'start') with the appropriate regular expression
-	match_start = re_prefix.search(line)
-	m2 = cur_test.re.search(line)
-	if (m2 != None):
-		next_row = {}
-		next_row['unit'] = int(match_start.group('unit'))
-		next_row['side'] = SIDES[match_start.group('side')]
-		next_row['time_stamp'] = make_datetime(match_start)
-		if (cur_test.tag == 'USB_PASSMARK'):
-			if m2.group('benchmark_type2') == 'error counter':
-				next_row['benchmark_type'] = m2.group('benchmark_type2')
-				error_count = 0;
-				log_file.readline()
-				l_num += 1.0
-				for i in range(0,10):
-					l = log_file.readline()
-					m_tmp = cur_test.re.match(l[19+len(match_start.group('side'))+len(cur_test.tag):])
-					error_count += eval(m_tmp.group('error_count'))
-					l_num += 1.0
-				next_row['error_count'] = error_count
-			elif m2.group('benchmark_type') == 'Read' or m2.group('benchmark_type') == 'Write':
-				next_row['benchmark_type'] = m2.group('benchmark_type')
-				transfer_rate = 0.0
-				max_rate = 0.0
-				min_rate = 1000.0
-				for i in range(0,16):
-					l = log_file.readline()
-					#print(l)
-					m_tmp = cur_test.re.match(l[19+len(match_start.group('side'))+len(cur_test.tag):])
-					tmp_rate = eval(m_tmp.group('transfer_rate'))
-					transfer_rate = transfer_rate+tmp_rate
-					if tmp_rate < min_rate:
-						min_rate = tmp_rate
-						tmp_max = eval(m_tmp.group('max_rate'))
-					if tmp_max > max_rate:
-						max_rate = tmp_max
-					l_num += 1.0
-					next_row['avg_rate'] = transfer_rate/16.0
-					next_row['max_rate'] = max_rate
-					next_row['min_rate'] = min_rate
-					if (m_tmp.group('transfer_count')=='1024' and not i == 15):
-						print("USB_PASSMARK Error at line [{}]".format(l))
-						break
-			"""elif (cur_test.tag == 'DD_TEST'):
-			for x in range(0,3):
-				for k in cur_test.data_info:
-					if ((cur_test.data_info[k] == 'int') or (cur_test.data_info[k] == 'float')) and ((m2.group(k)) != None) and (cur_test.data_info[k] != 'str'):
-						next_row[k] = eval(m2.group(k))
-					elif k not in next_row and m2.group(k)!= None:
-						next_row[k] = (m2.group(k))
-				l = log_file.readline()
-				m2 = cur_test.re.search(l)
-			l_num += 2.0"""
-		elif (cur_test.num_lines > 1):
-			for x in range(0,cur_test.num_lines):
-				for k in cur_test.data_info:
-					if ((cur_test.data_info[k] == 'int') or (cur_test.data_info[k] == 'float')) and ((m2.group(k)) != None) and (cur_test.data_info[k] != 'str'):
-						next_row[k] = eval(m2.group(k))
-					elif k not in next_row and m2.group(k)!= None:
-						next_row[k] = (m2.group(k))
-				l = log_file.readline()
-				m2 = cur_test.re.search(l)
-			l_num += 2.0
-		else:
-			for key in cur_test.data_info:
-				if ((m2.group(key)) == 'na'):
-					next_row[key] = None
-				elif ((cur_test.data_info[key] == 'int') or (cur_test.data_info[key] == 'float')) and ((m2.group(key)) != None) and (cur_test.data_info[key] != 'str'):
-					next_row[key] = eval(''.join(m2.group(key).split(',')))
+					#self.cur_line_num += len(tmp_insert)
+					#if (cur_test.tag == 'DD_TEST'):
+					#	self.cur_line_num += len(tmp_insert)*2
 				else:
-					next_row[key] = (m2.group(key))
-		if (recur_count > 200):
-			return([(next_row)])
-		l = log_file.readline()
-		if (cur_test.num_extra_lines > 0):
-			tmp_i = cur_test.num_extra_lines
-			while tmp_i > 0:
-				extra_match = cur_test.extra_re.match(l[19+len(match_start.group('side'))+len(cur_test.tag):])
-				if (extra_match != None):
-					for datum in cur_test.extra_data:
-						next_row[datum] = extra_match.group(datum)
-					l = log_file.readline()
-					l_num+=1.0
-				tmp_i -= 1
-		l_num+=1.0
-		perc = l_num/line_count
-		print('\r'+str(perc*100)+'% Complete                        ', end='')
-		recur_count += 1
-		return [(next_row)] + parse_line(l,log_file,cur_test,l_num,re_prefix,recur_count)
-	else:
-		return []
+					pass	
+			self.show_progress()
+			print(' ')
+			self.log_file.close()
+
+
+
+	def parse_line(self,line,cur_test,recur_count):
+		"""Given a line and a log file, and the test the current line is associated with, 
+		will convert the data in the line and in every consecutive line for the same test 
+		into a lists of rows to be inserted into the database (recursively)"""
+		
+		match_start = self.re_prefix.search(line)									# Get the 'preamble' data from the line (i.e. the datetime, side, test tag,etc.)
+		m2 = cur_test.re.search(line)												# Then get the test data using the appropriate regular expression
+		# If test data is recognized:
+		if (m2 != None and match_start != None):
+			next_row = {}															# Instantiate a dictionary for holding this row's values
+			next_row['unit'] = int(match_start.group('unit'))						# Set the unit data as appropriate
+			next_row['side'] = SIDES[match_start.group('side')]						# Set the side data as appropriate (in database format)
+			next_row['time_stamp'] = make_datetime(match_start)						# Set the time_stamp as appropriate
+			# If the current test is USB Passmark, execute a special set of interpretations:
+			if (cur_test.tag == 'USB_PASSMARK'):
+				if m2.group('benchmark_type2') == 'error counter':
+					next_row['benchmark_type'] = m2.group('benchmark_type2')
+					error_count = 0;
+					self.log_file.readline()
+					self.cur_line_num+=1.0
+					for i in range(0,10):
+						l = self.log_file.readline()
+						self.cur_line_num+=1.0
+						m_tmp = cur_test.re.match(l[19+len(match_start.group('side'))+len(cur_test.tag):])
+						error_count += eval(m_tmp.group('error_count'))
+					next_row['error_count'] = error_count
+				elif m2.group('benchmark_type') == 'Read' or m2.group('benchmark_type') == 'Write':
+					next_row['benchmark_type'] = m2.group('benchmark_type')
+					transfer_rate = 0.0
+					max_rate = 0.0
+					min_rate = 1000.0
+					for i in range(0,16):
+						l = self.log_file.readline()
+						self.cur_line_num +=1.0	
+						m_tmp = cur_test.re.match(l[19+len(match_start.group('side'))+len(cur_test.tag):])
+						tmp_rate = eval(m_tmp.group('transfer_rate'))
+						transfer_rate = transfer_rate+tmp_rate
+						if tmp_rate < min_rate:
+							min_rate = tmp_rate
+							tmp_max = eval(m_tmp.group('max_rate'))
+						if tmp_max > max_rate:
+							max_rate = tmp_max
+						next_row['avg_rate'] = transfer_rate/16.0
+						next_row['max_rate'] = max_rate
+						next_row['min_rate'] = min_rate
+						if (m_tmp.group('transfer_count')=='1024' and i != 15):
+							print("USB_PASSMARK Error at line [{}]".format(l))
+							return[next_row]
+			# Otherwise, check if this test has multiple lines of data
+			# If it does:
+			elif (cur_test.num_lines > 1):
+				for x in range(0,cur_test.num_lines):
+					for k in cur_test.data_info:
+						if ((cur_test.data_info[k] == 'int') or (cur_test.data_info[k] == 'float')) and ((m2.group(k)) != None) and (cur_test.data_info[k] != 'str'):
+							next_row[k] = eval(m2.group(k))
+						elif k not in next_row and m2.group(k)!= None:
+							next_row[k] = (m2.group(k))
+					l = self.log_file.readline()
+					self.cur_line_num +=1.0	
+					m2 = cur_test.re.search(l)
+			# Else, all normal data for a single row is on the current line:
+			else:															
+				for key in cur_test.data_info:														# For each column key outlined in the test info:
+					if m2.group(key) == 'na' or m2.group(key) == None:									# If the data for this column has no value (either explicitly or implicitly)
+						next_row[key] = None																# Set the column of this row to 'None'
+					elif (cur_test.data_info[key] == 'int') or (cur_test.data_info[key] == 'float'): 	# If the data for this column is expected to be an int or float
+						next_row[key] = eval(''.join(m2.group(key).split(',')))								# Set the column of this row to the evaluated value
+					else:																				# Else
+						next_row[key] = (m2.group(key))														# Set the column of this row to the string value found
+			# If the recursion depth is over 200, end the recursive process (to avoid python's depth limit)
+			if (recur_count > 200):
+				return([(next_row)])
+			# Retrieve the next line of the log_file
+			l = self.log_file.readline()
+			self.cur_line_num +=1.0	
+			# If the current test has possible additonal lines of data
+			if (cur_test.num_extra_lines > 0):
+				tmp_i = cur_test.num_extra_lines
+				while tmp_i > 0:
+					extra_match = cur_test.extra_re.search(l[19+len(match_start.group('side'))+len(cur_test.tag):])
+					if (extra_match != None):
+						for datum in cur_test.extra_data:
+							next_row[datum] = extra_match.group(datum)
+						l = self.log_file.readline()
+						self.cur_line_num+=1.0
+					tmp_i -= 1
+			self.show_progress()
+			recur_count += 1
+			return [(next_row)] + self.parse_line(l,cur_test,recur_count)
+		else:
+			return []
 
 
 class Test(object):
@@ -201,7 +235,6 @@ class Test(object):
 					self.extra_data = json_dict['extra_data']
 				else:
 					self.num_extra_lines = json_dict['num_extra_lines'] = 0
-				#self.data_types = json_dict['data_types']
 
 def make_datetime(match_obj):
 	"""Given a match object that contains groups with date/time info, return a corresponding python datetime object"""
@@ -209,80 +242,54 @@ def make_datetime(match_obj):
 		int(match_obj.group('hr')), int(match_obj.group('min')), int(match_obj.group('sec')))
 
 def return_or(l):
-	return ("|".join(list(map(lambda s: "("+s+")", l))))
-
-def return_options(options_list):
-	return("The options are " + ", ".join(list(options_list)))
+	"""
+	Given list 'l = [v1,...,vn]', return the string "((v1)|...|(vn))", which is a
+	string formatted appropriately for use in an 'or' statement in a regular expression
+	i.e.: calling return_or(['tea','milk','coffee']) will return "((tea)|(milk)|(coffee))" 
+	"""
+	return ('('+'|'.join(f"({v})" for v in l) + ')')
 
 def return_help():
 	return("Type '(h)elp' to bring up this prompt, '(o)ptions' for a list of viable responses,\n"
 		"'go back' to return to the previous prompt, or 'exit' to end the program")
 
 
-def return_full_row(row_match, new_row):
-	update = True
-	temp_row = {}
-	for key in row_match:
-		#print(key)
-		if key != 'id' and key != 'time_stamp':
-			if row_match[key] == new_row[key] or (row_match[key] != None and new_row[key] == None):
-				temp_row[key] = row_match[key]
-				#print(1)
-			elif row_match[key] == None and new_row[key] != None:
-				temp_row[key] = new_row[key]
-				#print(2)
-			else:
-				#print(3)
-				#print(row_match[key])
-				#print(new_row[key])
-				return new_row
-	temp_row['id'] = row_match['id']
-	return temp_row
+def rowcols4SQLquery(cols,id_cols=[]):
+	pre_cols = ','.join(str(col) for col in id_cols)
+	if len(pre_cols) > 0:
+		pre_cols += ','
+	return '(' + pre_cols + ','.join(f"`{col}`" for col in cols) + ')'
 
-def get_line_count(file):
-	p = subprocess.Popen(['wc', '-l', file], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-	result, err = p.communicate()
-	if p.returncode != 0:
-		raise IOError(err)
-	return (float(result.strip().split()[0]))
-
-def dictkeys2list(dictionary):
-	return ','.join(list(map(lambda key: "`{}`".format(key),dictionary)))
-
-def dictvals2list(key_list,dictionary):
-	key_list = list(key_list)
-	keys2add = []
-	for key in dictionary:
-		if key not in key_list:
-			keys2add += [key]
-	key_list = keys2add + key_list
-	return str(tuple(map(lambda key: ("NULL") if (key not in dictionary or not dictionary[key]) else (str(dictionary[key])),key_list)))
-	"""output = "("
-	for key in dictionary:
-		if dictionary[key] == None:
-			output+="NULL,"
+def rowvals4SQLquery(row,col_dict,id_cols=[]):
+	col_list = id_cols + list(col_dict.keys())
+	full_row = {}
+	for col in col_list:
+		if col not in row or row[col] == None:
+			full_row[col]="NULL"
+		elif col == "time_stamp" or col == "side" or (col in col_dict and col_dict[col]) == 'str':
+			full_row[col] = '"'+str(row[col])+'"'
 		else:
-			output+=str(dictionary[key])+","
-		return (output[0:-1]+")")"""
+			full_row[col] = str(row[col])
+	return ','.join(f"{full_row[col]}" for col in col_list)
+
+def rowvals4SQLmany(row_list,col_dict,id_cols=[]):
+	out_str = ""
+	out_str += ','.join(f"({rowvals4SQLquery(row,col_dict,id_cols)})" for row in row_list)
+	return out_str
 
 def insert_ignore_many_query(test, rows):
-	return "INSERT IGNORE INTO `{}` (unit,side,time_stamp,{}) VALUES {}".format(test.tag,
-		dictkeys2list(test.data_info),
-		",".join(list(map(lambda i: dictvals2list(test.data_info,i),rows))))
-
-#DB = dataset.connect('sqlite:///test_results.DB')
-#DB = dataset.connect('mysql://jberger:open.local.box@10.1.11.21/test_results')
-# print("{} Start: {}".format(MESSAGE_FILE_NAME,datetime.today()))
-#
-# line_count = get_line_count(MESSAGE_FILE_NAME)
+	pre_cols = ['unit','side','time_stamp']
+	return "INSERT IGNORE INTO `{}` {} VALUES {};".format(test.tag,
+		rowcols4SQLquery(test.data_info.keys(),pre_cols),
+		rowvals4SQLmany(rows,test.data_info,pre_cols))
 
 for m in MAIN_MESSAGE_FILES:
-	os.system("./TEST.sh {}".format(m))
-
+	os.system(f"./splitbytest.sh {m}")
+os.system("./mergebyside.sh")
 #datalog = Log('test_messages',['1'])
 for msg_file in MESSAGE_FILE_NAMES:
 	print("{} Start: {}".format(MESSAGE_FILE_NAMES[msg_file],datetime.today()))
-	line_count = get_line_count(msg_file)
+	#line_count = get_line_count(msg_file)
 	datalog = Log(msg_file,['1'])
 	for tag in MESSAGE_TAGS:
 		datalog.add_test(Test(json_file_name="../Tests/"+tag+".json"))
