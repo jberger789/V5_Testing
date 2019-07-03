@@ -3,8 +3,9 @@
 	"call": null,
 	"re_string": [
 		":\\s+",
-		"\\d+:\\d+:\\d+\\sup\\s+\\d+\\sday,\\s+",
-		"\\d+:\\d+,\\s+",
+		"\\d+:\\d+:\\d+\\sup\\s+",
+		"(\\d+\\sday(s)?,\\s+)?",
+		"((\\d+:\\d+)|(\\d\\s+min\\s*)),\\s+",
 		"\\d+\\s+users,\\s+",
 		"load\\saverage:\\s+",
 		"(?P<load_avg>\\d*\\.\\d*),\\s+",
