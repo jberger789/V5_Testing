@@ -161,10 +161,10 @@ rounds their timestamps to the nearest 10 seconds, and inserts it into the
 
 <dl class="function">
 <dt id="optimized_parsing.return_or">
-<code class="sig-prename descclassname">optimized_parsing.</code><code class="sig-name descname">return_or</code><span class="sig-paren">(</span><em class="sig-param">l</em><span class="sig-paren">)</span><a class="headerlink" href="#optimized_parsing.return_or" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">optimized_parsing.</code><code class="sig-name descname">return_or</code><span class="sig-paren">(</span><em class="sig-param">val_list</em><span class="sig-paren">)</span><a class="headerlink" href="#optimized_parsing.return_or" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="simple">
 <dt><strong>Parameters</strong>:</dt><dd><dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">l</span></code></dt><dd><p>A list of values <code class="docutils literal notranslate"><span class="pre">[v1,...,vn]</span></code></p>
+<dt><code class="docutils literal notranslate"><span class="pre">val_list</span></code></dt><dd><p>A list of values <code class="docutils literal notranslate"><span class="pre">[v1,...,vn]</span></code></p>
 </dd>
 </dl>
 </dd>
@@ -175,9 +175,8 @@ rounds their timestamps to the nearest 10 seconds, and inserts it into the
 </dd>
 </dl>
 <p><strong>Example</strong>:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Calling </span>
-<span class="n">return_or</span><span class="p">([</span><span class="s1">&#39;tea&#39;</span><span class="p">,</span><span class="s1">&#39;milk&#39;</span><span class="p">,</span><span class="s1">&#39;coffee&#39;</span><span class="p">])</span>
-<span class="c1"># Will return</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">return_or</span><span class="p">([</span><span class="s1">&#39;tea&#39;</span><span class="p">,</span><span class="s1">&#39;milk&#39;</span><span class="p">,</span><span class="s1">&#39;coffee&#39;</span><span class="p">])</span>
+<span class="c1"># Returns</span>
 <span class="s2">&quot;((tea)|(milk)|(coffee))&quot;</span>
 </pre></div>
 </div>
