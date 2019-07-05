@@ -1,7 +1,5 @@
 Results/
 Obsolete/
 PostProcessing/tmp/
+PostProcessing/pycache/
 Graphs/
-_build/
-_static/
-_templates/
