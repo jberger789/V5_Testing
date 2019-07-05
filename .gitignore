@@ -1,5 +1,5 @@
 Results/
 Obsolete/
 PostProcessing/tmp/
-PostProcessing/pycache/
+PostProcessing/__pycache__/
 Graphs/
