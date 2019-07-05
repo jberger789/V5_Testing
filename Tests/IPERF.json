@@ -34,9 +34,9 @@
 	],
 	"data_key": null,
 	"data_tag": null,
-	"key_list": ["bandwidth", "loss_percentage", "out_of_order_datagrams"],
+	"key_list": ["bandwidth", "loss_percentage", "out_of_order_datagrams", "lost_datagrams"],
 	"units_key": null,
-	"units_dict": {"bandwidth": "Gbits/sec","loss_percentage": "%","out_of_order_datagrams": "datagrams"},
+	"units_dict": {"bandwidth": "Gbits/sec","loss_percentage": "%","out_of_order_datagrams": "datagrams","lost_datagrams": "datagrams"},
 	"data_info": {
 		"role": "str",
 		"address": "str",

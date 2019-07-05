@@ -140,7 +140,7 @@ def determine_units(cur_test,sel_opt):
 
 	return units
 
-def generate_graph(cur_test,sel_opt,start_time,end_time,max_y=None, where_addendum = "", sub_title = "", save_to_file=False):
+def generate_graph(cur_test,sel_opt,start_time,end_time,max_y=None, where_addendum = "", sub_title = "", save_to_file=False,graph_type='plot',):
 	units = determine_units(cur_test,sel_opt)
 	x,y=get_data(cur_test,sel_opt,start_time,end_time,where_addendum)
 	x_tmp, y_tmp = map_time2temp(x,y)
@@ -157,7 +157,10 @@ def generate_graph(cur_test,sel_opt,start_time,end_time,max_y=None, where_addend
 	upper_info = {'xlabel': 'Time', 'ylabel': sel_opt + " (" + units + ")", 'ylim': max_y, 'fmt': '-'}
 	lower_info = {'xlabel': 'Temperature', 'ylabel': sel_opt + " " + units, 'ylim': max_y, 'fmt': '.', 'xunits': "°C"}
 	fig_info = {'tag': cur_test.tag + sub_title,'test_opt': sel_opt}
-	one_and_three_fig(x,y,upper_info,x_tmp,y_tmp,lower_info,fig_info)
+	if graph_type=='plot':
+		one_and_three_fig(x,y,upper_info,x_tmp,y_tmp,lower_info,fig_info)
+	elif graph_type=='hist':
+		double_hist_fig(y,{'xlabel': sel_opt + " (" + units + ")"},fig_info)
 	if save_to_file:
 		plt.savefig("../Graphs/{} ({}).png".format(fig_info['tag'],fig_info['test_opt']))
 	else:
@@ -169,11 +172,22 @@ def gen_IPERF_graph(sel_opt,start_time,end_time,stf=False):
 	#x,y={},{}
 	ips = {'BLK': {'Ethernet':'200.50','Fiber (Black)':'2.2','Fiber (Red)':'3.1'}, 'RED': {'Ethernet':'200.20','Fiber (Black)':'2.1','Fiber (Red)':'3.2'}}
 	interfaces = ['Ethernet', 'Fiber (Black)', 'Fiber (Red)']
-	max_by_op = {'bandwidth': 20, 'loss_percentage': 100, 'out_of_order_datagrams': 1000}
+	max_by_op = {'bandwidth': 20, 'loss_percentage': 100, 'out_of_order_datagrams': 1000, 'lost_datagrams': 100000}
 
 	for i in interfaces:
 		where_addendum = " AND PID='SUM' AND role='SERVER' AND (address='{}' OR address='{}')".format(ips['RED'][i],ips['BLK'][i])
-		generate_graph(cur_test,sel_opt,start_time,end_time,max_by_op[sel_opt],where_addendum, ": "+ i,save_to_file=stf)
+		generate_graph(cur_test,sel_opt,start_time,end_time,max_by_op[sel_opt],where_addendum, " "+ i,save_to_file=stf)
+
+def gen_IPERF_graph_alt(sel_opt,start_time,end_time,stf=False):
+	cur_test = tests['IPERF']
+	#x,y={},{}
+	ips = {'BLK': {'Ethernet':'200.50','Fiber (Black)':'2.2','Fiber (Red)':'3.1'}, 'RED': {'Ethernet':'200.20','Fiber (Black)':'2.1','Fiber (Red)':'3.2'}}
+	interfaces = ['Ethernet', 'Fiber (Black)', 'Fiber (Red)']
+	max_by_op = {'bandwidth': 20, 'loss_percentage': 100, 'out_of_order_datagrams': 10000, 'lost_datagrams': 1000000}
+
+	for i in interfaces:
+		where_addendum = " AND PID='SUM' AND role='SERVER' AND (address='{}' OR address='{}') AND interval_start>5 AND interval_end>10".format(ips['RED'][i],ips['BLK'][i])
+		generate_graph(cur_test,sel_opt,start_time,end_time,max_by_op[sel_opt],where_addendum, " "+ i,save_to_file=stf,graph_type='hist')
 		#query_str = "SELECT time_stamp,role,address,transfer_units,{} FROM IPERF WHERE PID='SUM' AND role='SERVER' AND (address='{}' OR address='{}') AND {} IS NOT NULL  AND (time_stamp >= '{}' AND time_stamp <= '{}')".format(sel_opt,s,ips['RED'][i],ips['BLK'][i],sel_opt,start_time,end_time))
 
 	"""for i in interfaces:
@@ -327,6 +341,27 @@ def tricolor_fig(x,y,info, fig_info):
 	ay.set_ylim(0,info['ylim'])
 	fig.suptitle("{}: {}".format(fig_info['tag'],fig_info['test_opt']))
 
+def double_hist_fig(data,info,fig_info):
+	fig = plt.figure(figsize=(15,9))
+	plt.subplots_adjust(hspace=0.3)
+	gs = GridSpec(2, 1, figure=fig)
+	ax = {}
+	ind = 0
+	for s in SIDES:
+		ax[s]=(fig.add_subplot(gs[ind, 0]))
+		ind+=1
+
+	for s in SIDES:
+		plot_hist(ax[s],data[s],{'bins': [0,1,10,20,30,40,50,60,70,80,90,100,200,300,500,1000,5000], 'color':SIDES[s]})
+		ax[s].set_xlabel(info['xlabel'])
+
+	fig.suptitle("Histogram of {}: {}".format(fig_info['tag'],fig_info['test_opt']))
+
+
+def plot_hist(ax,data,param_dict):
+	out = ax.hist(data,**param_dict)
+	return out
+
 def my_plotter(ax,xdata,ydata,fmt, param_dict):
 	out = ax.plot(xdata, ydata, fmt, **param_dict)
 	return out
@@ -355,20 +390,21 @@ class Test(object):
 
 def autogenerate_graphs(start_time,end_time):
 	print("Start: {}".format(datetime.datetime.today()))
-	test_data_graphs = {
+	"""test_data_graphs = {
 	"STRESS_NG": ['Instructions','CPU Cycles'],
 	"IPMITOOL": ['CPU Temp', 'FAN1', 'FAN2', 'FANA', '5VCC', '5VSB', '3.3VCC', '3.3VSB', '12V'],
 	"STREAM_C": ['Add','Copy'],
-	"IPERF": ['bandwidth','loss_percentage','out_of_order_datagrams'],
+	"IPERF": ['bandwidth','loss_percentage','out_of_order_datagrams','lost_datagrams'],
 	"USB_PASSMARK": ['error counter', 'Read', 'Write'],
 	"TAMPER_STATUS": ['voltage'],
 	"PING_TEST": ['packet_loss','total_time','average'],
 	"UPTIME": ['load_avg']
-	}
+	}"""
+	test_data_graphs = {"IPERF": ['bandwidth','loss_percentage','out_of_order_datagrams','lost_datagrams']}
 	for test in test_data_graphs:
 		for option in test_data_graphs[test]:
 			if test == 'IPERF':
-				gen_IPERF_graph(option,start_time,end_time,stf=True)
+				gen_IPERF_graph_alt(option,start_time,end_time,stf=True)
 			else:
 				generate_graph(tests[test],option,start_time,end_time,save_to_file=True)
 

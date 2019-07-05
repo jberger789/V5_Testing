@@ -9,18 +9,18 @@ MESSAGE_TAGS = ['STRESS_NG','IPMITOOL', 'STREAM_C', 'DD_TEST', 'HDPARM', 'IPERF'
 #MESSAGE_TAGS = ['UPTIME']
 MONTHS = {'Jan': 1, 'Feb': 2, 'Mar': 3, 'Apr': 4, 'May': 5, 'Jun': 6, 'Jul': 7, 'Aug': 8, 'Sep': 9, 'Oct': 10, 'Nov': 11, 'Dec': 12}
 #MAIN_MESSAGE_FILE = "messages_overnight_Jun21"
-MAIN_MESSAGE_FILES = ["../Results/messages_thermal_1","../Results/messages_thermal_2"]
+MAIN_MESSAGE_FILES = ["../Results/messages_thermal_3"]
 MESSAGE_FILE_NAMES = {'tmp/BLACKCLEAN.txt': "Black Results",'tmp/REDCLEAN.txt': "Red Results"}
 #MESSAGE_FILE_NAMES = {'tmp/REDCLEAN.txt': "Red Results"}
 DB_ADDRESS = 'mysql://guest:password@localhost/test_results'
 DB = dataset.connect(DB_ADDRESS)
 
-class test_json(json.JSONEncoder):
-	def default(self, o):
-		if (type(o) == Test):
-			return{'tag': o.tag, 'call': o.call, 're_string': (list(map(lambda s: s.strip('\t'), o.re_string.split('\n')))), 'key_tag': o.key_tag, 'data_info': o.data_info}
-		else:
-			return json.JSONEncoder.default(self, o)
+# class test_json(json.JSONEncoder):
+# 	def default(self, o):
+# 		if (type(o) == Test):
+# 			return{'tag': o.tag, 'call': o.call, 're_string': (list(map(lambda s: s.strip('\t'), o.re_string.split('\n')))), 'key_tag': o.key_tag, 'data_info': o.data_info}
+# 		else:
+# 			return json.JSONEncoder.default(self, o)
 
 class Log(object):
 	def __init__(self,filename,units):
@@ -70,58 +70,35 @@ class Log(object):
 			(?P<unit>"""+return_or(self.units)+r""")													# =    <Gets the unit number of the log message>    =
 			\s+																							# = ----------------------------------------------- =
 			(?P<tag>"""+return_or(test.tag for test in self.tests.values())+r""")						# = <Determines which test the log message is from> =
-			""",re.VERBOSE)		
-			# 				re.compile(r"""																# ===================================================
-			# (?P<mon>\b\w\w\w\b)\s+(?P<day>\b\d{1,2}\b)\s+(?P<hr>\d\d):(?P<min>\d\d):(?P<sec>\d\d)		# =   <Gets the date and time of the log message>   =
-			# \s																							# = ----------------------------------------------- =
-			# (?P<side>"""+return_or(SIDES)+r""")															# =       <Gets the side of the log message>        =
-			# -																							# = ----------------------------------------------- =
-			# (?P<unit>"""+return_or(self.units)+r""")													# =    <Gets the unit number of the log message>    =
-			# \s+																							# = ----------------------------------------------- =
-			# (?P<tag>"""+return_or(list(map(lambda t: t.tag,  list(self.tests.values()))))+r""")			# = <Determines which test the log message is from> =
-			# """,re.VERBOSE)																				# ===================================================
+			""",re.VERBOSE)																				# ===================================================	
 
 	def extract_data(self):
 		"""Read and interpret data from the log messages file given"""
 		# Define the regular expression for capturing the start of relevant log messages:
 		self.set_re_prefix()
-		# Open the log file:
-		#with open(self.message_file_name) as log_file:
-		if True:
-			for line in self.log_file:																# for each line in the log file:
-				self.cur_line_num +=1.0																	# Increment the line count
-				match_start = self.re_prefix.search(line) 												# Check if the line has a valid test prefix
-				# if it does:
-				if (match_start != None):
-					cur_test = self.tests[match_start.group('tag')]				# Set the current test according to the tag found
-					tmp_insert = self.parse_line(line,cur_test,0)		# Convert the line into row data, recursively
-					if tmp_insert != []:
-						table = DB[cur_test.tag]
-						#print(len(tmp_insert))
-						#table.insert_many(tmp_insert)
-						#print(insert_ignore_many_query(cur_test,tmp_insert))
-						#if len(tmp_insert) == 1:
-							#print(tmp_insert)
-							#print("----------------------------------")
+		for line in self.log_file:																# for each line in the log file:
+			self.cur_line_num +=1.0																	# Increment the line count
+			match_start = self.re_prefix.search(line) 												# Check if the line has a valid test prefix
+			# if it does:
+			if (match_start != None):
+				cur_test = self.tests[match_start.group('tag')]				# Set the current test according to the tag found
+				tmp_insert = self.parse_line(line,cur_test,0)		# Convert the line into row data, recursively
+				if tmp_insert != []:
+					table = DB[cur_test.tag]
+					try:
 						try:
-							try:
-								#print(insert_ignore_many_query(cur_test,tmp_insert))
-								DB.query(insert_ignore_many_query(cur_test,tmp_insert))
-							except OperationalError:
-								print(tmp_insert)
-								input(" ")
-						except NameError:
+							DB.query(insert_ignore_many_query(cur_test,tmp_insert))
+						except OperationalError:
 							print(tmp_insert)
 							input(" ")
-						#except sqlalchemy.exc.IntegrityError:
-					#self.cur_line_num += len(tmp_insert)
-					#if (cur_test.tag == 'DD_TEST'):
-					#	self.cur_line_num += len(tmp_insert)*2
-				else:
-					pass	
-			self.show_progress()
-			print(' ')
-			self.log_file.close()
+					except NameError:
+						print(tmp_insert)
+						input(" ")
+			else:
+				pass	
+		self.show_progress()
+		print(' ')
+		self.log_file.close()
 
 
 
@@ -130,7 +107,7 @@ class Log(object):
 		will convert the data in the line and in every consecutive line for the same test 
 		into a lists of rows to be inserted into the database (recursively)"""
 		
-		match_start = self.re_prefix.search(line)									# Get the 'preamble' data from the line (i.e. the datetime, side, test tag,etc.)
+		match_start = self.re_prefix.search(line)									# Get the 'preamble' data from the line (i.e. the datetime, side, test tag, etc)
 		m2 = cur_test.re.search(line)												# Then get the test data using the appropriate regular expression
 		# If test data is recognized:
 		if (m2 != None and match_start != None):
@@ -178,7 +155,7 @@ class Log(object):
 			elif (cur_test.num_lines > 1):
 				for x in range(0,cur_test.num_lines):
 					for k in cur_test.data_info:
-						if ((cur_test.data_info[k] == 'int') or (cur_test.data_info[k] == 'float')) and ((m2.group(k)) != None) and (cur_test.data_info[k] != 'str'):
+						if ((cur_test.data_info[k] == 'int') or (cur_test.data_info[k] == 'float')) and (m2.group(k) != None):
 							next_row[k] = eval(m2.group(k))
 						elif k not in next_row and m2.group(k)!= None:
 							next_row[k] = (m2.group(k))
@@ -187,14 +164,15 @@ class Log(object):
 					m2 = cur_test.re.search(l)
 			# Else, all normal data for a single row is on the current line:
 			else:															
-				for key in cur_test.data_info:														# For each column key outlined in the test info:
-					if m2.group(key) == 'na' or m2.group(key) == None:									# If the data for this column has no value (either explicitly or implicitly)
-						next_row[key] = None																# Set the column of this row to 'None'
-					elif (cur_test.data_info[key] == 'int') or (cur_test.data_info[key] == 'float'): 	# If the data for this column is expected to be an int or float
-						next_row[key] = eval(''.join(m2.group(key).split(',')))								# Set the column of this row to the evaluated value
+				for key in cur_test.data_info:															# For each column key outlined in the test info:
+					if m2.group(key) == 'na' or m2.group(key) == None:									# >	If the data for this column has no value (either explicitly or implicitly)
+						next_row[key] = None															# 	 >>	Set the column of this row to 'None'
+					elif (cur_test.data_info[key] == 'int') or (cur_test.data_info[key] == 'float'): 	# >	If the data for this column is expected to be an int or float
+						next_row[key] = eval(''.join(m2.group(key).split(',')))							# 	 >>	Set the column of this row to the evaluated value
 					else:																				# Else
-						next_row[key] = (m2.group(key))														# Set the column of this row to the string value found
-			# If the recursion depth is over 200, end the recursive process (to avoid python's depth limit)
+						next_row[key] = (m2.group(key))													# >	Set the column of this row to the string value found
+			# If the recursion depth is over 200, end the 
+			# recursive process (to avoid python's depth limit)
 			if (recur_count > 200):
 				return([(next_row)])
 			# Retrieve the next line of the log_file
@@ -243,15 +221,24 @@ def make_datetime(match_obj):
 
 def return_or(l):
 	"""
-	Given list 'l = [v1,...,vn]', return the string "((v1)|...|(vn))", which is a
-	string formatted appropriately for use in an 'or' statement in a regular expression
-	i.e.: calling return_or(['tea','milk','coffee']) will return "((tea)|(milk)|(coffee))" 
-	"""
-	return ('('+'|'.join(f"({v})" for v in l) + ')')
+	**Parameters**:
+		``l``
+			A list of values ``[v1,...,vn]``
 
-def return_help():
-	return("Type '(h)elp' to bring up this prompt, '(o)ptions' for a list of viable responses,\n"
-		"'go back' to return to the previous prompt, or 'exit' to end the program")
+	**Returns**:
+		``or_str``
+			The string ``"((v1)|...|(vn))"``, which is formatted appropriately for use in an ``or`` statement in a regular expression
+
+	**Example**::
+
+		# Calling 
+		return_or(['tea','milk','coffee'])
+		# Will return
+		"((tea)|(milk)|(coffee))"
+
+	"""
+	or_str = '('+'|'.join(f"({v})" for v in l) + ')'
+	return or_str
 
 
 def rowcols4SQLquery(cols,id_cols=[]):
@@ -283,19 +270,18 @@ def insert_ignore_many_query(test, rows):
 		rowcols4SQLquery(test.data_info.keys(),pre_cols),
 		rowvals4SQLmany(rows,test.data_info,pre_cols))
 
-for m in MAIN_MESSAGE_FILES:
-	os.system(f"./splitbytest.sh {m}")
-os.system("./mergebyside.sh")
-#datalog = Log('test_messages',['1'])
-for msg_file in MESSAGE_FILE_NAMES:
-	print("{} Start: {}".format(MESSAGE_FILE_NAMES[msg_file],datetime.today()))
-	#line_count = get_line_count(msg_file)
-	datalog = Log(msg_file,['1'])
-	for tag in MESSAGE_TAGS:
-		datalog.add_test(Test(json_file_name="../Tests/"+tag+".json"))
 
-	datalog.extract_data()
-	print("{} End: {}".format(MESSAGE_FILE_NAMES[msg_file],datetime.today()))
+if __name__ == '__main__':
+	for m in MAIN_MESSAGE_FILES:
+		os.system(f"./splitbytest.sh {m}")
+	os.system("./mergebyside.sh")
+	for msg_file in MESSAGE_FILE_NAMES:
+		print("{} Start: {}".format(MESSAGE_FILE_NAMES[msg_file],datetime.today()))
+		datalog = Log(msg_file,['1'])
+		for tag in MESSAGE_TAGS:
+			datalog.add_test(Test(json_file_name="../Tests/"+tag+".json"))
+		datalog.extract_data()
+		print("{} End: {}".format(MESSAGE_FILE_NAMES[msg_file],datetime.today()))
 
 
 # datalog = Log(MESSAGE_FILE_NAME,['1'])

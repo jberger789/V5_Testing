@@ -2,3 +2,6 @@ Results/
 Obsolete/
 PostProcessing/tmp/
 Graphs/
+_build/
+_static/
+_templates/
