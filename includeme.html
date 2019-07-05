@@ -193,13 +193,39 @@ an SQL query (where the values are the column names of the table.</p>
 <dt><code class="docutils literal notranslate"><span class="pre">cols</span></code></dt><dd><p>A list containing the column names as strings</p>
 </dd>
 <dt><code class="docutils literal notranslate"><span class="pre">id_cols</span></code></dt><dd><p>A list containing the column names used for identification purposes, and which will not normally be contained in the row dictionary</p>
-<p>In most instances this list will be equal to [‘time_stamp’,’unit’,’side’], since these 
+<p>In most instances this list will be equal to <code class="docutils literal notranslate"><span class="pre">['time_stamp','unit','side']</span></code>, since these 
 columns’ values are extracted separately from the rest of the row data</p>
+<p>By default, this parameter is set to an empty list</p>
 </dd>
 </dl>
 </dd>
 <dt><strong>Returns</strong>:</dt><dd><dl class="simple">
 <dt><code class="docutils literal notranslate"><span class="pre">col_str</span></code></dt><dd><p>A string containing comma separated values from <code class="docutils literal notranslate"><span class="pre">id_cols</span></code> and <code class="docutils literal notranslate"><span class="pre">cols</span></code>, enclosed in parentheses</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="optimized_parsing.rowvals4SQLmany">
+<code class="sig-prename descclassname">optimized_parsing.</code><code class="sig-name descname">rowvals4SQLmany</code><span class="sig-paren">(</span><em class="sig-param">row_list</em>, <em class="sig-param">col_dict</em>, <em class="sig-param">id_cols=[]</em><span class="sig-paren">)</span><a class="headerlink" href="#optimized_parsing.rowvals4SQLmany" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates a string representation of the values in many rows, formatted for an SQL query.</p>
+<dl>
+<dt><strong>Parameters</strong>:</dt><dd><dl>
+<dt><code class="docutils literal notranslate"><span class="pre">row_list</span></code></dt><dd><p>A list containing the rows (as dictionaries) to be inserted.
+Assumes every row dictionary contains corresponding values for every data column in the table</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">col_dict</span></code></dt><dd></dd>
+<dt><code class="docutils literal notranslate"><span class="pre">id_cols</span></code></dt><dd><p>A list containing the column names used for identification purposes, and which will not normally be contained in the row dictionary</p>
+<p>In most instances this list will be equal to <code class="docutils literal notranslate"><span class="pre">['time_stamp','unit','side']</span></code>, since these 
+columns’ values are extracted separately from the rest of the row data</p>
+<p>By default, this parameter is set to an empty list</p>
+</dd>
+</dl>
+</dd>
+<dt><strong>Returns</strong>:</dt><dd><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">out_str</span></code></dt><dd><p>A string ????</p>
 </dd>
 </dl>
 </dd>
