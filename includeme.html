@@ -183,6 +183,29 @@ rounds their timestamps to the nearest 10 seconds, and inserts it into the
 </div>
 </dd></dl>
 
+<dl class="function">
+<dt id="optimized_parsing.rowcols4SQLquery">
+<code class="sig-prename descclassname">optimized_parsing.</code><code class="sig-name descname">rowcols4SQLquery</code><span class="sig-paren">(</span><em class="sig-param">cols</em>, <em class="sig-param">id_cols=[]</em><span class="sig-paren">)</span><a class="headerlink" href="#optimized_parsing.rowcols4SQLquery" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates a string representation of the values in cols, formatted for 
+an SQL query (where the values are the column names of the table.</p>
+<dl>
+<dt><strong>Parameters</strong>: </dt><dd><dl>
+<dt><code class="docutils literal notranslate"><span class="pre">cols</span></code></dt><dd><p>A list containing the column names as strings</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">id_cols</span></code></dt><dd><p>A list containing the column names used for identification purposes, and which will not normally be contained in the row dictionary</p>
+<p>In most instances this list will be equal to [‘time_stamp’,’unit’,’side’], since these 
+columns’ values are extracted separately from the rest of the row data</p>
+</dd>
+</dl>
+</dd>
+<dt><strong>Returns</strong>:</dt><dd><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">col_str</span></code></dt><dd><p>A string containing comma separated values from <code class="docutils literal notranslate"><span class="pre">id_cols</span></code> and <code class="docutils literal notranslate"><span class="pre">cols</span></code>, enclosed in parentheses</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="class">
 <dt id="optimized_parsing.Log">
 <em class="property">class </em><code class="sig-prename descclassname">optimized_parsing.</code><code class="sig-name descname">Log</code><span class="sig-paren">(</span><em class="sig-param">filename</em>, <em class="sig-param">units</em><span class="sig-paren">)</span><a class="headerlink" href="#optimized_parsing.Log" title="Permalink to this definition">¶</a></dt>
