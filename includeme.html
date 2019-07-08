@@ -671,6 +671,33 @@ appropriate units. Present when <a class="reference internal" href="#results_vie
 </dd></dl>
 
 <dl class="function">
+<dt id="results_viewer.determine_units">
+<code class="sig-prename descclassname">results_viewer.</code><code class="sig-name descname">determine_units</code><span class="sig-paren">(</span><em class="sig-param">cur_test</em>, <em class="sig-param">sel_opt</em><span class="sig-paren">)</span><a class="headerlink" href="#results_viewer.determine_units" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns to appropriate units for the selected test and option.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cur_test</strong> (<a class="reference internal" href="#optimized_parsing.Test" title="optimized_parsing.Test"><em>Test</em></a>) – The <a class="reference internal" href="#results_viewer.Test" title="results_viewer.Test"><code class="xref py py-class docutils literal notranslate"><span class="pre">Test</span></code></a> for which we wish to obtain data.</p></li>
+<li><p><strong>sel_opt</strong> (<em>str</em>) – The user selected option denoting the subset of
+test data that we care about.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>units</strong> – The units of the data in the selected subset.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="results_viewer.generate_graph">
+<code class="sig-prename descclassname">results_viewer.</code><code class="sig-name descname">generate_graph</code><span class="sig-paren">(</span><em class="sig-param">cur_test</em>, <em class="sig-param">sel_opt</em>, <em class="sig-param">start_time</em>, <em class="sig-param">end_time</em>, <em class="sig-param">max_y=None</em>, <em class="sig-param">where_addendum=''</em>, <em class="sig-param">sub_title=''</em>, <em class="sig-param">save_to_file=False</em>, <em class="sig-param">graph_type='plot'</em><span class="sig-paren">)</span><a class="headerlink" href="#results_viewer.generate_graph" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs the steps necessary to generate a graph for the selected subset of data.</p>
+</dd></dl>
+
+<dl class="function">
 <dt id="results_viewer.get_data">
 <code class="sig-prename descclassname">results_viewer.</code><code class="sig-name descname">get_data</code><span class="sig-paren">(</span><em class="sig-param">cur_test</em>, <em class="sig-param">sel_opt</em>, <em class="sig-param">start_time</em>, <em class="sig-param">end_time</em>, <em class="sig-param">where_addendum=''</em><span class="sig-paren">)</span><a class="headerlink" href="#results_viewer.get_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve test data from the database.</p>
@@ -693,6 +720,51 @@ Empty by default, and only used by some tests.</p></li>
 <li><p><strong>y</strong> (<em>dict</em>) – A dictionary containing a list of the desired y-axis data associated with each side</p></li>
 </ul>
 </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="results_viewer.graph_select">
+<code class="sig-prename descclassname">results_viewer.</code><code class="sig-name descname">graph_select</code><span class="sig-paren">(</span><em class="sig-param">test_key</em>, <em class="sig-param">start_time</em>, <em class="sig-param">end_time</em><span class="sig-paren">)</span><a class="headerlink" href="#results_viewer.graph_select" title="Permalink to this definition">¶</a></dt>
+<dd><p>Allows the user the select the test option for which they wish to generate a graph.</p>
+<p>If the user enters ‘o’ or ‘options’, returns the list of valid options for the current test.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>test_key</strong> (<a class="reference internal" href="#optimized_parsing.Test" title="optimized_parsing.Test"><em>Test</em></a>) – The test which the user has currently selected.</p></li>
+<li><p><strong>start_time</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">datetime.datetime</span></code>) – The time at which the current test run began.</p></li>
+<li><p><strong>end_time</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">datetime.datetime</span></code>) – The time at which the current test run ended.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="results_viewer.test_run_select">
+<code class="sig-prename descclassname">results_viewer.</code><code class="sig-name descname">test_run_select</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#results_viewer.test_run_select" title="Permalink to this definition">¶</a></dt>
+<dd><p>Allows the user to select test run that they wish to generate graphs for.</p>
+<p>If the user enters ‘o’ or ‘options’, returns the list of test runs stored
+in the <em>TESTS</em> table of <code class="xref py py-const docutils literal notranslate"><span class="pre">DB</span></code>, along with their start and end times.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="results_viewer.test_select">
+<code class="sig-prename descclassname">results_viewer.</code><code class="sig-name descname">test_select</code><span class="sig-paren">(</span><em class="sig-param">start_time</em>, <em class="sig-param">end_time</em><span class="sig-paren">)</span><a class="headerlink" href="#results_viewer.test_select" title="Permalink to this definition">¶</a></dt>
+<dd><p>Allows the user the select the test for which they wish to view data.</p>
+<p>If the user enters ‘o’ or ‘options’, returns the list of available tests,
+along with a numerical shorthand they can be entered as.</p>
+<p>Has additional options.  One is to run <code class="xref py py-func docutils literal notranslate"><span class="pre">autogenerate_graphs()</span></code> by
+entering ‘s’ or ‘save’, allowing the user to automatically generate
+a preset selection of graphs for their selected test run. The other
+allows the user to generate a graph of temperature vs. time, by
+entering ‘t’</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>start_time</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">datetime.datetime</span></code>) – The time at which the current test run began.</p></li>
+<li><p><strong>end_time</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">datetime.datetime</span></code>) – The time at which the current test run ended.</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
