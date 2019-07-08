@@ -154,6 +154,216 @@ rounds their timestamps to the nearest 10 seconds, and inserts it into the
 <div class="section" id="module-optimized_parsing">
 <span id="parser"></span><h1>PARSER<a class="headerlink" href="#module-optimized_parsing" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
+<dt id="optimized_parsing.Log">
+<em class="property">class </em><code class="sig-prename descclassname">optimized_parsing.</code><code class="sig-name descname">Log</code><span class="sig-paren">(</span><em class="sig-param">filename</em>, <em class="sig-param">units</em><span class="sig-paren">)</span><a class="headerlink" href="#optimized_parsing.Log" title="Permalink to this definition">¶</a></dt>
+<dd><p>An object associated with a log messages file.</p>
+<p>Contains details about what units and tests are
+expected to have results in the log.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<em>str</em>) – The name of the log file.</p></li>
+<li><p><strong>units</strong> (<em>list of str</em>) – The list containing the units with results in the log.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="attribute">
+<dt id="optimized_parsing.Log.message_file_name">
+<code class="sig-name descname">message_file_name</code><a class="headerlink" href="#optimized_parsing.Log.message_file_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>The name of the log messages file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="optimized_parsing.Log.log_file">
+<code class="sig-name descname">log_file</code><a class="headerlink" href="#optimized_parsing.Log.log_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>The log file itself.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>file</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="optimized_parsing.Log.units">
+<code class="sig-name descname">units</code><a class="headerlink" href="#optimized_parsing.Log.units" title="Permalink to this definition">¶</a></dt>
+<dd><p>The list of units associated with this log.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>list of str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="optimized_parsing.Log.tests">
+<code class="sig-name descname">tests</code><a class="headerlink" href="#optimized_parsing.Log.tests" title="Permalink to this definition">¶</a></dt>
+<dd><p>A dictionary containing the name (tags) of tests
+associated with this log as keys, with the values
+as the corresponding <a class="reference internal" href="#optimized_parsing.Test" title="optimized_parsing.Test"><code class="xref py py-class docutils literal notranslate"><span class="pre">Test</span></code></a> objects.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="optimized_parsing.Log.line_count">
+<code class="sig-name descname">line_count</code><a class="headerlink" href="#optimized_parsing.Log.line_count" title="Permalink to this definition">¶</a></dt>
+<dd><p>The number of lines in the log file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="optimized_parsing.Log.cur_line_num">
+<code class="sig-name descname">cur_line_num</code><a class="headerlink" href="#optimized_parsing.Log.cur_line_num" title="Permalink to this definition">¶</a></dt>
+<dd><p>The current line number.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="optimized_parsing.Log.re_prefix">
+<code class="sig-name descname">re_prefix</code><a class="headerlink" href="#optimized_parsing.Log.re_prefix" title="Permalink to this definition">¶</a></dt>
+<dd><p>The regular expression associated with the prefixes
+of the messages in this log.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">re.Match</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="optimized_parsing.Log.add_test">
+<code class="sig-name descname">add_test</code><span class="sig-paren">(</span><em class="sig-param">test</em><span class="sig-paren">)</span><a class="headerlink" href="#optimized_parsing.Log.add_test" title="Permalink to this definition">¶</a></dt>
+<dd><p>Associate a new test with this log.</p>
+<p>Attempts to set up a new table in the database for
+storing data from this test. After it has done so, or
+if such a table already exists, this method adds the
+new test to the test dictionary <code class="docutils literal notranslate"><span class="pre">self.tests</span></code>, where the
+key is the string equivalent to this test’s tag (<code class="docutils literal notranslate"><span class="pre">test.tag</span></code>).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>test</strong> (<a class="reference internal" href="#optimized_parsing.Test" title="optimized_parsing.Test"><em>Test</em></a>) – The test object to be added to this log.</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>May raise errors when attempting to create a
+new table, as there is no available way to
+specify the length of an SQL string type.</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="optimized_parsing.Log.extract_data">
+<code class="sig-name descname">extract_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#optimized_parsing.Log.extract_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extracts test results from the log file.</p>
+<p>For each line in the log file, checks if it has a relevant <cite>prefix</cite>.
+If it does, then it calls <a class="reference internal" href="#optimized_parsing.Log.parse_line" title="optimized_parsing.Log.parse_line"><code class="xref py py-meth docutils literal notranslate"><span class="pre">parse_line()</span></code></a> on the line to attempt to
+convert data from the line into a row to be inserted into the database.</p>
+<p>When it recieves the list of rows to be inserted, it then attempts to insert
+them into the corresponding test table in the database, using a query string
+generated by <a class="reference internal" href="#optimized_parsing.insert_ignore_many_query" title="optimized_parsing.insert_ignore_many_query"><code class="xref py py-func docutils literal notranslate"><span class="pre">insert_ignore_many_query()</span></code></a>, in order to ensure
+that duplicate entries are not inserted.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="optimized_parsing.Log.get_line_count">
+<code class="sig-name descname">get_line_count</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#optimized_parsing.Log.get_line_count" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the number of lines in the log file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The number of lines in the file with the name <code class="docutils literal notranslate"><span class="pre">self.message_file_name</span></code>.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>float</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><strong>IOError</strong> – The file with the name <code class="docutils literal notranslate"><span class="pre">self.message_file_name</span></code> could not be opened.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="optimized_parsing.Log.parse_line">
+<code class="sig-name descname">parse_line</code><span class="sig-paren">(</span><em class="sig-param">line</em>, <em class="sig-param">cur_test</em>, <em class="sig-param">recur_count=0</em><span class="sig-paren">)</span><a class="headerlink" href="#optimized_parsing.Log.parse_line" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts data from a log message into a row to insert into an SQL table.</p>
+<p>Given a log message line and the test the line is associated with, attempts
+to interpret the data in the line into a row dictionary.</p>
+<p>The exact interpretation process is dependant on the individual test, but in
+general it attemps to match the line to a regular expression corresponding
+to the current test’s output format, and then uses the groups found by the
+regular expression, along with the variables specified in the test’s
+<code class="docutils literal notranslate"><span class="pre">data_info</span></code> attribute to populate a row dictionary with the data.</p>
+<p>For tests that do (or may) have multiple lines of data for a single test result
+(and thus a single row of data), will also check and attempt to parse the
+following lines as specified by the attributes of <code class="docutils literal notranslate"><span class="pre">cur_test</span></code>.</p>
+<p>After successfully filling a dictionary for a full row of data for the
+current test, will call itself recursively on the next line in the log file,
+under the assumption that the next line also belongs to the same test.  This
+continues until it either reaches the end of the lines associated with the
+current test, or it exceeds python’s recursion limit. This allows it to return
+a list of rows to be inserted into a single table with one query, which is
+much faster than inserting each row individually.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>line</strong> (<em>str</em>) – A string containing a single line from the log file, which presumable contains
+a log message generated by the test denoted in <code class="docutils literal notranslate"><span class="pre">cur_test</span></code></p></li>
+<li><p><strong>cur_test</strong> (<a class="reference internal" href="#optimized_parsing.Test" title="optimized_parsing.Test"><em>Test</em></a>) – The test object that is expected to correspond to the test results contained in line</p></li>
+<li><p><strong>recur_count</strong> (<em>int</em>) – Stores current recursion depth, to avoid raising an error if the limit is reached.
+Set to <code class="docutils literal notranslate"><span class="pre">0</span></code> by default if no value is specified.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of <cite>row</cite> dictionaries.  Every row in the list is associated with the same test.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="optimized_parsing.Log.set_re_prefix">
+<code class="sig-name descname">set_re_prefix</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#optimized_parsing.Log.set_re_prefix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set up the regular expression for the <cite>prefix</cite>.</p>
+<p>The <cite>prefix</cite> is the part of the log message that contains
+the time stamp, the unit and side, and the test tag.
+The regular expression for matching the <cite>prefix</cite> is as
+such dependent on which units were tested and which
+tests were performed during the test run that the log
+file contains results from. The <cite>prefix</cite> makes it possible
+to determine if a log message came from a test or not,
+thus quickly ruling out some irrelevant log messages,
+and making it possible to determine which test the log
+messsage may have come from.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="optimized_parsing.Log.show_progress">
+<code class="sig-name descname">show_progress</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#optimized_parsing.Log.show_progress" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print the current progress in parsing the log file.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="optimized_parsing.Test">
 <em class="property">class </em><code class="sig-prename descclassname">optimized_parsing.</code><code class="sig-name descname">Test</code><span class="sig-paren">(</span><em class="sig-param">json_file_name=None</em><span class="sig-paren">)</span><a class="headerlink" href="#optimized_parsing.Test" title="Permalink to this definition">¶</a></dt>
 <dd><p>An object which represents all of the information regarding a single test.</p>
