@@ -254,8 +254,8 @@ of the messages in this log.</p>
 <p>Attempts to set up a new table in the database for
 storing data from this test. After it has done so, or
 if such a table already exists, this method adds the
-new test to the test dictionary <code class="docutils literal notranslate"><span class="pre">self.tests</span></code>, where the
-key is the string equivalent to this test’s tag (<code class="docutils literal notranslate"><span class="pre">test.tag</span></code>).</p>
+new test to the test dictionary <a class="reference internal" href="#optimized_parsing.Log.tests" title="optimized_parsing.Log.tests"><code class="xref py py-attr docutils literal notranslate"><span class="pre">tests</span></code></a>, where the
+key is the string equivalent to this test’s tag (<a class="reference internal" href="#optimized_parsing.Test.tag" title="optimized_parsing.Test.tag"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Test.tag</span></code></a>).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>test</strong> (<a class="reference internal" href="#optimized_parsing.Test" title="optimized_parsing.Test"><em>Test</em></a>) – The test object to be added to this log.</p>
@@ -288,13 +288,13 @@ that duplicate entries are not inserted.</p>
 <dd><p>Return the number of lines in the log file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>The number of lines in the file with the name <code class="docutils literal notranslate"><span class="pre">self.message_file_name</span></code>.</p>
+<dd class="field-odd"><p>The number of lines in the file with the name attr:<cite>message_file_name</cite>.</p>
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p>float</p>
 </dd>
 <dt class="field-odd">Raises</dt>
-<dd class="field-odd"><p><strong>IOError</strong> – The file with the name <code class="docutils literal notranslate"><span class="pre">self.message_file_name</span></code> could not be opened.</p>
+<dd class="field-odd"><p><strong>IOError</strong> – The file with the name attr:<cite>message_file_name</cite> could not be opened.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -309,7 +309,7 @@ to interpret the data in the line into a row dictionary.</p>
 general it attemps to match the line to a regular expression corresponding
 to the current test’s output format, and then uses the groups found by the
 regular expression, along with the variables specified in the test’s
-<code class="docutils literal notranslate"><span class="pre">data_info</span></code> attribute to populate a row dictionary with the data.</p>
+<a class="reference internal" href="#optimized_parsing.Test.data_info" title="optimized_parsing.Test.data_info"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Test.data_info</span></code></a> attribute to populate a row dictionary with the data.</p>
 <p>For tests that do (or may) have multiple lines of data for a single test result
 (and thus a single row of data), will also check and attempt to parse the
 following lines as specified by the attributes of <code class="docutils literal notranslate"><span class="pre">cur_test</span></code>.</p>
