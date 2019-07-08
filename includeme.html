@@ -33,149 +33,8 @@
             
   <div class="section" id="v5-testing">
 <h1>V5_Testing<a class="headerlink" href="#v5-testing" title="Permalink to this headline">¶</a></h1>
-</div>
-<div class="section" id="module-temp_data_shifter">
-<span id="temperature-data-shifter"></span><h1>Temperature Data Shifter<a class="headerlink" href="#module-temp_data_shifter" title="Permalink to this headline">¶</a></h1>
-<dl class="data">
-<dt id="temp_data_shifter.RESULTS_DB">
-<code class="sig-prename descclassname">temp_data_shifter.</code><code class="sig-name descname">RESULTS_DB</code><em class="property"> = &lt;Database(mysql://guest:*****&#64;localhost/test_results)&gt;</em><a class="headerlink" href="#temp_data_shifter.RESULTS_DB" title="Permalink to this definition">¶</a></dt>
-<dd><p>Database containing results from all tests.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">dataset.database</span></code></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="data">
-<dt id="temp_data_shifter.TEMPS_DB">
-<code class="sig-prename descclassname">temp_data_shifter.</code><code class="sig-name descname">TEMPS_DB</code><em class="property"> = &lt;Database(sqlite:///../Results/DAQTEMPS.db)&gt;</em><a class="headerlink" href="#temp_data_shifter.TEMPS_DB" title="Permalink to this definition">¶</a></dt>
-<dd><p>Database containing temperature data collected during the test run.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">dataset.database</span></code></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="temp_data_shifter.convert_row">
-<code class="sig-prename descclassname">temp_data_shifter.</code><code class="sig-name descname">convert_row</code><span class="sig-paren">(</span><em class="sig-param">row</em><span class="sig-paren">)</span><a class="headerlink" href="#temp_data_shifter.convert_row" title="Permalink to this definition">¶</a></dt>
-<dd><p>Converts a row from <a class="reference internal" href="#temp_data_shifter.TEMPS_DB" title="temp_data_shifter.TEMPS_DB"><code class="xref py py-const docutils literal notranslate"><span class="pre">TEMPS_DB</span></code></a> to two rows for <a class="reference internal" href="#temp_data_shifter.RESULTS_DB" title="temp_data_shifter.RESULTS_DB"><code class="xref py py-const docutils literal notranslate"><span class="pre">RESULTS_DB</span></code></a>.</p>
-<p>Takes in a single row of temperature data from <a class="reference internal" href="#temp_data_shifter.TEMPS_DB" title="temp_data_shifter.TEMPS_DB"><code class="xref py py-const docutils literal notranslate"><span class="pre">TEMPS_DB</span></code></a> and converts it
-into two rows of temperature data to be inserted into <em>TEMPERATURES</em> in <a class="reference internal" href="#temp_data_shifter.RESULTS_DB" title="temp_data_shifter.RESULTS_DB"><code class="xref py py-const docutils literal notranslate"><span class="pre">RESULTS_DB</span></code></a>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>row</strong> (<em>dict</em>) – A dictionary representing the row retrieved from <a class="reference internal" href="#temp_data_shifter.TEMPS_DB" title="temp_data_shifter.TEMPS_DB"><code class="xref py py-const docutils literal notranslate"><span class="pre">TEMPS_DB</span></code></a>.
-Assumes the row was retrieved successfully.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><strong>out_rows</strong> – A list containing the two newly generated rows.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>list of dict</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="temp_data_shifter.insert_ignore_many_query">
-<code class="sig-prename descclassname">temp_data_shifter.</code><code class="sig-name descname">insert_ignore_many_query</code><span class="sig-paren">(</span><em class="sig-param">table</em>, <em class="sig-param">rows</em><span class="sig-paren">)</span><a class="headerlink" href="#temp_data_shifter.insert_ignore_many_query" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generate an appropriate string for inserting potentially duplicate rows into an SQL table.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>table</strong> (<em>str</em>) – The name of an SQL table in the current database.
-Assumes a table with that name exists in <a class="reference internal" href="#temp_data_shifter.RESULTS_DB" title="temp_data_shifter.RESULTS_DB"><code class="xref py py-const docutils literal notranslate"><span class="pre">RESULTS_DB</span></code></a>.</p></li>
-<li><p><strong>rows</strong> (<em>list of dict</em>) – A list of rows to insert into <code class="docutils literal notranslate"><span class="pre">table</span></code>.
-Assumes every row dictionary contains corresponding
-values for every data column in the table.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A string representing an SQL statement that, if executed, performs an <em>INSERT IGNORE</em> of every row in <code class="docutils literal notranslate"><span class="pre">rows</span></code> into <code class="docutils literal notranslate"><span class="pre">table</span></code>.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>str</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="temp_data_shifter.round_time">
-<code class="sig-prename descclassname">temp_data_shifter.</code><code class="sig-name descname">round_time</code><span class="sig-paren">(</span><em class="sig-param">tm_str</em><span class="sig-paren">)</span><a class="headerlink" href="#temp_data_shifter.round_time" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generates a <code class="xref py py-class docutils literal notranslate"><span class="pre">datetime.datetime</span></code> object containing a rounded version of a time stamp string.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>tm_str</strong> (<em>str</em>) – <p>A string containing a representation of a <code class="xref py py-class docutils literal notranslate"><span class="pre">datetime.datetime</span></code> object in standard format.</p>
-<p>Standard format is defined as <code class="docutils literal notranslate"><span class="pre">&quot;YYYY-MM-DD</span> <span class="pre">hh:mm:ss[:msecs]&quot;</span></code></p>
-</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A <code class="xref py py-class docutils literal notranslate"><span class="pre">datetime.datetime</span></code> object, containing the timestamp from <code class="docutils literal notranslate"><span class="pre">tm_str</span></code> rounded to the nearest ten second mark</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">datetime.datetime</span></code></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="temp_data_shifter.rowvals4SQLmany">
-<code class="sig-prename descclassname">temp_data_shifter.</code><code class="sig-name descname">rowvals4SQLmany</code><span class="sig-paren">(</span><em class="sig-param">row_list</em><span class="sig-paren">)</span><a class="headerlink" href="#temp_data_shifter.rowvals4SQLmany" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generates a string representation of the values in many rows, formatted for an SQL query.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>row_list</strong> (<em>list of dict</em>) – A list containing the row dictionaries to be inserted. Assumes every row
-dictionary contains corresponding values for every data column in the table.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A string containing strings generated by <code class="xref py py-meth docutils literal notranslate"><span class="pre">rowwvals4SQLquery()</span></code> for each row in <code class="docutils literal notranslate"><span class="pre">row_list</span></code>, separated by commas.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>str</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="temp_data_shifter.rowvals4SQLquery">
-<code class="sig-prename descclassname">temp_data_shifter.</code><code class="sig-name descname">rowvals4SQLquery</code><span class="sig-paren">(</span><em class="sig-param">row</em><span class="sig-paren">)</span><a class="headerlink" href="#temp_data_shifter.rowvals4SQLquery" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generates a string representation of the values in <code class="docutils literal notranslate"><span class="pre">row</span></code>, formatted for an SQL query.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>row</strong> (<em>dict</em>) – The dictionary representing the row.
-Assumes <code class="docutils literal notranslate"><span class="pre">row</span></code> contains corresponding values for every data column in the table</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A string containing comma separated values from <code class="docutils literal notranslate"><span class="pre">row</span></code>, enclosed in parentheses</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>str</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="temp_data_shifter.temp_shifter">
-<code class="sig-prename descclassname">temp_data_shifter.</code><code class="sig-name descname">temp_shifter</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#temp_data_shifter.temp_shifter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Shifts temperature data from <a class="reference internal" href="#temp_data_shifter.TEMPS_DB" title="temp_data_shifter.TEMPS_DB"><code class="xref py py-const docutils literal notranslate"><span class="pre">TEMPS_DB</span></code></a> to <a class="reference internal" href="#temp_data_shifter.RESULTS_DB" title="temp_data_shifter.RESULTS_DB"><code class="xref py py-const docutils literal notranslate"><span class="pre">RESULTS_DB</span></code></a>.</p>
-<p>Takes in temperature data from <a class="reference internal" href="#temp_data_shifter.TEMPS_DB" title="temp_data_shifter.TEMPS_DB"><code class="xref py py-const docutils literal notranslate"><span class="pre">TEMPS_DB</span></code></a>, rounds their time stamps
-to the nearest ten seconds, formats them as rows split by side, and inserts
-the rows into the <em>TEMPERATURES</em> table in <a class="reference internal" href="#temp_data_shifter.RESULTS_DB" title="temp_data_shifter.RESULTS_DB"><code class="xref py py-const docutils literal notranslate"><span class="pre">RESULTS_DB</span></code></a></p>
-<dl class="simple">
-<dt>Assumes:</dt><dd><ul class="simple">
-<li><p>Both databases exist as defined</p></li>
-<li><p>The row in <em>TESTS</em> with the time interval containing the data to be shifted exists</p></li>
-<li><p>The tables in both databases exist and are formatted as expected</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-</div>
 <div class="section" id="module-optimized_parsing">
-<span id="parser"></span><h1>PARSER<a class="headerlink" href="#module-optimized_parsing" title="Permalink to this headline">¶</a></h1>
+<span id="parser"></span><h2>PARSER<a class="headerlink" href="#module-optimized_parsing" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="optimized_parsing.Log">
 <em class="property">class </em><code class="sig-prename descclassname">optimized_parsing.</code><code class="sig-name descname">Log</code><span class="sig-paren">(</span><em class="sig-param">filename</em>, <em class="sig-param">units</em><span class="sig-paren">)</span><a class="headerlink" href="#optimized_parsing.Log" title="Permalink to this definition">¶</a></dt>
@@ -675,6 +534,147 @@ Suitable for use in an SQL <em>INSERT</em> query.</p>
 </dd></dl>
 
 </div>
+<div class="section" id="module-temp_data_shifter">
+<span id="temperature-data-shifter"></span><h2>Temperature Data Shifter<a class="headerlink" href="#module-temp_data_shifter" title="Permalink to this headline">¶</a></h2>
+<dl class="data">
+<dt id="temp_data_shifter.RESULTS_DB">
+<code class="sig-prename descclassname">temp_data_shifter.</code><code class="sig-name descname">RESULTS_DB</code><em class="property"> = &lt;Database(mysql://guest:*****&#64;localhost/test_results)&gt;</em><a class="headerlink" href="#temp_data_shifter.RESULTS_DB" title="Permalink to this definition">¶</a></dt>
+<dd><p>Database containing results from all tests.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">dataset.database</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="data">
+<dt id="temp_data_shifter.TEMPS_DB">
+<code class="sig-prename descclassname">temp_data_shifter.</code><code class="sig-name descname">TEMPS_DB</code><em class="property"> = &lt;Database(sqlite:///../Results/DAQTEMPS.db)&gt;</em><a class="headerlink" href="#temp_data_shifter.TEMPS_DB" title="Permalink to this definition">¶</a></dt>
+<dd><p>Database containing temperature data collected during the test run.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">dataset.database</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="temp_data_shifter.convert_row">
+<code class="sig-prename descclassname">temp_data_shifter.</code><code class="sig-name descname">convert_row</code><span class="sig-paren">(</span><em class="sig-param">row</em><span class="sig-paren">)</span><a class="headerlink" href="#temp_data_shifter.convert_row" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts a row from <a class="reference internal" href="#temp_data_shifter.TEMPS_DB" title="temp_data_shifter.TEMPS_DB"><code class="xref py py-const docutils literal notranslate"><span class="pre">TEMPS_DB</span></code></a> to two rows for <a class="reference internal" href="#temp_data_shifter.RESULTS_DB" title="temp_data_shifter.RESULTS_DB"><code class="xref py py-const docutils literal notranslate"><span class="pre">RESULTS_DB</span></code></a>.</p>
+<p>Takes in a single row of temperature data from <a class="reference internal" href="#temp_data_shifter.TEMPS_DB" title="temp_data_shifter.TEMPS_DB"><code class="xref py py-const docutils literal notranslate"><span class="pre">TEMPS_DB</span></code></a> and converts it
+into two rows of temperature data to be inserted into <em>TEMPERATURES</em> in <a class="reference internal" href="#temp_data_shifter.RESULTS_DB" title="temp_data_shifter.RESULTS_DB"><code class="xref py py-const docutils literal notranslate"><span class="pre">RESULTS_DB</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>row</strong> (<em>dict</em>) – A dictionary representing the row retrieved from <a class="reference internal" href="#temp_data_shifter.TEMPS_DB" title="temp_data_shifter.TEMPS_DB"><code class="xref py py-const docutils literal notranslate"><span class="pre">TEMPS_DB</span></code></a>.
+Assumes the row was retrieved successfully.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>out_rows</strong> – A list containing the two newly generated rows.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="temp_data_shifter.insert_ignore_many_query">
+<code class="sig-prename descclassname">temp_data_shifter.</code><code class="sig-name descname">insert_ignore_many_query</code><span class="sig-paren">(</span><em class="sig-param">table</em>, <em class="sig-param">rows</em><span class="sig-paren">)</span><a class="headerlink" href="#temp_data_shifter.insert_ignore_many_query" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate an appropriate string for inserting potentially duplicate rows into an SQL table.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>table</strong> (<em>str</em>) – The name of an SQL table in the current database.
+Assumes a table with that name exists in <a class="reference internal" href="#temp_data_shifter.RESULTS_DB" title="temp_data_shifter.RESULTS_DB"><code class="xref py py-const docutils literal notranslate"><span class="pre">RESULTS_DB</span></code></a>.</p></li>
+<li><p><strong>rows</strong> (<em>list of dict</em>) – A list of rows to insert into <code class="docutils literal notranslate"><span class="pre">table</span></code>.
+Assumes every row dictionary contains corresponding
+values for every data column in the table.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A string representing an SQL statement that, if executed, performs an <em>INSERT IGNORE</em> of every row in <code class="docutils literal notranslate"><span class="pre">rows</span></code> into <code class="docutils literal notranslate"><span class="pre">table</span></code>.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="temp_data_shifter.round_time">
+<code class="sig-prename descclassname">temp_data_shifter.</code><code class="sig-name descname">round_time</code><span class="sig-paren">(</span><em class="sig-param">tm_str</em><span class="sig-paren">)</span><a class="headerlink" href="#temp_data_shifter.round_time" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates a <code class="xref py py-class docutils literal notranslate"><span class="pre">datetime.datetime</span></code> object containing a rounded version of a time stamp string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>tm_str</strong> (<em>str</em>) – <p>A string containing a representation of a <code class="xref py py-class docutils literal notranslate"><span class="pre">datetime.datetime</span></code> object in standard format.</p>
+<p>Standard format is defined as <code class="docutils literal notranslate"><span class="pre">&quot;YYYY-MM-DD</span> <span class="pre">hh:mm:ss[:msecs]&quot;</span></code></p>
+</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A <code class="xref py py-class docutils literal notranslate"><span class="pre">datetime.datetime</span></code> object, containing the timestamp from <code class="docutils literal notranslate"><span class="pre">tm_str</span></code> rounded to the nearest ten second mark</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">datetime.datetime</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="temp_data_shifter.rowvals4SQLmany">
+<code class="sig-prename descclassname">temp_data_shifter.</code><code class="sig-name descname">rowvals4SQLmany</code><span class="sig-paren">(</span><em class="sig-param">row_list</em><span class="sig-paren">)</span><a class="headerlink" href="#temp_data_shifter.rowvals4SQLmany" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates a string representation of the values in many rows, formatted for an SQL query.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>row_list</strong> (<em>list of dict</em>) – A list containing the row dictionaries to be inserted. Assumes every row
+dictionary contains corresponding values for every data column in the table.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A string containing strings generated by <code class="xref py py-meth docutils literal notranslate"><span class="pre">rowwvals4SQLquery()</span></code> for each row in <code class="docutils literal notranslate"><span class="pre">row_list</span></code>, separated by commas.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="temp_data_shifter.rowvals4SQLquery">
+<code class="sig-prename descclassname">temp_data_shifter.</code><code class="sig-name descname">rowvals4SQLquery</code><span class="sig-paren">(</span><em class="sig-param">row</em><span class="sig-paren">)</span><a class="headerlink" href="#temp_data_shifter.rowvals4SQLquery" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates a string representation of the values in <code class="docutils literal notranslate"><span class="pre">row</span></code>, formatted for an SQL query.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>row</strong> (<em>dict</em>) – The dictionary representing the row.
+Assumes <code class="docutils literal notranslate"><span class="pre">row</span></code> contains corresponding values for every data column in the table</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A string containing comma separated values from <code class="docutils literal notranslate"><span class="pre">row</span></code>, enclosed in parentheses</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="temp_data_shifter.temp_shifter">
+<code class="sig-prename descclassname">temp_data_shifter.</code><code class="sig-name descname">temp_shifter</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#temp_data_shifter.temp_shifter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Shifts temperature data from <a class="reference internal" href="#temp_data_shifter.TEMPS_DB" title="temp_data_shifter.TEMPS_DB"><code class="xref py py-const docutils literal notranslate"><span class="pre">TEMPS_DB</span></code></a> to <a class="reference internal" href="#temp_data_shifter.RESULTS_DB" title="temp_data_shifter.RESULTS_DB"><code class="xref py py-const docutils literal notranslate"><span class="pre">RESULTS_DB</span></code></a>.</p>
+<p>Takes in temperature data from <a class="reference internal" href="#temp_data_shifter.TEMPS_DB" title="temp_data_shifter.TEMPS_DB"><code class="xref py py-const docutils literal notranslate"><span class="pre">TEMPS_DB</span></code></a>, rounds their time stamps
+to the nearest ten seconds, formats them as rows split by side, and inserts
+the rows into the <em>TEMPERATURES</em> table in <a class="reference internal" href="#temp_data_shifter.RESULTS_DB" title="temp_data_shifter.RESULTS_DB"><code class="xref py py-const docutils literal notranslate"><span class="pre">RESULTS_DB</span></code></a></p>
+<dl class="simple">
+<dt>Assumes:</dt><dd><ul class="simple">
+<li><p>Both databases exist as defined</p></li>
+<li><p>The row in <em>TESTS</em> with the time interval containing the data to be shifted exists</p></li>
+<li><p>The tables in both databases exist and are formatted as expected</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</div>
 
 
           </div>
@@ -695,9 +695,11 @@ Suitable for use in an SQL <em>INSERT</em> query.</p>
 <h3>Navigation</h3>
 <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">V5_Testing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#module-temp_data_shifter">Temperature Data Shifter</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#module-optimized_parsing">PARSER</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">V5_Testing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#module-optimized_parsing">PARSER</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-temp_data_shifter">Temperature Data Shifter</a></li>
+</ul>
+</li>
 </ul>
 
 <div class="relations">
