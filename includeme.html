@@ -154,6 +154,12 @@ rounds their timestamps to the nearest 10 seconds, and inserts it into the
 <div class="section" id="module-optimized_parsing">
 <span id="parser"></span><h1>PARSER<a class="headerlink" href="#module-optimized_parsing" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
+<dt id="optimized_parsing.insert_ignore_many_query">
+<code class="sig-prename descclassname">optimized_parsing.</code><code class="sig-name descname">insert_ignore_many_query</code><span class="sig-paren">(</span><em class="sig-param">test</em>, <em class="sig-param">rows</em><span class="sig-paren">)</span><a class="headerlink" href="#optimized_parsing.insert_ignore_many_query" title="Permalink to this definition">¶</a></dt>
+<dd><p>TEMP</p>
+</dd></dl>
+
+<dl class="function">
 <dt id="optimized_parsing.make_datetime">
 <code class="sig-prename descclassname">optimized_parsing.</code><code class="sig-name descname">make_datetime</code><span class="sig-paren">(</span><em class="sig-param">match_obj</em><span class="sig-paren">)</span><a class="headerlink" href="#optimized_parsing.make_datetime" title="Permalink to this definition">¶</a></dt>
 <dd><p>Given a match object that contains groups with date/time info, return a corresponding python datetime object</p>
@@ -162,46 +168,55 @@ rounds their timestamps to the nearest 10 seconds, and inserts it into the
 <dl class="function">
 <dt id="optimized_parsing.return_or">
 <code class="sig-prename descclassname">optimized_parsing.</code><code class="sig-name descname">return_or</code><span class="sig-paren">(</span><em class="sig-param">val_list</em><span class="sig-paren">)</span><a class="headerlink" href="#optimized_parsing.return_or" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="simple">
-<dt><strong>Parameters</strong>:</dt><dd><dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">val_list</span></code></dt><dd><p>A list of values <code class="docutils literal notranslate"><span class="pre">[v1,...,vn]</span></code></p>
+<dd><p>Return the contents of <em>val_list</em> in as a regex <cite>or</cite> statement.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>val_list</strong> (<em>list</em>) – A list of values <code class="docutils literal notranslate"><span class="pre">[v1,...,vn]</span></code></p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The string <code class="docutils literal notranslate"><span class="pre">&quot;((v1)|...|(vn))&quot;</span></code>, which is formatted appropriately
+for use in an <cite>or</cite> statement in a regular expression</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
 </dd>
 </dl>
-</dd>
-<dt><strong>Returns</strong>:</dt><dd><dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">or_str</span></code></dt><dd><p>The string <code class="docutils literal notranslate"><span class="pre">&quot;((v1)|...|(vn))&quot;</span></code>, which is formatted appropriately for use in an <code class="docutils literal notranslate"><span class="pre">or</span></code> statement in a regular expression</p>
-</dd>
-</dl>
-</dd>
-</dl>
-<p><strong>Example</strong>:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">return_or</span><span class="p">([</span><span class="s1">&#39;tea&#39;</span><span class="p">,</span><span class="s1">&#39;milk&#39;</span><span class="p">,</span><span class="s1">&#39;coffee&#39;</span><span class="p">])</span>
-<span class="c1"># Returns</span>
-<span class="s2">&quot;((tea)|(milk)|(coffee))&quot;</span>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">return_or</span><span class="p">([</span><span class="s1">&#39;tea&#39;</span><span class="p">,</span><span class="s1">&#39;milk&#39;</span><span class="p">,</span><span class="s1">&#39;coffee&#39;</span><span class="p">]))</span>
+<span class="go">&quot;((tea)|(milk)|(coffee))&quot;</span>
 </pre></div>
 </div>
 </dd></dl>
 
 <dl class="function">
 <dt id="optimized_parsing.rowcols4SQLquery">
-<code class="sig-prename descclassname">optimized_parsing.</code><code class="sig-name descname">rowcols4SQLquery</code><span class="sig-paren">(</span><em class="sig-param">cols</em>, <em class="sig-param">id_cols=[]</em><span class="sig-paren">)</span><a class="headerlink" href="#optimized_parsing.rowcols4SQLquery" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generates a string representation of the values in cols, formatted for
-an SQL query (where the values are the column names of the table.</p>
-<dl>
-<dt><strong>Parameters</strong>:</dt><dd><dl>
-<dt><code class="docutils literal notranslate"><span class="pre">cols</span></code></dt><dd><p>A list containing the column names as strings</p>
+<code class="sig-prename descclassname">optimized_parsing.</code><code class="sig-name descname">rowcols4SQLquery</code><span class="sig-paren">(</span><em class="sig-param">cols, pre_cols=['time_stamp', 'unit', 'side']</em><span class="sig-paren">)</span><a class="headerlink" href="#optimized_parsing.rowcols4SQLquery" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates a string representation column names for a table.</p>
+<p>The output is formatted for use in an SQL query
+(where the values of <em>cols</em> are the column names of the table).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cols</strong> (<em>list</em>) – A list of strings representing the names of the columns
+unique to a specific test table.</p></li>
+<li><p><strong>pre_cols</strong> (<em>list</em>) – <p>A list containing the names of columns which are not contained
+in the row dictionary.</p>
+<p>This parameter is set to <em>PREFIX_COLS</em> by default, since the
+columns for <cite>time_stamp</cite>, <cite>unit</cite>, and <cite>side</cite> are those which
+would not usually be contained in the row dicitionary, as they
+are not unique to a specific test table, and as such their
+values are extracted separately from those corresponding
+to the columns in <code class="docutils literal notranslate"><span class="pre">cols</span></code>.</p>
+</p></li>
+</ul>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">id_cols</span></code></dt><dd><p>A list containing the column names used for identification purposes, and which will not normally be contained in the row dictionary</p>
-<p>In most instances this list will be equal to <code class="docutils literal notranslate"><span class="pre">['time_stamp','unit','side']</span></code>, since these
-columns’ values are extracted separately from the rest of the row data</p>
-<p>By default, this parameter is set to an empty list</p>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A string containing comma separated values from <code class="docutils literal notranslate"><span class="pre">pre_cols</span></code> and <code class="docutils literal notranslate"><span class="pre">cols</span></code>,
+enclosed in parentheses. Suitable for use when naming the columns in
+an SQL <cite>INSERT</cite> statement.</p>
 </dd>
-</dl>
-</dd>
-<dt><strong>Returns</strong>:</dt><dd><dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">col_str</span></code></dt><dd><p>A string containing comma separated values from <code class="docutils literal notranslate"><span class="pre">id_cols</span></code> and <code class="docutils literal notranslate"><span class="pre">cols</span></code>, enclosed in parentheses</p>
-</dd>
-</dl>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
 </dd>
 </dl>
 </dd></dl>
@@ -261,9 +276,9 @@ specify the length of an SQL string type</p>
 <code class="sig-name descname">extract_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#optimized_parsing.Log.extract_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Extracts test results from the log file.</p>
 <p>For each line in the log file, checks if it has a relevant <cite>prefix</cite>.
-If it does, then it runs calls parse_line() on the line to attempt
-to convert data from the line into a row to be inserted into the database.
-When it recieves the list of rows to be inserted, it then attempts to insert
+If it does, then it calls parse_line() on the line to attempt to
+convert data from the line into a row to be inserted into the database.</p>
+<p>When it recieves the list of rows to be inserted, it then attempts to insert
 them into the corresponding test table in the database, using a query string
 generated by insert_ignore_many_query(), in order to ensure that duplicate
 entries are not inserted.</p>
@@ -313,7 +328,7 @@ much faster than inserting each row individually.</p>
 <li><p><strong>line</strong> (<em>str</em>) – A string containing a single line from the log file, which presumable contains
 a log message generated by the test denoted in <code class="docutils literal notranslate"><span class="pre">cur_test</span></code></p></li>
 <li><p><strong>cur_test</strong> (<a class="reference internal" href="#optimized_parsing.Test" title="optimized_parsing.Test"><em>Test</em></a><em>(</em><em>)</em>) – The test object that is expected to correspond to the test results contained in line</p></li>
-<li><p><strong>recur_count</strong> (<em>int</em>) – Stores current recursion depth, to avoid raising an error if the limit is reached
+<li><p><strong>recur_count</strong> (<em>int</em>) – Stores current recursion depth, to avoid raising an error if the limit is reached.
 Set to <code class="docutils literal notranslate"><span class="pre">0</span></code> by default if no value is specified.</p></li>
 </ul>
 </dd>
