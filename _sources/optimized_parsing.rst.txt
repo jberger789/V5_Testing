@@ -1,0 +1,7 @@
+optimized\_parsing module
+=========================
+
+.. automodule:: optimized_parsing
+   :members:
+   :undoc-members:
+   :show-inheritance:

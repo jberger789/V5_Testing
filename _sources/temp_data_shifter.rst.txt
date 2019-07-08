@@ -1,0 +1,7 @@
+temp\_data\_shifter module
+==========================
+
+.. automodule:: temp_data_shifter
+   :members:
+   :undoc-members:
+   :show-inheritance:

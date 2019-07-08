@@ -1,0 +1,207 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>results_viewer module &#8212; V5_Testing Scripts  documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="module-results_viewer">
+<span id="results-viewer-module"></span><h1>results_viewer module<a class="headerlink" href="#module-results_viewer" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="results_viewer.Test">
+<em class="property">class </em><code class="sig-prename descclassname">results_viewer.</code><code class="sig-name descname">Test</code><span class="sig-paren">(</span><em class="sig-param">json_file_name</em><span class="sig-paren">)</span><a class="headerlink" href="#results_viewer.Test" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+</dd></dl>
+
+<dl class="function">
+<dt id="results_viewer.autogenerate_graphs">
+<code class="sig-prename descclassname">results_viewer.</code><code class="sig-name descname">autogenerate_graphs</code><span class="sig-paren">(</span><em class="sig-param">start_time</em>, <em class="sig-param">end_time</em><span class="sig-paren">)</span><a class="headerlink" href="#results_viewer.autogenerate_graphs" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="results_viewer.determine_units">
+<code class="sig-prename descclassname">results_viewer.</code><code class="sig-name descname">determine_units</code><span class="sig-paren">(</span><em class="sig-param">cur_test</em>, <em class="sig-param">sel_opt</em><span class="sig-paren">)</span><a class="headerlink" href="#results_viewer.determine_units" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="results_viewer.double_hist_fig">
+<code class="sig-prename descclassname">results_viewer.</code><code class="sig-name descname">double_hist_fig</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">info</em>, <em class="sig-param">fig_info</em><span class="sig-paren">)</span><a class="headerlink" href="#results_viewer.double_hist_fig" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="results_viewer.gen_IPERF_graph">
+<code class="sig-prename descclassname">results_viewer.</code><code class="sig-name descname">gen_IPERF_graph</code><span class="sig-paren">(</span><em class="sig-param">sel_opt</em>, <em class="sig-param">start_time</em>, <em class="sig-param">end_time</em>, <em class="sig-param">stf=False</em><span class="sig-paren">)</span><a class="headerlink" href="#results_viewer.gen_IPERF_graph" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="results_viewer.gen_IPERF_graph_alt">
+<code class="sig-prename descclassname">results_viewer.</code><code class="sig-name descname">gen_IPERF_graph_alt</code><span class="sig-paren">(</span><em class="sig-param">sel_opt</em>, <em class="sig-param">start_time</em>, <em class="sig-param">end_time</em>, <em class="sig-param">stf=False</em><span class="sig-paren">)</span><a class="headerlink" href="#results_viewer.gen_IPERF_graph_alt" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="results_viewer.gen_temp_graph">
+<code class="sig-prename descclassname">results_viewer.</code><code class="sig-name descname">gen_temp_graph</code><span class="sig-paren">(</span><em class="sig-param">start_time</em>, <em class="sig-param">end_time</em><span class="sig-paren">)</span><a class="headerlink" href="#results_viewer.gen_temp_graph" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="results_viewer.generate_graph">
+<code class="sig-prename descclassname">results_viewer.</code><code class="sig-name descname">generate_graph</code><span class="sig-paren">(</span><em class="sig-param">cur_test</em>, <em class="sig-param">sel_opt</em>, <em class="sig-param">start_time</em>, <em class="sig-param">end_time</em>, <em class="sig-param">max_y=None</em>, <em class="sig-param">where_addendum=''</em>, <em class="sig-param">sub_title=''</em>, <em class="sig-param">save_to_file=False</em>, <em class="sig-param">graph_type='plot'</em><span class="sig-paren">)</span><a class="headerlink" href="#results_viewer.generate_graph" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="results_viewer.get_data">
+<code class="sig-prename descclassname">results_viewer.</code><code class="sig-name descname">get_data</code><span class="sig-paren">(</span><em class="sig-param">cur_test</em>, <em class="sig-param">sel_opt</em>, <em class="sig-param">start_time</em>, <em class="sig-param">end_time</em>, <em class="sig-param">where_addendum=''</em><span class="sig-paren">)</span><a class="headerlink" href="#results_viewer.get_data" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="results_viewer.graph_select">
+<code class="sig-prename descclassname">results_viewer.</code><code class="sig-name descname">graph_select</code><span class="sig-paren">(</span><em class="sig-param">test_key</em>, <em class="sig-param">start_time</em>, <em class="sig-param">end_time</em><span class="sig-paren">)</span><a class="headerlink" href="#results_viewer.graph_select" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="results_viewer.map_time2temp">
+<code class="sig-prename descclassname">results_viewer.</code><code class="sig-name descname">map_time2temp</code><span class="sig-paren">(</span><em class="sig-param">times</em>, <em class="sig-param">data</em><span class="sig-paren">)</span><a class="headerlink" href="#results_viewer.map_time2temp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="results_viewer.my_plotter">
+<code class="sig-prename descclassname">results_viewer.</code><code class="sig-name descname">my_plotter</code><span class="sig-paren">(</span><em class="sig-param">ax</em>, <em class="sig-param">xdata</em>, <em class="sig-param">ydata</em>, <em class="sig-param">fmt</em>, <em class="sig-param">param_dict</em><span class="sig-paren">)</span><a class="headerlink" href="#results_viewer.my_plotter" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="results_viewer.one_and_three_fig">
+<code class="sig-prename descclassname">results_viewer.</code><code class="sig-name descname">one_and_three_fig</code><span class="sig-paren">(</span><em class="sig-param">upperx</em>, <em class="sig-param">uppery</em>, <em class="sig-param">upper_info</em>, <em class="sig-param">lowerx</em>, <em class="sig-param">lowery</em>, <em class="sig-param">lower_info</em>, <em class="sig-param">fig_info</em><span class="sig-paren">)</span><a class="headerlink" href="#results_viewer.one_and_three_fig" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="results_viewer.plot_hist">
+<code class="sig-prename descclassname">results_viewer.</code><code class="sig-name descname">plot_hist</code><span class="sig-paren">(</span><em class="sig-param">ax</em>, <em class="sig-param">data</em>, <em class="sig-param">param_dict</em><span class="sig-paren">)</span><a class="headerlink" href="#results_viewer.plot_hist" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="results_viewer.return_help">
+<code class="sig-prename descclassname">results_viewer.</code><code class="sig-name descname">return_help</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#results_viewer.return_help" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="results_viewer.return_options">
+<code class="sig-prename descclassname">results_viewer.</code><code class="sig-name descname">return_options</code><span class="sig-paren">(</span><em class="sig-param">options_list</em>, <em class="sig-param">sep_char</em><span class="sig-paren">)</span><a class="headerlink" href="#results_viewer.return_options" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="results_viewer.test_run_select">
+<code class="sig-prename descclassname">results_viewer.</code><code class="sig-name descname">test_run_select</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#results_viewer.test_run_select" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="results_viewer.test_select">
+<code class="sig-prename descclassname">results_viewer.</code><code class="sig-name descname">test_select</code><span class="sig-paren">(</span><em class="sig-param">start_time</em>, <em class="sig-param">end_time</em><span class="sig-paren">)</span><a class="headerlink" href="#results_viewer.test_select" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="results_viewer.three_vert_fig">
+<code class="sig-prename descclassname">results_viewer.</code><code class="sig-name descname">three_vert_fig</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">y</em>, <em class="sig-param">info</em>, <em class="sig-param">fig_info</em><span class="sig-paren">)</span><a class="headerlink" href="#results_viewer.three_vert_fig" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="results_viewer.tricolor_fig">
+<code class="sig-prename descclassname">results_viewer.</code><code class="sig-name descname">tricolor_fig</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">y</em>, <em class="sig-param">info</em>, <em class="sig-param">fig_info</em><span class="sig-paren">)</span><a class="headerlink" href="#results_viewer.tricolor_fig" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">V5_Testing Scripts</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="includeme.html">V5_Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="includeme.html#temperature-data-shifter">Temperature Data Shifter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="includeme.html#parser">PARSER</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Joshua Berger, Jack Tillman, Gabe Sauvageau.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.1.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/results_viewer.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
