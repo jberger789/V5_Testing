@@ -550,15 +550,35 @@ the regular expressions that parse the line (assuming they cannot create arbitra
 
 </div>
 </div>
-<div class="section" id="results-viewer">
-<h2>Results Viewer<a class="headerlink" href="#results-viewer" title="Permalink to this headline">¶</a></h2>
-<dl class="simple">
-<dt>..automodule:: results_viewer</dt><dd><dl class="field-list simple">
-<dt class="field-odd">members</dt>
-<dd class="field-odd"><p></p></dd>
-</dl>
+<div class="section" id="module-results_viewer">
+<span id="results-viewer"></span><h2>Results Viewer<a class="headerlink" href="#module-results_viewer" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="results_viewer.get_data">
+<code class="sig-prename descclassname">results_viewer.</code><code class="sig-name descname">get_data</code><span class="sig-paren">(</span><em class="sig-param">cur_test</em>, <em class="sig-param">sel_opt</em>, <em class="sig-param">start_time</em>, <em class="sig-param">end_time</em>, <em class="sig-param">where_addendum=''</em><span class="sig-paren">)</span><a class="headerlink" href="#results_viewer.get_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve test data from the database.</p>
+<p>Get the data associated with the selected test run, from current test’s database,
+limited to only the data specified by the selected option.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cur_test</strong> (<a class="reference internal" href="#optimized_parsing.Test" title="optimized_parsing.Test"><em>Test</em></a>) – The <code class="xref py py-class docutils literal notranslate"><span class="pre">Test</span></code> for which we wish to obtain data.</p></li>
+<li><p><strong>sel_opt</strong> (<em>str</em>) – The user selected option denoting the subset of data we care about.</p></li>
+<li><p><strong>start_time</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">datetime.datetime</span></code>) – The time at which the currently selected test run began.</p></li>
+<li><p><strong>end_time</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">datetime.datetime</span></code>) – The time at which the currently selected test run ended.</p></li>
+<li><p><strong>where_addendum</strong> (<em>str</em><em>, </em><em>optional</em>) – An optional string which is used to specify additional constraints for the query to the database.
+Empty by default, and only used by some tests.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>x</strong> (<em>dict</em>) – A dictionary containing a list of the desired x-axis data associated with each side</p></li>
+<li><p><strong>y</strong> (<em>dict</em>) – A dictionary containing a list of the desired y-axis data associated with each side</p></li>
+</ul>
+</p>
 </dd>
 </dl>
+</dd></dl>
+
 </div>
 <div class="section" id="module-temp_data_shifter">
 <span id="temperature-data-shifter"></span><h2>Temperature Data Shifter<a class="headerlink" href="#module-temp_data_shifter" title="Permalink to this headline">¶</a></h2>
@@ -732,7 +752,7 @@ values for every data column in the table.</p></li>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Post Processing</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#module-optimized_parsing">Parser</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#results-viewer">Results Viewer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-results_viewer">Results Viewer</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-temp_data_shifter">Temperature Data Shifter</a></li>
 </ul>
 </li>
