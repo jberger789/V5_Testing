@@ -61,15 +61,15 @@ Assumes the row was retrieved successfully</p>
 <dd><p>Generate an appropriate string for inserting potentially duplicate rows into an SQL table.</p>
 <dl class="simple">
 <dt><strong>Parameters</strong>:</dt><dd><dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">table</span></code></dt><dd><p>The name of an SQL table in the current database.  
+<dt><code class="docutils literal notranslate"><span class="pre">table</span></code></dt><dd><p>The name of an SQL table in the current database.
 Assumes a table with that name exists in the database as defined by <strong>RESULTS_DB</strong></p>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">rows</span></code></dt><dd><p>a list of rows to insert into <code class="docutils literal notranslate"><span class="pre">table</span></code>.  
+<dt><code class="docutils literal notranslate"><span class="pre">rows</span></code></dt><dd><p>a list of rows to insert into <code class="docutils literal notranslate"><span class="pre">table</span></code>.
 Assumes every row dictionary contains corresponding values for every data column in the table</p>
 </dd>
 </dl>
 </dd>
-<dt><strong>Returns</strong>: </dt><dd><dl class="simple">
+<dt><strong>Returns</strong>:</dt><dd><dl class="simple">
 <dt><code class="docutils literal notranslate"><span class="pre">query_str</span></code></dt><dd><p>A string representing an SQL statement that, if executed, performs an <em>INSERT IGNORE</em> of every row in <code class="docutils literal notranslate"><span class="pre">rows</span></code> into <code class="docutils literal notranslate"><span class="pre">table</span></code></p>
 </dd>
 </dl>
@@ -120,7 +120,7 @@ Assumes every row dictionary contains corresponding values for every data column
 <code class="sig-prename descclassname">temp_data_shifter.</code><code class="sig-name descname">rowvals4SQLquery</code><span class="sig-paren">(</span><em class="sig-param">row</em><span class="sig-paren">)</span><a class="headerlink" href="#temp_data_shifter.rowvals4SQLquery" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generates a string representation of the values in <code class="docutils literal notranslate"><span class="pre">row</span></code>, formatted for an SQL query.</p>
 <dl class="simple">
-<dt><strong>Parameters</strong>: </dt><dd><dl class="simple">
+<dt><strong>Parameters</strong>:</dt><dd><dl class="simple">
 <dt><code class="docutils literal notranslate"><span class="pre">row</span></code></dt><dd><p>The dictionary representing the row.
 Assumes the dictionary contains corresponding values for every data column in the table</p>
 </dd>
@@ -137,8 +137,8 @@ Assumes the dictionary contains corresponding values for every data column in th
 <dl class="function">
 <dt id="temp_data_shifter.temp_shifter">
 <code class="sig-prename descclassname">temp_data_shifter.</code><code class="sig-name descname">temp_shifter</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#temp_data_shifter.temp_shifter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Takes in temperature data from the database as defined by <strong>TEMPS_DB</strong>, 
-rounds their timestamps to the nearest 10 seconds, and inserts it into the 
+<dd><p>Takes in temperature data from the database as defined by <strong>TEMPS_DB</strong>,
+rounds their timestamps to the nearest 10 seconds, and inserts it into the
 <em>TEMPERATURES</em> table in the database as defined by <strong>RESULTS_DB</strong>.</p>
 <dl class="simple">
 <dt><strong>Assumes</strong>:</dt><dd><ul class="simple">
@@ -185,14 +185,14 @@ rounds their timestamps to the nearest 10 seconds, and inserts it into the
 <dl class="function">
 <dt id="optimized_parsing.rowcols4SQLquery">
 <code class="sig-prename descclassname">optimized_parsing.</code><code class="sig-name descname">rowcols4SQLquery</code><span class="sig-paren">(</span><em class="sig-param">cols</em>, <em class="sig-param">id_cols=[]</em><span class="sig-paren">)</span><a class="headerlink" href="#optimized_parsing.rowcols4SQLquery" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generates a string representation of the values in cols, formatted for 
+<dd><p>Generates a string representation of the values in cols, formatted for
 an SQL query (where the values are the column names of the table.</p>
 <dl>
-<dt><strong>Parameters</strong>: </dt><dd><dl>
+<dt><strong>Parameters</strong>:</dt><dd><dl>
 <dt><code class="docutils literal notranslate"><span class="pre">cols</span></code></dt><dd><p>A list containing the column names as strings</p>
 </dd>
 <dt><code class="docutils literal notranslate"><span class="pre">id_cols</span></code></dt><dd><p>A list containing the column names used for identification purposes, and which will not normally be contained in the row dictionary</p>
-<p>In most instances this list will be equal to <code class="docutils literal notranslate"><span class="pre">['time_stamp','unit','side']</span></code>, since these 
+<p>In most instances this list will be equal to <code class="docutils literal notranslate"><span class="pre">['time_stamp','unit','side']</span></code>, since these
 columns’ values are extracted separately from the rest of the row data</p>
 <p>By default, this parameter is set to an empty list</p>
 </dd>
@@ -217,7 +217,7 @@ Assumes every row dictionary contains corresponding values for every data column
 </dd>
 <dt><code class="docutils literal notranslate"><span class="pre">col_dict</span></code></dt><dd></dd>
 <dt><code class="docutils literal notranslate"><span class="pre">id_cols</span></code></dt><dd><p>A list containing the column names used for identification purposes, and which will not normally be contained in the row dictionary</p>
-<p>In most instances this list will be equal to <code class="docutils literal notranslate"><span class="pre">['time_stamp','unit','side']</span></code>, since these 
+<p>In most instances this list will be equal to <code class="docutils literal notranslate"><span class="pre">['time_stamp','unit','side']</span></code>, since these
 columns’ values are extracted separately from the rest of the row data</p>
 <p>By default, this parameter is set to an empty list</p>
 </dd>
@@ -237,7 +237,23 @@ columns’ values are extracted separately from the rest of the row data</p>
 <dd><dl class="method">
 <dt id="optimized_parsing.Log.add_test">
 <code class="sig-name descname">add_test</code><span class="sig-paren">(</span><em class="sig-param">test</em><span class="sig-paren">)</span><a class="headerlink" href="#optimized_parsing.Log.add_test" title="Permalink to this definition">¶</a></dt>
-<dd><p>Associate a new test with this log</p>
+<dd><p>Associates a new test with this log.</p>
+<p>Attempts to set up a new table in the database for
+storing data from this test. After it has done so, or
+if such a table already exists, this method adds the
+new test to the test dictionary <cite>self.tests</cite>, where the
+key is the string equivalent to this test’s tag (<cite>test.tag</cite>)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>test</strong> (<a class="reference internal" href="#optimized_parsing.Test" title="optimized_parsing.Test"><em>Test</em></a><em>(</em><em>)</em>) – The test object to be added to this log</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>May raise errors when attempting to create a
+new table, as there is no available way to
+specify the length of an SQL string type</p>
+</div>
 </dd></dl>
 
 <dl class="method">
@@ -249,8 +265,8 @@ columns’ values are extracted separately from the rest of the row data</p>
 <dl class="method">
 <dt id="optimized_parsing.Log.parse_line">
 <code class="sig-name descname">parse_line</code><span class="sig-paren">(</span><em class="sig-param">line</em>, <em class="sig-param">cur_test</em>, <em class="sig-param">recur_count</em><span class="sig-paren">)</span><a class="headerlink" href="#optimized_parsing.Log.parse_line" title="Permalink to this definition">¶</a></dt>
-<dd><p>Given a line and a log file, and the test the current line is associated with, 
-will convert the data in the line and in every consecutive line for the same test 
+<dd><p>Given a line and a log file, and the test the current line is associated with,
+will convert the data in the line and in every consecutive line for the same test
 into a lists of rows to be inserted into the database (recursively)</p>
 </dd></dl>
 
