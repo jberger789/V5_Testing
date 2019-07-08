@@ -157,7 +157,7 @@ rounds their timestamps to the nearest 10 seconds, and inserts it into the
 <dt id="optimized_parsing.insert_ignore_many_query">
 <code class="sig-prename descclassname">optimized_parsing.</code><code class="sig-name descname">insert_ignore_many_query</code><span class="sig-paren">(</span><em class="sig-param">test</em>, <em class="sig-param">rows</em><span class="sig-paren">)</span><a class="headerlink" href="#optimized_parsing.insert_ignore_many_query" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a string for an SQL <em>INSERT IGNORE</em> query for multiple rows of data.</p>
-<p>Given a Test() object and a list of rows, generate an SQL query string
+<p>Given a <a class="reference internal" href="#optimized_parsing.Test" title="optimized_parsing.Test"><code class="xref py py-class docutils literal notranslate"><span class="pre">Test</span></code></a> object and a list of rows, generate an SQL query string
 for inserting all of the rows in <code class="docutils literal notranslate"><span class="pre">rows</span></code> into the table corresponding
 to <code class="docutils literal notranslate"><span class="pre">test</span></code>.</p>
 <dl class="field-list simple">
@@ -194,7 +194,7 @@ the regular expressions that parse the line (assuming they cannot create arbitra
 <dd><p>Given a match object that contains groups with date/time info, return a corresponding python datetime object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>match_obj</strong> (<em>re.Match</em>) – A match object which contains time stamp information, and corresponding groups.</p>
+<dd class="field-odd"><p><strong>match_obj</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">re.Match</span></code>) – A match object which contains time stamp information, and corresponding groups.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>A datetime object containing the time stamp information in <code class="docutils literal notranslate"><span class="pre">match_obj</span></code>.</p>
