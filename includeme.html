@@ -38,14 +38,189 @@
 <div class="section" id="constants">
 <h3>Constants<a class="headerlink" href="#constants" title="Permalink to this headline">¶</a></h3>
 <dl class="data">
-<dt>
-<code class="sig-prename descclassname">optimized_parsing.</code><code class="sig-name descname">PREFIX_COLS</code><em class="property"> = ['time_stamp', 'unit', 'side']</em></dt>
+<dt id="optimized_parsing.PREFIX_COLS">
+<code class="sig-prename descclassname">optimized_parsing.</code><code class="sig-name descname">PREFIX_COLS</code><em class="property"> = ['time_stamp', 'unit', 'side']</em><a class="headerlink" href="#optimized_parsing.PREFIX_COLS" title="Permalink to this definition">¶</a></dt>
 <dd><p>List containing names of the prefix columns</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
 <dd class="field-odd"><p>list of str</p>
 </dd>
 </dl>
+</dd></dl>
+
+</div>
+<div class="section" id="general-functions">
+<h3>General Functions<a class="headerlink" href="#general-functions" title="Permalink to this headline">¶</a></h3>
+<dl class="function">
+<dt>
+<code class="sig-prename descclassname">optimized_parsing.</code><code class="sig-name descname">make_datetime</code><span class="sig-paren">(</span><em class="sig-param">match_obj</em><span class="sig-paren">)</span></dt>
+<dd><p>Given a match object that contains groups with date/time info, return a corresponding python datetime object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>match_obj</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">re.Match</span></code>) – A match object which contains time stamp information, and corresponding groups.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A datetime object containing the time stamp information in <code class="docutils literal notranslate"><span class="pre">match_obj</span></code>.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">datetime.datetime</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="sig-prename descclassname">optimized_parsing.</code><code class="sig-name descname">return_or</code><span class="sig-paren">(</span><em class="sig-param">val_list</em><span class="sig-paren">)</span></dt>
+<dd><p>Return the contents of <em>val_list</em> in as a regex <cite>or</cite> statement.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>val_list</strong> (<em>list</em>) – A list of values <code class="docutils literal notranslate"><span class="pre">[v1,...,vn]</span></code></p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The string <code class="docutils literal notranslate"><span class="pre">&quot;((v1)|...|(vn))&quot;</span></code>, which is formatted appropriately
+for use in an <cite>or</cite> statement in a regular expression</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">return_or</span><span class="p">([</span><span class="s1">&#39;tea&#39;</span><span class="p">,</span><span class="s1">&#39;milk&#39;</span><span class="p">,</span><span class="s1">&#39;coffee&#39;</span><span class="p">]))</span>
+<span class="go">&quot;((tea)|(milk)|(coffee))&quot;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="sig-prename descclassname">optimized_parsing.</code><code class="sig-name descname">rowvals4SQLquery</code><span class="sig-paren">(</span><em class="sig-param">row, col_info, pre_cols=['time_stamp', 'unit', 'side']</em><span class="sig-paren">)</span></dt>
+<dd><p>Generates a string representation of the values in a row.</p>
+<p>Given a row dictionary, and a dictionary containing column info
+for the correspoding test, returns a string representation of
+the corresponding values in rows for every column of the table.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>row</strong> (<em>dictionary</em>) – A dictionary containing the data for a single row of an SQL
+table. The keys are the names of columns, with the values as
+the corresponding values.</p></li>
+<li><p><strong>col_info</strong> (<em>dicitionary</em>) – A dictionary containing the columns unique to a specific test as keys,
+with the corresponding values as the data types of the columns.</p></li>
+<li><p><strong>pre_cols</strong> (<em>list</em>) – <p>A list containing the names of columns which are not contained
+in <code class="docutils literal notranslate"><span class="pre">col_info</span></code>.</p>
+<p>This parameter is set to <a class="reference internal" href="#optimized_parsing.PREFIX_COLS" title="optimized_parsing.PREFIX_COLS"><code class="xref py py-const docutils literal notranslate"><span class="pre">PREFIX_COLS</span></code></a> by default, since the
+columns for <cite>time_stamp</cite>, <cite>unit</cite>, and <cite>side</cite> are those which
+are not unique to any single test, and thus are not contained
+within <code class="docutils literal notranslate"><span class="pre">col_info</span></code>.</p>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A string representing all the column data in <code class="docutils literal notranslate"><span class="pre">row</span></code> (with all data
+formatted as appropriate, and empty columns rendered as “NULL”),
+with data separated by commas and enclosed in parentheses.
+Suitable for use in an SQL <em>INSERT</em> query.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="sig-prename descclassname">optimized_parsing.</code><code class="sig-name descname">rowvals4SQLmany</code><span class="sig-paren">(</span><em class="sig-param">row_list</em>, <em class="sig-param">col_info</em><span class="sig-paren">)</span></dt>
+<dd><p>Generates a string representation of the values in many rows.</p>
+<p>Given a list of row dicitonaries, and dictionary containing column info
+for the corresponding test, returns a string representation of the row data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>row_list</strong> (<em>list</em>) – <p>A list containing the rows (as dictionaries) to be inserted.</p>
+<p>Assumes every row dictionary contains corresponding values for
+every data column in the table.</p>
+</p></li>
+<li><p><strong>col_info</strong> (<em>dictionary</em>) – A dictionary containing the columns unique to a specific test as keys,
+with the corresponding values as the data types of the columns.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A string representing the data in all of the rows in <code class="docutils literal notranslate"><span class="pre">row_list</span></code>,
+with each row’s data string separated by commas. Suitable for
+use in an SQL <em>INSERT</em> query for many rows of data.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="sig-prename descclassname">optimized_parsing.</code><code class="sig-name descname">rowcols4SQLquery</code><span class="sig-paren">(</span><em class="sig-param">cols, pre_cols=['time_stamp', 'unit', 'side']</em><span class="sig-paren">)</span></dt>
+<dd><p>Generates a string representation column names for a table.</p>
+<p>The output is formatted for use in an SQL query
+(where the values of <code class="docutils literal notranslate"><span class="pre">cols</span></code> are the column names of the table).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cols</strong> (<em>list</em>) – A list of strings representing the names of the columns
+unique to a specific test table.</p></li>
+<li><p><strong>pre_cols</strong> (<em>list</em>) – <p>A list containing the names of columns which are not contained
+in the row dictionary.</p>
+<p>This parameter is set to <a class="reference internal" href="#optimized_parsing.PREFIX_COLS" title="optimized_parsing.PREFIX_COLS"><code class="xref py py-const docutils literal notranslate"><span class="pre">PREFIX_COLS</span></code></a> by default, since the
+columns for <cite>time_stamp</cite>, <cite>unit</cite>, and <cite>side</cite> are those which
+would not usually be contained in the row dicitionary, as
+they are not unique to a specific test table, and thus their
+values are extracted separately from those corresponding
+to the columns in <code class="docutils literal notranslate"><span class="pre">cols</span></code>.</p>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A string containing comma separated values from <code class="docutils literal notranslate"><span class="pre">pre_cols</span></code> and <code class="docutils literal notranslate"><span class="pre">cols</span></code>,
+enclosed in parentheses. Suitable for use when naming the columns in
+an SQL <em>INSERT</em> query.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="sig-prename descclassname">optimized_parsing.</code><code class="sig-name descname">insert_ignore_many_query</code><span class="sig-paren">(</span><em class="sig-param">test</em>, <em class="sig-param">rows</em><span class="sig-paren">)</span></dt>
+<dd><p>Returns a string for an SQL <em>INSERT IGNORE</em> query for multiple rows of data.</p>
+<p>Given a <a class="reference internal" href="#optimized_parsing.Test" title="optimized_parsing.Test"><code class="xref py py-class docutils literal notranslate"><span class="pre">Test</span></code></a> object and a list of rows, generate an SQL query string
+for inserting all of the rows in <code class="docutils literal notranslate"><span class="pre">rows</span></code> into the table corresponding
+to <code class="docutils literal notranslate"><span class="pre">test</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>test</strong> (<a class="reference internal" href="#optimized_parsing.Test" title="optimized_parsing.Test"><em>Test</em></a>) – The test that corresponds to the data contained in <code class="docutils literal notranslate"><span class="pre">rows</span></code>.</p></li>
+<li><p><strong>rows</strong> (<em>list</em>) – A list of row dictionaries to be inserted into the table
+corresponding to <code class="docutils literal notranslate"><span class="pre">test</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A string that, when executed as an SQL query, will
+perform an <em>INSERT IGNORE</em> of the rows in <code class="docutils literal notranslate"><span class="pre">rows</span></code>
+into the table corresponding to <code class="docutils literal notranslate"><span class="pre">test</span></code></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Because this code was created for internal use (and ideally automated use),
+it makes no attempt at data sanitization, meaning it could, in theory, allow
+a malicious actor with arbitrary access to this code to perform an SQL injection
+attack. However, if they only have access to the log file, it is unlikely that
+they would be able to embed arbitrary SQL queries that would still be recognized by
+the regular expressions that parse the line (assuming they cannot create arbitrary tests)</p>
+</div>
 </dd></dl>
 
 </div>
@@ -373,181 +548,6 @@ messsage may have come from.</p>
 </dd></dl>
 
 </div></blockquote>
-</div>
-<div class="section" id="other-functions">
-<h3>Other Functions<a class="headerlink" href="#other-functions" title="Permalink to this headline">¶</a></h3>
-<dl class="function">
-<dt>
-<code class="sig-prename descclassname">optimized_parsing.</code><code class="sig-name descname">make_datetime</code><span class="sig-paren">(</span><em class="sig-param">match_obj</em><span class="sig-paren">)</span></dt>
-<dd><p>Given a match object that contains groups with date/time info, return a corresponding python datetime object.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>match_obj</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">re.Match</span></code>) – A match object which contains time stamp information, and corresponding groups.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A datetime object containing the time stamp information in <code class="docutils literal notranslate"><span class="pre">match_obj</span></code>.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">datetime.datetime</span></code></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<code class="sig-prename descclassname">optimized_parsing.</code><code class="sig-name descname">return_or</code><span class="sig-paren">(</span><em class="sig-param">val_list</em><span class="sig-paren">)</span></dt>
-<dd><p>Return the contents of <em>val_list</em> in as a regex <cite>or</cite> statement.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>val_list</strong> (<em>list</em>) – A list of values <code class="docutils literal notranslate"><span class="pre">[v1,...,vn]</span></code></p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The string <code class="docutils literal notranslate"><span class="pre">&quot;((v1)|...|(vn))&quot;</span></code>, which is formatted appropriately
-for use in an <cite>or</cite> statement in a regular expression</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>str</p>
-</dd>
-</dl>
-<p class="rubric">Example</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">return_or</span><span class="p">([</span><span class="s1">&#39;tea&#39;</span><span class="p">,</span><span class="s1">&#39;milk&#39;</span><span class="p">,</span><span class="s1">&#39;coffee&#39;</span><span class="p">]))</span>
-<span class="go">&quot;((tea)|(milk)|(coffee))&quot;</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<code class="sig-prename descclassname">optimized_parsing.</code><code class="sig-name descname">rowvals4SQLquery</code><span class="sig-paren">(</span><em class="sig-param">row, col_info, pre_cols=['time_stamp', 'unit', 'side']</em><span class="sig-paren">)</span></dt>
-<dd><p>Generates a string representation of the values in a row.</p>
-<p>Given a row dictionary, and a dictionary containing column info
-for the correspoding test, returns a string representation of
-the corresponding values in rows for every column of the table.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>row</strong> (<em>dictionary</em>) – A dictionary containing the data for a single row of an SQL
-table. The keys are the names of columns, with the values as
-the corresponding values.</p></li>
-<li><p><strong>col_info</strong> (<em>dicitionary</em>) – A dictionary containing the columns unique to a specific test as keys,
-with the corresponding values as the data types of the columns.</p></li>
-<li><p><strong>pre_cols</strong> (<em>list</em>) – <p>A list containing the names of columns which are not contained
-in <code class="docutils literal notranslate"><span class="pre">col_info</span></code>.</p>
-<p>This parameter is set to <code class="xref py py-const docutils literal notranslate"><span class="pre">PREFIX_COLS</span></code> by default, since the
-columns for <cite>time_stamp</cite>, <cite>unit</cite>, and <cite>side</cite> are those which
-are not unique to any single test, and thus are not contained
-within <code class="docutils literal notranslate"><span class="pre">col_info</span></code>.</p>
-</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A string representing all the column data in <code class="docutils literal notranslate"><span class="pre">row</span></code> (with all data
-formatted as appropriate, and empty columns rendered as “NULL”),
-with data separated by commas and enclosed in parentheses.
-Suitable for use in an SQL <em>INSERT</em> query.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>str</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<code class="sig-prename descclassname">optimized_parsing.</code><code class="sig-name descname">rowvals4SQLmany</code><span class="sig-paren">(</span><em class="sig-param">row_list</em>, <em class="sig-param">col_info</em><span class="sig-paren">)</span></dt>
-<dd><p>Generates a string representation of the values in many rows.</p>
-<p>Given a list of row dicitonaries, and dictionary containing column info
-for the corresponding test, returns a string representation of the row data.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>row_list</strong> (<em>list</em>) – <p>A list containing the rows (as dictionaries) to be inserted.</p>
-<p>Assumes every row dictionary contains corresponding values for
-every data column in the table.</p>
-</p></li>
-<li><p><strong>col_info</strong> (<em>dictionary</em>) – A dictionary containing the columns unique to a specific test as keys,
-with the corresponding values as the data types of the columns.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A string representing the data in all of the rows in <code class="docutils literal notranslate"><span class="pre">row_list</span></code>,
-with each row’s data string separated by commas. Suitable for
-use in an SQL <em>INSERT</em> query for many rows of data.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>str</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<code class="sig-prename descclassname">optimized_parsing.</code><code class="sig-name descname">rowcols4SQLquery</code><span class="sig-paren">(</span><em class="sig-param">cols, pre_cols=['time_stamp', 'unit', 'side']</em><span class="sig-paren">)</span></dt>
-<dd><p>Generates a string representation column names for a table.</p>
-<p>The output is formatted for use in an SQL query
-(where the values of <code class="docutils literal notranslate"><span class="pre">cols</span></code> are the column names of the table).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>cols</strong> (<em>list</em>) – A list of strings representing the names of the columns
-unique to a specific test table.</p></li>
-<li><p><strong>pre_cols</strong> (<em>list</em>) – <p>A list containing the names of columns which are not contained
-in the row dictionary.</p>
-<p>This parameter is set to <code class="xref py py-const docutils literal notranslate"><span class="pre">PREFIX_COLS</span></code> by default, since the
-columns for <cite>time_stamp</cite>, <cite>unit</cite>, and <cite>side</cite> are those which
-would not usually be contained in the row dicitionary, as
-they are not unique to a specific test table, and thus their
-values are extracted separately from those corresponding
-to the columns in <code class="docutils literal notranslate"><span class="pre">cols</span></code>.</p>
-</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A string containing comma separated values from <code class="docutils literal notranslate"><span class="pre">pre_cols</span></code> and <code class="docutils literal notranslate"><span class="pre">cols</span></code>,
-enclosed in parentheses. Suitable for use when naming the columns in
-an SQL <em>INSERT</em> query.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>str</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<code class="sig-prename descclassname">optimized_parsing.</code><code class="sig-name descname">insert_ignore_many_query</code><span class="sig-paren">(</span><em class="sig-param">test</em>, <em class="sig-param">rows</em><span class="sig-paren">)</span></dt>
-<dd><p>Returns a string for an SQL <em>INSERT IGNORE</em> query for multiple rows of data.</p>
-<p>Given a <a class="reference internal" href="#optimized_parsing.Test" title="optimized_parsing.Test"><code class="xref py py-class docutils literal notranslate"><span class="pre">Test</span></code></a> object and a list of rows, generate an SQL query string
-for inserting all of the rows in <code class="docutils literal notranslate"><span class="pre">rows</span></code> into the table corresponding
-to <code class="docutils literal notranslate"><span class="pre">test</span></code>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>test</strong> (<a class="reference internal" href="#optimized_parsing.Test" title="optimized_parsing.Test"><em>Test</em></a>) – The test that corresponds to the data contained in <code class="docutils literal notranslate"><span class="pre">rows</span></code>.</p></li>
-<li><p><strong>rows</strong> (<em>list</em>) – A list of row dictionaries to be inserted into the table
-corresponding to <code class="docutils literal notranslate"><span class="pre">test</span></code>.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A string that, when executed as an SQL query, will
-perform an <em>INSERT IGNORE</em> of the rows in <code class="docutils literal notranslate"><span class="pre">rows</span></code>
-into the table corresponding to <code class="docutils literal notranslate"><span class="pre">test</span></code></p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>str</p>
-</dd>
-</dl>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Because this code was created for internal use (and ideally automated use),
-it makes no attempt at data sanitization, meaning it could, in theory, allow
-a malicious actor with arbitrary access to this code to perform an SQL injection
-attack. However, if they only have access to the log file, it is unlikely that
-they would be able to embed arbitrary SQL queries that would still be recognized by
-the regular expressions that parse the line (assuming they cannot create arbitrary tests)</p>
-</div>
-</dd></dl>
-
 </div>
 </div>
 <div class="section" id="module-temp_data_shifter">
