@@ -141,13 +141,14 @@ Assumes <code class="docutils literal notranslate"><span class="pre">row</span><
 <p>Takes in temperature data from <code class="xref py py-const docutils literal notranslate"><span class="pre">TEMPS_DB</span></code>, rounds their time stamps
 to the nearest ten seconds, formats them as rows split by side, and inserts
 the rows into the <em>TEMPERATURES</em> table in <code class="xref py py-const docutils literal notranslate"><span class="pre">RESULTS_DB</span></code></p>
-<blockquote>
-<div><ul class="simple">
+<dl class="simple">
+<dt>Assumes:</dt><dd><ul class="simple">
 <li><p>Both databases exist as defined</p></li>
 <li><p>The row in <em>TESTS</em> with the time interval containing the data to be shifted exists</p></li>
 <li><p>The tables in both databases exist and are formatted as expected</p></li>
 </ul>
-</div></blockquote>
+</dd>
+</dl>
 </dd></dl>
 
 </div>
