@@ -693,9 +693,61 @@ test data that we care about.</p></li>
 </dd></dl>
 
 <dl class="function">
+<dt id="results_viewer.gen_IPERF_graph">
+<code class="sig-prename descclassname">results_viewer.</code><code class="sig-name descname">gen_IPERF_graph</code><span class="sig-paren">(</span><em class="sig-param">sel_opt</em>, <em class="sig-param">start_time</em>, <em class="sig-param">end_time</em>, <em class="sig-param">stf=False</em><span class="sig-paren">)</span><a class="headerlink" href="#results_viewer.gen_IPERF_graph" title="Permalink to this definition">¶</a></dt>
+<dd><p>Variant function for generating a graph of IPERF values, calls <a class="reference internal" href="#results_viewer.generate_graph" title="results_viewer.generate_graph"><code class="xref py py-func docutils literal notranslate"><span class="pre">generate_graph()</span></code></a> with additional parameters specific to IPERF</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sel_opt</strong> (<em>str</em>) – The user selected option denoting the subset of
+test data that we care about.</p></li>
+<li><p><strong>start_time</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code>) – The time at which the currently selected test run began.</p></li>
+<li><p><strong>end_time</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">datetime.datetime</span></code>) – The time at which the currently selected test run ended.</p></li>
+<li><p><strong>stf</strong> (<em>bool</em>) – A boolean telling the function if the figures should be saved to a file
+instead of displayed on screen. <code class="docutils literal notranslate"><span class="pre">False</span></code> by default.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="results_viewer.gen_temp_graph">
+<code class="sig-prename descclassname">results_viewer.</code><code class="sig-name descname">gen_temp_graph</code><span class="sig-paren">(</span><em class="sig-param">start_time</em>, <em class="sig-param">end_time</em><span class="sig-paren">)</span><a class="headerlink" href="#results_viewer.gen_temp_graph" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate a graph of the temperature data vs. time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>start_time</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code>) – The time at which the currently selected test run began.</p></li>
+<li><p><strong>end_time</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">datetime.datetime</span></code>) – The time at which the currently selected test run ended.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
 <dt id="results_viewer.generate_graph">
 <code class="sig-prename descclassname">results_viewer.</code><code class="sig-name descname">generate_graph</code><span class="sig-paren">(</span><em class="sig-param">cur_test</em>, <em class="sig-param">sel_opt</em>, <em class="sig-param">start_time</em>, <em class="sig-param">end_time</em>, <em class="sig-param">max_y=None</em>, <em class="sig-param">where_addendum=''</em>, <em class="sig-param">sub_title=''</em>, <em class="sig-param">save_to_file=False</em>, <em class="sig-param">graph_type='plot'</em><span class="sig-paren">)</span><a class="headerlink" href="#results_viewer.generate_graph" title="Permalink to this definition">¶</a></dt>
 <dd><p>Performs the steps necessary to generate a graph for the selected subset of data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cur_test</strong> (<a class="reference internal" href="#results_viewer.Test" title="results_viewer.Test"><code class="xref py py-class docutils literal notranslate"><span class="pre">Test</span></code></a>) – The <a class="reference internal" href="#results_viewer.Test" title="results_viewer.Test"><code class="xref py py-class docutils literal notranslate"><span class="pre">Test</span></code></a> for which we wish to obtain data.</p></li>
+<li><p><strong>sel_opt</strong> (<em>str</em>) – The user selected option denoting the subset of
+test data that we care about.</p></li>
+<li><p><strong>start_time</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code>) – The time at which the currently selected test run began.</p></li>
+<li><p><strong>end_time</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">datetime.datetime</span></code>) – The time at which the currently selected test run ended.</p></li>
+<li><p><strong>max_y</strong> (<em>int</em><em>, </em><em>optional</em>) – The value to use for the max y value on the graphs.</p></li>
+<li><p><strong>where_addendum</strong> (<em>str</em><em>, </em><em>optional</em>) – An optional string which is used to specify additional constraints for the query to the database.
+Empty by default, and only used by some tests.</p></li>
+<li><p><strong>sub_title</strong> (<em>str</em><em>, </em><em>optional</em>) – The subtitle to append to the figure title. By default an empty string.</p></li>
+<li><p><strong>save_to_file</strong> (<em>bool</em>) – A boolean telling the function if the figures should be saved to a file
+instead of displayed on screen. <code class="docutils literal notranslate"><span class="pre">False</span></code> by default.</p></li>
+<li><p><strong>graph_type</strong> (<em>str</em>) – The type of graph to generate.  Set to ‘plot’ by default.
+Valid options are ‘plot’ to generate a normal plot, or
+‘hist’ to generate a histogram.</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="function">
@@ -739,6 +791,31 @@ Empty by default, and only used by some tests.</p></li>
 </ul>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="results_viewer.map_time2temp">
+<code class="sig-prename descclassname">results_viewer.</code><code class="sig-name descname">map_time2temp</code><span class="sig-paren">(</span><em class="sig-param">times</em>, <em class="sig-param">data</em><span class="sig-paren">)</span><a class="headerlink" href="#results_viewer.map_time2temp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Maps a list of time stamps and a list data to a list of temperatures and a list of data at the corresponding times.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>times</strong> (list of <code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code>) – The list of time stamps to find corresponding temperature values for.</p></li>
+<li><p><strong>data</strong> (<em>list</em>) – List of values, where the index of each value corresponds to an index in <code class="docutils literal notranslate"><span class="pre">times</span></code>.
+Included to ensure that the number of data points in the x and y axes are not misaligned.</p></li>
+<li><p><strong>Returns</strong> – </p></li>
+<li><p><strong>--------</strong> – </p></li>
+<li><p><strong>temps_list</strong> (<em>list of float</em>) – List of the temperature values corresponding to the time stamps in <code class="docutils literal notranslate"><span class="pre">times</span></code>.</p></li>
+<li><p><strong>temp_data</strong> (<em>list</em>) – List of values, where the index of each value corresponds to an index in <code class="docutils literal notranslate"><span class="pre">temps_list</span></code>.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="results_viewer.one_and_three_fig">
+<code class="sig-prename descclassname">results_viewer.</code><code class="sig-name descname">one_and_three_fig</code><span class="sig-paren">(</span><em class="sig-param">upperx</em>, <em class="sig-param">uppery</em>, <em class="sig-param">upper_info</em>, <em class="sig-param">lowerx</em>, <em class="sig-param">lowery</em>, <em class="sig-param">lower_info</em>, <em class="sig-param">fig_info</em><span class="sig-paren">)</span><a class="headerlink" href="#results_viewer.one_and_three_fig" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate a figure with one large graph on top of data vs. time, and three smaller graphs below of data vs. temperature.</p>
 </dd></dl>
 
 <dl class="function">
