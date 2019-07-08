@@ -759,7 +759,45 @@ instead of displayed on screen. <code class="docutils literal notranslate"><span
 <dl class="function">
 <dt>
 <code class="sig-prename descclassname">results_viewer.</code><code class="sig-name descname">one_and_three_fig</code><span class="sig-paren">(</span><em class="sig-param">upperx</em>, <em class="sig-param">uppery</em>, <em class="sig-param">upper_info</em>, <em class="sig-param">lowerx</em>, <em class="sig-param">lowery</em>, <em class="sig-param">lower_info</em>, <em class="sig-param">fig_info</em><span class="sig-paren">)</span></dt>
-<dd><p>Generate a figure with one large graph on top of data vs. time, and three smaller graphs below of data vs. temperature.</p>
+<dd><p>Generate a figure with one large upper graph of data vs time, and three smaller lower graphs of data vs temperature.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>upperx</strong> (<em>dict</em>) – Dictionary containing lists of x-axis data that correspond to each side in <code class="xref py py-const docutils literal notranslate"><span class="pre">SIDES</span></code>.</p></li>
+<li><p><strong>uppery</strong> (<em>dict</em>) – Dictionary containing lists of y-axis data that correspond to each side in <code class="xref py py-const docutils literal notranslate"><span class="pre">SIDES</span></code>.</p></li>
+<li><p><strong>upper_info</strong> (<em>dict</em>) – Dictionary contain information used when generating the upper graph, such as the
+graph format, the y limit, and various labels and titles.</p></li>
+<li><p><strong>lowerx</strong> (<em>dict</em>) – Dictionary containing dictionaries that correspond to each side in <code class="xref py py-const docutils literal notranslate"><span class="pre">SIDES</span></code>,
+which in turn contain lists of x-axis data that correspond to each of three keys.</p></li>
+<li><p><strong>lowery</strong> (<em>dict</em>) – Dictionary containing dictionaries that correspond to each side in <code class="xref py py-const docutils literal notranslate"><span class="pre">SIDES</span></code>,
+which in turn contain lists of y-axis data that correspond to each of three keys.</p></li>
+<li><p><strong>lower_info</strong> (<em>dict</em>) – Dictionary contain information used when generating the lower graph, such as the
+graph format, the y limit, and various labels and titles.</p></li>
+<li><p><strong>fig_info</strong> (<em>dict</em>) – Dictionary containing more general info that applies the the figure as a whole.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="sig-prename descclassname">results_viewer.</code><code class="sig-name descname">tricolor_fig</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">y</em>, <em class="sig-param">info</em>, <em class="sig-param">fig_info</em><span class="sig-paren">)</span></dt>
+<dd><p>Generate a figure with one large graph, with data graphed in three different colors.</p>
+<p>That is, three colors per side, for a total of six colors.  Each color corresponds to one
+side and key.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>dict</em>) – Dictionary containing dictionaries that correspond to each side in <code class="xref py py-const docutils literal notranslate"><span class="pre">SIDES</span></code>,
+which in turn contain lists of x-axis data that correspond to each of three keys.</p></li>
+<li><p><strong>y</strong> (<em>dict</em>) – Dictionary containing dictionaries that correspond to each side in <code class="xref py py-const docutils literal notranslate"><span class="pre">SIDES</span></code>,
+which in turn contain lists of y-axis data that correspond to each of three keys.</p></li>
+<li><p><strong>info</strong> (<em>dict</em>) – Dictionary contain information used when generating the graph, such as the
+graph format, the y limit, and various labels and titles.</p></li>
+<li><p><strong>fig_info</strong> (<em>dict</em>) – Dictionary containing more general info that applies the the figure as a whole.</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 </div>
