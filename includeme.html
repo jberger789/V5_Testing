@@ -363,6 +363,17 @@ messsage may have come from.</p>
 
 </dd></dl>
 
+<dl class="data">
+<dt id="optimized_parsing.PREFIX_COLS">
+<code class="sig-prename descclassname">optimized_parsing.</code><code class="sig-name descname">PREFIX_COLS</code><em class="property"> = ['time_stamp', 'unit', 'side']</em><a class="headerlink" href="#optimized_parsing.PREFIX_COLS" title="Permalink to this definition">¶</a></dt>
+<dd><p>List containing names of the prefix columns</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>list of str</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="class">
 <dt id="optimized_parsing.Test">
 <em class="property">class </em><code class="sig-prename descclassname">optimized_parsing.</code><code class="sig-name descname">Test</code><span class="sig-paren">(</span><em class="sig-param">json_file_name=None</em><span class="sig-paren">)</span><a class="headerlink" href="#optimized_parsing.Test" title="Permalink to this definition">¶</a></dt>
@@ -556,7 +567,7 @@ for use in an <cite>or</cite> statement in a regular expression</p>
 unique to a specific test table.</p></li>
 <li><p><strong>pre_cols</strong> (<em>list</em>) – <p>A list containing the names of columns which are not contained
 in the row dictionary.</p>
-<p>This parameter is set to <strong>PREFIX_COLS</strong> by default, since the
+<p>This parameter is set to <a class="reference internal" href="#optimized_parsing.PREFIX_COLS" title="optimized_parsing.PREFIX_COLS"><code class="xref py py-const docutils literal notranslate"><span class="pre">PREFIX_COLS</span></code></a> by default, since the
 columns for <cite>time_stamp</cite>, <cite>unit</cite>, and <cite>side</cite> are those which
 would not usually be contained in the row dicitionary, as
 they are not unique to a specific test table, and thus their
