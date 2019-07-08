@@ -153,6 +153,111 @@ rounds their timestamps to the nearest 10 seconds, and inserts it into the
 </div>
 <div class="section" id="module-optimized_parsing">
 <span id="parser"></span><h1>PARSER<a class="headerlink" href="#module-optimized_parsing" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="optimized_parsing.Test">
+<em class="property">class </em><code class="sig-prename descclassname">optimized_parsing.</code><code class="sig-name descname">Test</code><span class="sig-paren">(</span><em class="sig-param">json_file_name=None</em><span class="sig-paren">)</span><a class="headerlink" href="#optimized_parsing.Test" title="Permalink to this definition">¶</a></dt>
+<dd><p>An object which represents all of the information regarding a single test.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>json_file_name</strong> (<em>str</em>) – The filename of the json file from which test information should be loaded.</p>
+</dd>
+</dl>
+<dl class="attribute">
+<dt id="optimized_parsing.Test.tag">
+<code class="sig-name descname">tag</code><a class="headerlink" href="#optimized_parsing.Test.tag" title="Permalink to this definition">¶</a></dt>
+<dd><p>The tag associated with the test (also used as the name of the test,
+and the name of the table containing the test data).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="optimized_parsing.Test.re">
+<code class="sig-name descname">re</code><a class="headerlink" href="#optimized_parsing.Test.re" title="Permalink to this definition">¶</a></dt>
+<dd><p>The regular expression used for parsing log messages from the test.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">re.Pattern</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="optimized_parsing.Test.key_tag">
+<code class="sig-name descname">key_tag</code><a class="headerlink" href="#optimized_parsing.Test.key_tag" title="Permalink to this definition">¶</a></dt>
+<dd><p>The name of the variable by which test data is separated.  Not used
+in all tests.  An example is sensor for IPMI_TOOL, since every sensor
+has the same data fields, and thus are stored in separate rows.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="optimized_parsing.Test.data_info">
+<code class="sig-name descname">data_info</code><a class="headerlink" href="#optimized_parsing.Test.data_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>A dictionary with keys corresponding to the names of the data columns
+in the test’s table, and values corresponding to the type of each column.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="optimized_parsing.Test.num_lines">
+<code class="sig-name descname">num_lines</code><a class="headerlink" href="#optimized_parsing.Test.num_lines" title="Permalink to this definition">¶</a></dt>
+<dd><p>The number of lines of log messages that contain data for a single test result.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="optimized_parsing.Test.num_extra_lines">
+<code class="sig-name descname">num_extra_lines</code><a class="headerlink" href="#optimized_parsing.Test.num_extra_lines" title="Permalink to this definition">¶</a></dt>
+<dd><p>The number of additional lines of log messages that <em>may</em> contain data for
+a single test result, often in a separate format.</p>
+<p>Set to <strong>0</strong> if not present in the test’s information file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="optimized_parsing.Test.extra_re">
+<code class="sig-name descname">extra_re</code><a class="headerlink" href="#optimized_parsing.Test.extra_re" title="Permalink to this definition">¶</a></dt>
+<dd><p>The regular expression used for recognizing the data in extra lines. Only used by some tests.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">re.Pattern</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="optimized_parsing.Test.extra_data">
+<code class="sig-name descname">extra_data</code><a class="headerlink" href="#optimized_parsing.Test.extra_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>The list containing the names of the data present in extra lines. Only used by some_tests.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>list of str</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 <dl class="function">
 <dt id="optimized_parsing.insert_ignore_many_query">
 <code class="sig-prename descclassname">optimized_parsing.</code><code class="sig-name descname">insert_ignore_many_query</code><span class="sig-paren">(</span><em class="sig-param">test</em>, <em class="sig-param">rows</em><span class="sig-paren">)</span><a class="headerlink" href="#optimized_parsing.insert_ignore_many_query" title="Permalink to this definition">¶</a></dt>
@@ -445,9 +550,109 @@ messsage may have come from.</p>
 </dd></dl>
 
 <dl class="class">
-<dt id="optimized_parsing.Test">
-<em class="property">class </em><code class="sig-prename descclassname">optimized_parsing.</code><code class="sig-name descname">Test</code><span class="sig-paren">(</span><em class="sig-param">json_file_name=None</em><span class="sig-paren">)</span><a class="headerlink" href="#optimized_parsing.Test" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dt>
+<em class="property">class </em><code class="sig-prename descclassname">optimized_parsing.</code><code class="sig-name descname">Test</code><span class="sig-paren">(</span><em class="sig-param">json_file_name=None</em><span class="sig-paren">)</span></dt>
+<dd><p>An object which represents all of the information regarding a single test.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>json_file_name</strong> (<em>str</em>) – The filename of the json file from which test information should be loaded.</p>
+</dd>
+</dl>
+<dl class="attribute">
+<dt>
+<code class="sig-name descname">tag</code></dt>
+<dd><p>The tag associated with the test (also used as the name of the test,
+and the name of the table containing the test data).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="sig-name descname">re</code></dt>
+<dd><p>The regular expression used for parsing log messages from the test.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">re.Pattern</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="sig-name descname">key_tag</code></dt>
+<dd><p>The name of the variable by which test data is separated.  Not used
+in all tests.  An example is sensor for IPMI_TOOL, since every sensor
+has the same data fields, and thus are stored in separate rows.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="sig-name descname">data_info</code></dt>
+<dd><p>A dictionary with keys corresponding to the names of the data columns
+in the test’s table, and values corresponding to the type of each column.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="sig-name descname">num_lines</code></dt>
+<dd><p>The number of lines of log messages that contain data for a single test result.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="sig-name descname">num_extra_lines</code></dt>
+<dd><p>The number of additional lines of log messages that <em>may</em> contain data for
+a single test result, often in a separate format.</p>
+<p>Set to <strong>0</strong> if not present in the test’s information file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="sig-name descname">extra_re</code></dt>
+<dd><p>The regular expression used for recognizing the data in extra lines. Only used by some tests.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">re.Pattern</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="sig-name descname">extra_data</code></dt>
+<dd><p>The list containing the names of the data present in extra lines. Only used by some_tests.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>list of str</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
 
 </div>
 
