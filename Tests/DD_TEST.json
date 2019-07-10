@@ -13,7 +13,7 @@
 	"data_key": "drive",
 	"data_tag": "rate",
 	"key_list": null,
-	"units_key": null,
+	"units_key": "",
 	"units_dict": null,
 	"data_info": {
 		"drive": "str",
