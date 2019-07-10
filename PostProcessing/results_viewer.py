@@ -1,4 +1,4 @@
-import dataset, matplotlib.pyplot, datetime, json
+import dataset, matplotlib.pyplot as plt, datetime, json
 from matplotlib.gridspec import GridSpec
 from matplotlib.widgets import Button
 
@@ -274,9 +274,9 @@ def generate_graph(cur_test,sel_opt,start_time,end_time,max_y=None, where_addend
 	elif graph_type=='hist':
 		double_hist_fig(y,{'xlabel': sel_opt + " (" + units + ")"},fig_info)
 	if save_to_file:
-		matplotlib.pyplot.savefig("../Graphs/{} ({}).png".format(fig_info['tag'],fig_info['test_opt']))
+		plt.savefig("../Graphs/{} ({}).png".format(fig_info['tag'],fig_info['test_opt']))
 	else:
-		matplotlib.pyplot.show()
+		plt.show()
 		
 def get_ylims(y_data):
 	if len(y_data) > 0:
@@ -395,7 +395,7 @@ def gen_temp_graph(start_time,end_time):
 
 	#three_vert_fig(x,y,info,fig_info)
 	tricolor_fig(x,y,info,fig_info)
-	matplotlib.pyplot.show()
+	plt.show()
 
 def one_and_three_fig(upperx,uppery,upper_info,lowerx,lowery,lower_info,fig_info):
 	"""Generate a figure with one large upper graph of data vs time, and three smaller lower graphs of data vs temperature.
@@ -421,8 +421,8 @@ def one_and_three_fig(upperx,uppery,upper_info,lowerx,lowery,lower_info,fig_info
 	fig_info : dict
 		Dictionary containing more general info that applies the the figure as a whole.
 	"""
-	fig = matplotlib.pyplot.figure(figsize=(15,9))
-	matplotlib.pyplot.subplots_adjust(hspace=0.3)
+	fig = plt.figure(figsize=(15,9))
+	plt.subplots_adjust(hspace=0.3)
 	gs = GridSpec(2, 3, figure=fig)
 	axt = fig.add_subplot(gs[0, :])
 	axb = []
@@ -448,8 +448,8 @@ def one_and_three_fig(upperx,uppery,upper_info,lowerx,lowery,lower_info,fig_info
 	fig.suptitle("{}: {}".format(fig_info['tag'],fig_info['test_opt']))
 
 def three_vert_fig(x,y,info, fig_info):
-	fig = matplotlib.pyplot.figure(figsize=(15,9))
-	matplotlib.pyplot.subplots_adjust(hspace=0.3)
+	fig = plt.figure(figsize=(15,9))
+	plt.subplots_adjust(hspace=0.3)
 	gs = GridSpec(3, 1, figure=fig)
 	ay = []
 	for i in range(0,3):
@@ -485,8 +485,8 @@ def tricolor_fig(x,y,info, fig_info):
 	fig_info : dict
 		Dictionary containing more general info that applies the the figure as a whole.
 	"""
-	fig = matplotlib.pyplot.figure(figsize=(15,9))
-	matplotlib.pyplot.subplots_adjust(hspace=0.3)
+	fig = plt.figure(figsize=(15,9))
+	plt.subplots_adjust(hspace=0.3)
 	gs = GridSpec(1, 1, figure=fig)
 	ay = (fig.add_subplot(gs[0, 0]))
 	color_dict={"BLK": ['black','green','blue'], "RED": ['red','yellow','orange']}
@@ -501,8 +501,8 @@ def tricolor_fig(x,y,info, fig_info):
 	fig.suptitle("{}".format(fig_info['tag']))
 
 def double_hist_fig(data,fig_info):
-	fig = matplotlib.pyplot.figure(figsize=(15,9))
-	matplotlib.pyplot.subplots_adjust(hspace=0.3)
+	fig = plt.figure(figsize=(15,9))
+	plt.subplots_adjust(hspace=0.3)
 	gs = GridSpec(2, 1, figure=fig)
 	ax = {}
 	ind = 0
@@ -637,9 +637,6 @@ def autogenerate_graphs(start_time,end_time):
 
 	print("End: {}".format(datetime.datetime.today()))
 
-for n in MESSAGE_TAGS:
-	tests[MESSAGE_TAGS[n]] = Test("../Tests/"+MESSAGE_TAGS[n]+".json")
-
 def TPM_random_hist():
 	random_ints = {}
 	for s in SIDES:
@@ -649,10 +646,12 @@ def TPM_random_hist():
 				random_ints[s] += (int(hex_int, 16) for hex_int in line.split(' '))
 	fig_info = {'bin_info': 256, 'xlabel': 'Random Number', 'tag': "TPM", 'test_opt': "RndNumGen"}
 	double_hist_fig(random_ints,fig_info)
-	matplotlib.pyplot.show()
+	plt.show()
 
 
 if __name__ == '__main__':
+	for n in MESSAGE_TAGS:
+		tests[MESSAGE_TAGS[n]] = Test("../Tests/"+MESSAGE_TAGS[n]+".json")
 	#TPM_random_hist()
 	test_run_select()
 
