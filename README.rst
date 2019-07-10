@@ -49,6 +49,7 @@ Constants
 Selection Functions
 -------------------
 .. automodule:: results_viewer
+	:noindex:
 	:members: test_run_select, test_select, graph_select
 
 Data Retrieval and Graphing Functions
