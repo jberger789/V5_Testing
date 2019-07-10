@@ -82,19 +82,19 @@
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Post Processing</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#module-optimized_parsing">Parser</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#constants">Constants</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#test">Test</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#log">Log</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#other-functions">Other Functions</a></li>
-</ul>
-</li>
 <li class="toctree-l2"><a class="reference internal" href="#module-results_viewer">Results Viewer</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#id1">Constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#constants">Constants</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#selection-functions">Selection Functions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#data-retrieval-and-graphing-functions">Data Retrieval and Graphing Functions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#graph-helper-functions">Graph Helper Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#test">Test</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#other-functions">Other Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-optimized_parsing">Parser</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id1">Constants</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#id2">Test</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#log">Log</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#id3">Other Functions</a></li>
 </ul>
 </li>
@@ -172,10 +172,468 @@
             
   <div class="section" id="post-processing">
 <h1>Post Processing<a class="headerlink" href="#post-processing" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="module-optimized_parsing">
-<span id="parser"></span><h2>Parser<a class="headerlink" href="#module-optimized_parsing" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-results_viewer">
+<span id="results-viewer"></span><h2>Results Viewer<a class="headerlink" href="#module-results_viewer" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="constants">
 <h3>Constants<a class="headerlink" href="#constants" title="Permalink to this headline">¶</a></h3>
+<dl class="data">
+<dt id="results_viewer.MESSAGE_TAGS">
+<code class="sig-prename descclassname">results_viewer.</code><code class="sig-name descname">MESSAGE_TAGS</code><em class="property"> = {1: 'STRESS_NG', 2: 'IPMITOOL', 3: 'STREAM_C', 4: 'DD_TEST', 5: 'HDPARM', 6: 'IPERF', 7: 'USB_PASSMARK', 8: 'TAMPER_STATUS', 9: 'FIBER_FPGA_TEMP', 10: 'PING_TEST', 11: 'UPTIME'}</em><a class="headerlink" href="#results_viewer.MESSAGE_TAGS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dictionary containing shorthand numerical ids and the corresponding test names for each.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="data">
+<dt id="results_viewer.SIDES">
+<code class="sig-prename descclassname">results_viewer.</code><code class="sig-name descname">SIDES</code><em class="property"> = {'BLK': 'black', 'RED': 'red'}</em><a class="headerlink" href="#results_viewer.SIDES" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dictionary containing key-names for the sides in the database, as well as their corresponding full names/colors.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="data">
+<dt id="results_viewer.TEMPERATURE_OPS">
+<code class="sig-prename descclassname">results_viewer.</code><code class="sig-name descname">TEMPERATURE_OPS</code><em class="property"> = ['intake', 'outtake', 'ambient']</em><a class="headerlink" href="#results_viewer.TEMPERATURE_OPS" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of valid temperature keys (aka options).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>list of str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="data">
+<dt id="results_viewer.DB">
+<code class="sig-prename descclassname">results_viewer.</code><code class="sig-name descname">DB</code><em class="property"> = &lt;Database(mysql://guest:*****&#64;localhost/test_results)&gt;</em><a class="headerlink" href="#results_viewer.DB" title="Permalink to this definition">¶</a></dt>
+<dd><p>Database containing results from all tests.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Database</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="data">
+<dt id="results_viewer.TEST_DATA_GRAPHS">
+<code class="sig-prename descclassname">results_viewer.</code><code class="sig-name descname">TEST_DATA_GRAPHS</code><em class="property"> = {'DD_TEST': ['SDA'], 'FIBER_FPGA_TEMP': ['2.5', '3.5'], 'HDPARM': ['cached', 'buffered disk'], 'IPERF': ['bandwidth', 'loss_percentage', 'out_of_order_datagrams', 'lost_datagrams'], 'IPMITOOL': ['CPU Temp', 'FAN1', 'FAN2', 'FANA', '5VCC', '5VSB', '3.3VCC', '3.3VSB', '12V'], 'PING_TEST': ['packet_loss', 'total_time', 'average'], 'STREAM_C': ['Add', 'Copy'], 'STRESS_NG': ['Instructions', 'CPU Cycles'], 'TAMPER_STATUS': ['voltage'], 'UPTIME': ['load_avg'], 'USB_PASSMARK': ['error counter', 'Read', 'Write']}</em><a class="headerlink" href="#results_viewer.TEST_DATA_GRAPHS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dictionary containing the names of tests to be auto-graphed, and the corresponding list of options to be graphed for each test.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="selection-functions">
+<h3>Selection Functions<a class="headerlink" href="#selection-functions" title="Permalink to this headline">¶</a></h3>
+<dl class="function">
+<dt>
+<code class="sig-prename descclassname">results_viewer.</code><code class="sig-name descname">test_run_select</code><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
+<dd><p>Allows the user to select test run that they wish to generate graphs for.</p>
+<p>If the user enters ‘o’ or ‘options’, returns the list of test runs stored
+in the <em>TESTS</em> table of <a class="reference internal" href="#results_viewer.DB" title="results_viewer.DB"><code class="xref py py-const docutils literal notranslate"><span class="pre">DB</span></code></a>, along with their start and end times.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="sig-prename descclassname">results_viewer.</code><code class="sig-name descname">test_select</code><span class="sig-paren">(</span><em class="sig-param">start_time</em>, <em class="sig-param">end_time</em><span class="sig-paren">)</span></dt>
+<dd><p>Allows the user the select the test for which they wish to view data.</p>
+<p>If the user enters ‘o’ or ‘options’, returns the list of available tests,
+along with a numerical shorthand they can be entered as.</p>
+<p>Has additional options.  One is to run <code class="xref py py-func docutils literal notranslate"><span class="pre">autogenerate_graphs()</span></code> by
+entering ‘s’ or ‘save’, allowing the user to automatically generate
+a preset selection of graphs for their selected test run. The other
+allows the user to generate a graph of temperature vs. time, by
+entering ‘t’</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>start_time</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code>) – The time at which the current test run began.</p></li>
+<li><p><strong>end_time</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code>) – The time at which the current test run ended.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="sig-prename descclassname">results_viewer.</code><code class="sig-name descname">graph_select</code><span class="sig-paren">(</span><em class="sig-param">test_key</em>, <em class="sig-param">start_time</em>, <em class="sig-param">end_time</em><span class="sig-paren">)</span></dt>
+<dd><p>Allows the user the select the test option for which they wish to generate a graph.</p>
+<p>If the user enters ‘o’ or ‘options’, returns the list of valid options for the current test.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>test_key</strong> (<a class="reference internal" href="#results_viewer.Test" title="results_viewer.Test"><code class="xref py py-class docutils literal notranslate"><span class="pre">Test</span></code></a>) – The <a class="reference internal" href="#results_viewer.Test" title="results_viewer.Test"><code class="xref py py-class docutils literal notranslate"><span class="pre">Test</span></code></a> which the user has currently selected.</p></li>
+<li><p><strong>start_time</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code>) – The time at which the current test run began.</p></li>
+<li><p><strong>end_time</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code>) – The time at which the current test run ended.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="data-retrieval-and-graphing-functions">
+<h3>Data Retrieval and Graphing Functions<a class="headerlink" href="#data-retrieval-and-graphing-functions" title="Permalink to this headline">¶</a></h3>
+<dl class="function">
+<dt>
+<code class="sig-prename descclassname">results_viewer.</code><code class="sig-name descname">get_data</code><span class="sig-paren">(</span><em class="sig-param">cur_test</em>, <em class="sig-param">sel_opt</em>, <em class="sig-param">start_time</em>, <em class="sig-param">end_time</em>, <em class="sig-param">where_addendum=''</em><span class="sig-paren">)</span></dt>
+<dd><p>Retrieve test data from the database.</p>
+<p>Get the data associated with the selected test run, from current test’s database,
+limited to only the data specified by the selected option.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cur_test</strong> (<a class="reference internal" href="#results_viewer.Test" title="results_viewer.Test"><code class="xref py py-class docutils literal notranslate"><span class="pre">Test</span></code></a>) – The <a class="reference internal" href="#results_viewer.Test" title="results_viewer.Test"><code class="xref py py-class docutils literal notranslate"><span class="pre">Test</span></code></a> for which we wish to obtain data.</p></li>
+<li><p><strong>sel_opt</strong> (<em>str</em>) – The user selected option denoting the subset of data we care about.</p></li>
+<li><p><strong>start_time</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code>) – The time at which the currently selected test run began.</p></li>
+<li><p><strong>end_time</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code>) – The time at which the currently selected test run ended.</p></li>
+<li><p><strong>where_addendum</strong> (<em>str</em><em>, </em><em>optional</em>) – An optional string which is used to specify additional constraints for the query to the database.
+Empty by default, and only used by some tests.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>x</strong> (<em>dict</em>) – A dictionary containing a list of the desired x-axis data associated with each side</p></li>
+<li><p><strong>y</strong> (<em>dict</em>) – A dictionary containing a list of the desired y-axis data associated with each side</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="sig-prename descclassname">results_viewer.</code><code class="sig-name descname">determine_units</code><span class="sig-paren">(</span><em class="sig-param">cur_test</em>, <em class="sig-param">sel_opt</em><span class="sig-paren">)</span></dt>
+<dd><p>Returns to appropriate units for the selected test and option.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cur_test</strong> (<a class="reference internal" href="#results_viewer.Test" title="results_viewer.Test"><code class="xref py py-class docutils literal notranslate"><span class="pre">Test</span></code></a>) – The <a class="reference internal" href="#results_viewer.Test" title="results_viewer.Test"><code class="xref py py-class docutils literal notranslate"><span class="pre">Test</span></code></a> for which we wish to obtain data.</p></li>
+<li><p><strong>sel_opt</strong> (<em>str</em>) – The user selected option denoting the subset of
+test data that we care about.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>units</strong> – The units of the data in the selected subset.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="sig-prename descclassname">results_viewer.</code><code class="sig-name descname">map_time2temp</code><span class="sig-paren">(</span><em class="sig-param">times</em>, <em class="sig-param">data</em><span class="sig-paren">)</span></dt>
+<dd><p>Maps a list of time stamps and a list data to a list of temperatures and a list of data at the corresponding times.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>times</strong> (list of <code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code>) – The list of time stamps to find corresponding temperature values for.</p></li>
+<li><p><strong>data</strong> (<em>list</em>) – List of values, where the index of each value corresponds to an index in <code class="docutils literal notranslate"><span class="pre">times</span></code>.
+Included to ensure that the number of data points in the x and y axes are not misaligned.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>temps_list</strong> (<em>list of float</em>) – List of the temperature values corresponding to the time stamps in <code class="docutils literal notranslate"><span class="pre">times</span></code>.</p></li>
+<li><p><strong>temp_data</strong> (<em>list</em>) – List of values, where the index of each value corresponds to an index in <code class="docutils literal notranslate"><span class="pre">temps_list</span></code>.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="sig-prename descclassname">results_viewer.</code><code class="sig-name descname">generate_graph</code><span class="sig-paren">(</span><em class="sig-param">cur_test</em>, <em class="sig-param">sel_opt</em>, <em class="sig-param">start_time</em>, <em class="sig-param">end_time</em>, <em class="sig-param">max_y=None</em>, <em class="sig-param">where_addendum=''</em>, <em class="sig-param">sub_title=''</em>, <em class="sig-param">save_to_file=False</em>, <em class="sig-param">graph_type='plot'</em><span class="sig-paren">)</span></dt>
+<dd><p>Performs the steps necessary to generate a graph for the selected subset of data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cur_test</strong> (<a class="reference internal" href="#results_viewer.Test" title="results_viewer.Test"><code class="xref py py-class docutils literal notranslate"><span class="pre">Test</span></code></a>) – The <a class="reference internal" href="#results_viewer.Test" title="results_viewer.Test"><code class="xref py py-class docutils literal notranslate"><span class="pre">Test</span></code></a> for which we wish to obtain data.</p></li>
+<li><p><strong>sel_opt</strong> (<em>str</em>) – The user selected option denoting the subset of
+test data that we care about.</p></li>
+<li><p><strong>start_time</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code>) – The time at which the currently selected test run began.</p></li>
+<li><p><strong>end_time</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code>) – The time at which the currently selected test run ended.</p></li>
+<li><p><strong>max_y</strong> (<em>int</em><em>, </em><em>optional</em>) – The value to use for the max y value on the graphs.</p></li>
+<li><p><strong>where_addendum</strong> (<em>str</em><em>, </em><em>optional</em>) – An optional string which is used to specify additional constraints for the query to the database.
+Empty by default, and only used by some tests.</p></li>
+<li><p><strong>sub_title</strong> (<em>str</em><em>, </em><em>optional</em>) – The subtitle to append to the figure title. By default an empty string.</p></li>
+<li><p><strong>save_to_file</strong> (<em>bool</em>) – A boolean telling the function if the figures should be saved to a file
+instead of displayed on screen. <code class="docutils literal notranslate"><span class="pre">False</span></code> by default.</p></li>
+<li><p><strong>graph_type</strong> (<em>str</em>) – The type of graph to generate.  Set to ‘plot’ by default.
+Valid options are ‘plot’ to generate a normal plot, or
+‘hist’ to generate a histogram.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="sig-prename descclassname">results_viewer.</code><code class="sig-name descname">gen_IPERF_graph</code><span class="sig-paren">(</span><em class="sig-param">sel_opt</em>, <em class="sig-param">start_time</em>, <em class="sig-param">end_time</em>, <em class="sig-param">stf=False</em><span class="sig-paren">)</span></dt>
+<dd><p>Variant function for generating a graph of IPERF values, calls <code class="xref py py-func docutils literal notranslate"><span class="pre">generate_graph()</span></code> with additional parameters specific to IPERF</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sel_opt</strong> (<em>str</em>) – The user selected option denoting the subset of
+test data that we care about.</p></li>
+<li><p><strong>start_time</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code>) – The time at which the currently selected test run began.</p></li>
+<li><p><strong>end_time</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code>) – The time at which the currently selected test run ended.</p></li>
+<li><p><strong>stf</strong> (<em>bool</em>) – A boolean telling the function if the figures should be saved to a file
+instead of displayed on screen. <code class="docutils literal notranslate"><span class="pre">False</span></code> by default.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="sig-prename descclassname">results_viewer.</code><code class="sig-name descname">gen_temp_graph</code><span class="sig-paren">(</span><em class="sig-param">start_time</em>, <em class="sig-param">end_time</em><span class="sig-paren">)</span></dt>
+<dd><p>Generate a graph of the temperature data vs. time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>start_time</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code>) – The time at which the currently selected test run began.</p></li>
+<li><p><strong>end_time</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code>) – The time at which the currently selected test run ended.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="sig-prename descclassname">results_viewer.</code><code class="sig-name descname">autogenerate_graphs</code><span class="sig-paren">(</span><em class="sig-param">start_time</em>, <em class="sig-param">end_time</em><span class="sig-paren">)</span></dt>
+<dd><p>Generate a set of predetermined graphs and save them as pngs.</p>
+<p>The graphs are determined by the constant <a class="reference internal" href="#results_viewer.TEST_DATA_GRAPHS" title="results_viewer.TEST_DATA_GRAPHS"><code class="xref py py-const docutils literal notranslate"><span class="pre">TEST_DATA_GRAPHS</span></code></a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>start_time</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code>) – The time at which the currently selected test run began.</p></li>
+<li><p><strong>end_time</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code>) – The time at which the currently selected test run ended.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="graph-helper-functions">
+<h3>Graph Helper Functions<a class="headerlink" href="#graph-helper-functions" title="Permalink to this headline">¶</a></h3>
+<dl class="function">
+<dt>
+<code class="sig-prename descclassname">results_viewer.</code><code class="sig-name descname">one_and_three_fig</code><span class="sig-paren">(</span><em class="sig-param">upperx</em>, <em class="sig-param">uppery</em>, <em class="sig-param">upper_info</em>, <em class="sig-param">lowerx</em>, <em class="sig-param">lowery</em>, <em class="sig-param">lower_info</em>, <em class="sig-param">fig_info</em><span class="sig-paren">)</span></dt>
+<dd><p>Generate a figure with one large upper graph of data vs time, and three smaller lower graphs of data vs temperature.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>upperx</strong> (<em>dict</em>) – Dictionary containing lists of x-axis data that correspond to each side in <a class="reference internal" href="#results_viewer.SIDES" title="results_viewer.SIDES"><code class="xref py py-const docutils literal notranslate"><span class="pre">SIDES</span></code></a>.</p></li>
+<li><p><strong>uppery</strong> (<em>dict</em>) – Dictionary containing lists of y-axis data that correspond to each side in <a class="reference internal" href="#results_viewer.SIDES" title="results_viewer.SIDES"><code class="xref py py-const docutils literal notranslate"><span class="pre">SIDES</span></code></a>.</p></li>
+<li><p><strong>upper_info</strong> (<em>dict</em>) – Dictionary contain information used when generating the upper graph, such as the
+graph format, the y limit, and various labels and titles.</p></li>
+<li><p><strong>lowerx</strong> (<em>dict</em>) – Dictionary containing dictionaries that correspond to each side in <a class="reference internal" href="#results_viewer.SIDES" title="results_viewer.SIDES"><code class="xref py py-const docutils literal notranslate"><span class="pre">SIDES</span></code></a>,
+which in turn contain lists of x-axis data that correspond to each of three keys.</p></li>
+<li><p><strong>lowery</strong> (<em>dict</em>) – Dictionary containing dictionaries that correspond to each side in <a class="reference internal" href="#results_viewer.SIDES" title="results_viewer.SIDES"><code class="xref py py-const docutils literal notranslate"><span class="pre">SIDES</span></code></a>,
+which in turn contain lists of y-axis data that correspond to each of three keys.</p></li>
+<li><p><strong>lower_info</strong> (<em>dict</em>) – Dictionary contain information used when generating the lower graph, such as the
+graph format, the y limit, and various labels and titles.</p></li>
+<li><p><strong>fig_info</strong> (<em>dict</em>) – Dictionary containing more general info that applies the the figure as a whole.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="sig-prename descclassname">results_viewer.</code><code class="sig-name descname">tricolor_fig</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">y</em>, <em class="sig-param">info</em>, <em class="sig-param">fig_info</em><span class="sig-paren">)</span></dt>
+<dd><p>Generate a figure with one large graph, with data graphed in three different colors.</p>
+<p>That is, three colors per side, for a total of six colors.  Each color corresponds to one
+side and key.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>dict</em>) – Dictionary containing dictionaries that correspond to each side in <a class="reference internal" href="#results_viewer.SIDES" title="results_viewer.SIDES"><code class="xref py py-const docutils literal notranslate"><span class="pre">SIDES</span></code></a>,
+which in turn contain lists of x-axis data that correspond to each of three keys.</p></li>
+<li><p><strong>y</strong> (<em>dict</em>) – Dictionary containing dictionaries that correspond to each side in <a class="reference internal" href="#results_viewer.SIDES" title="results_viewer.SIDES"><code class="xref py py-const docutils literal notranslate"><span class="pre">SIDES</span></code></a>,
+which in turn contain lists of y-axis data that correspond to each of three keys.</p></li>
+<li><p><strong>info</strong> (<em>dict</em>) – Dictionary contain information used when generating the graph, such as the
+graph format, the y limit, and various labels and titles.</p></li>
+<li><p><strong>fig_info</strong> (<em>dict</em>) – Dictionary containing more general info that applies the the figure as a whole.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="sig-prename descclassname">results_viewer.</code><code class="sig-name descname">my_plotter</code><span class="sig-paren">(</span><em class="sig-param">ax</em>, <em class="sig-param">xdata</em>, <em class="sig-param">ydata</em>, <em class="sig-param">fmt</em>, <em class="sig-param">param_dict</em><span class="sig-paren">)</span></dt>
+<dd><p>Plot <code class="docutils literal notranslate"><span class="pre">xdata</span></code> and <code class="docutils literal notranslate"><span class="pre">ydata</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ax</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">axis</span></code>) – The <code class="xref py py-class docutils literal notranslate"><span class="pre">axis</span></code> on which to plot the data.</p></li>
+<li><p><strong>xdata</strong> (<em>list</em>) – The list of data for the x-axis.</p></li>
+<li><p><strong>ydata</strong> (<em>list</em>) – The list of data for the y-axis.</p></li>
+<li><p><strong>fmt</strong> (<em>str</em>) – The format string for the plot.</p></li>
+<li><p><strong>param_dict</strong> (<em>dict</em>) – Additional parameters.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="test">
+<h3>Test<a class="headerlink" href="#test" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><dl class="class">
+<dt id="results_viewer.Test">
+<em class="property">class </em><code class="sig-prename descclassname">results_viewer.</code><code class="sig-name descname">Test</code><span class="sig-paren">(</span><em class="sig-param">json_file_name</em><span class="sig-paren">)</span><a class="headerlink" href="#results_viewer.Test" title="Permalink to this definition">¶</a></dt>
+<dd><p>An object which represents all of the information regarding a single test.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>json_file_name</strong> (<em>str</em>) – The filename of the json file from which test information should be loaded.</p>
+</dd>
+</dl>
+<dl class="attribute">
+<dt id="results_viewer.Test.tag">
+<code class="sig-name descname">tag</code><a class="headerlink" href="#results_viewer.Test.tag" title="Permalink to this definition">¶</a></dt>
+<dd><p>The tag associated with the test (also used as the name of the test,
+and the name of the table containing the test data).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="results_viewer.Test.data_key">
+<code class="sig-name descname">data_key</code><a class="headerlink" href="#results_viewer.Test.data_key" title="Permalink to this definition">¶</a></dt>
+<dd><p>The name of the column which contains the names of the different
+subsets of data the user can choose from when generating a graph.
+Use is mutually exclusive with <a class="reference internal" href="#results_viewer.Test.key_list" title="results_viewer.Test.key_list"><code class="xref py py-attr docutils literal notranslate"><span class="pre">key_list</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="results_viewer.Test.data_info">
+<code class="sig-name descname">data_info</code><a class="headerlink" href="#results_viewer.Test.data_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>A dictionary with keys corresponding to the names of the data columns
+in the test’s table, and values corresponding to the type of each column.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="results_viewer.Test.data_tag">
+<code class="sig-name descname">data_tag</code><a class="headerlink" href="#results_viewer.Test.data_tag" title="Permalink to this definition">¶</a></dt>
+<dd><p>The name of the column in which the desired data is stored, not used
+by all tests.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="results_viewer.Test.key_list">
+<code class="sig-name descname">key_list</code><a class="headerlink" href="#results_viewer.Test.key_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>A list of the names of different subsets of data the user can choose
+from when generating a graph. Use is mutually exclusive with <a class="reference internal" href="#results_viewer.Test.data_key" title="results_viewer.Test.data_key"><code class="xref py py-attr docutils literal notranslate"><span class="pre">data_key</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>list of str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="results_viewer.Test.units_key">
+<code class="sig-name descname">units_key</code><a class="headerlink" href="#results_viewer.Test.units_key" title="Permalink to this definition">¶</a></dt>
+<dd><p>The name of the column which contains the units of the data stored in
+the current row of the table. Not present for all tests.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="results_viewer.Test.units_dict">
+<code class="sig-name descname">units_dict</code><a class="headerlink" href="#results_viewer.Test.units_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>A dictionary matching the options from <a class="reference internal" href="#results_viewer.Test.key_list" title="results_viewer.Test.key_list"><code class="xref py py-attr docutils literal notranslate"><span class="pre">key_list</span></code></a> with the
+appropriate units. Present when <a class="reference internal" href="#results_viewer.Test.units_key" title="results_viewer.Test.units_key"><code class="xref py py-attr docutils literal notranslate"><span class="pre">units_key</span></code></a> is not.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div></blockquote>
+</div>
+<div class="section" id="other-functions">
+<h3>Other Functions<a class="headerlink" href="#other-functions" title="Permalink to this headline">¶</a></h3>
+<dl class="function">
+<dt>
+<code class="sig-prename descclassname">results_viewer.</code><code class="sig-name descname">return_options</code><span class="sig-paren">(</span><em class="sig-param">options_list</em>, <em class="sig-param">sep_char</em><span class="sig-paren">)</span></dt>
+<dd><p>Return the options listed in <code class="docutils literal notranslate"><span class="pre">options_list</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>options_list</strong> (<em>list of str</em>) – The list of the options to return.</p></li>
+<li><p><strong>sep_char</strong> (<em>str</em>) – The character to use when separating the options.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A string listing the available options, with each option separated
+by the character defined by <code class="docutils literal notranslate"><span class="pre">sep_char</span></code>.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="sig-prename descclassname">results_viewer.</code><code class="sig-name descname">return_help</code><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
+<dd><p>Return the standard help message.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The standard help message, listing valid user inputs.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</div>
+<div class="section" id="module-optimized_parsing">
+<span id="parser"></span><h2>Parser<a class="headerlink" href="#module-optimized_parsing" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id1">
+<h3>Constants<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
 <dl class="data">
 <dt id="optimized_parsing.SIDES">
 <code class="sig-prename descclassname">optimized_parsing.</code><code class="sig-name descname">SIDES</code><em class="property"> = {'black': 'BLK', 'red': 'RED'}</em><a class="headerlink" href="#optimized_parsing.SIDES" title="Permalink to this definition">¶</a></dt>
@@ -210,8 +668,8 @@
 </dd></dl>
 
 </div>
-<div class="section" id="test">
-<h3>Test<a class="headerlink" href="#test" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id2">
+<h3>Test<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
 <blockquote>
 <div><dl class="class">
 <dt id="optimized_parsing.Test">
@@ -536,8 +994,8 @@ messsage may have come from.</p>
 
 </div></blockquote>
 </div>
-<div class="section" id="other-functions">
-<h3>Other Functions<a class="headerlink" href="#other-functions" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id3">
+<h3>Other Functions<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
 <dl class="function">
 <dt>
 <code class="sig-prename descclassname">optimized_parsing.</code><code class="sig-name descname">make_datetime</code><span class="sig-paren">(</span><em class="sig-param">match_obj</em><span class="sig-paren">)</span></dt>
@@ -708,464 +1166,6 @@ attack. However, if they only have access to the log file, it is unlikely that
 they would be able to embed arbitrary SQL queries that would still be recognized by
 the regular expressions that parse the line (assuming they cannot create arbitrary tests)</p>
 </div>
-</dd></dl>
-
-</div>
-</div>
-<div class="section" id="module-results_viewer">
-<span id="results-viewer"></span><h2>Results Viewer<a class="headerlink" href="#module-results_viewer" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id1">
-<h3>Constants<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
-<dl class="data">
-<dt id="results_viewer.MESSAGE_TAGS">
-<code class="sig-prename descclassname">results_viewer.</code><code class="sig-name descname">MESSAGE_TAGS</code><em class="property"> = {1: 'STRESS_NG', 2: 'IPMITOOL', 3: 'STREAM_C', 4: 'DD_TEST', 5: 'HDPARM', 6: 'IPERF', 7: 'USB_PASSMARK', 8: 'TAMPER_STATUS', 9: 'FIBER_FPGA_TEMP', 10: 'PING_TEST', 11: 'UPTIME'}</em><a class="headerlink" href="#results_viewer.MESSAGE_TAGS" title="Permalink to this definition">¶</a></dt>
-<dd><p>Dictionary containing shorthand numerical ids and the corresponding test names for each.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>dict</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="data">
-<dt id="results_viewer.SIDES">
-<code class="sig-prename descclassname">results_viewer.</code><code class="sig-name descname">SIDES</code><em class="property"> = {'BLK': 'black', 'RED': 'red'}</em><a class="headerlink" href="#results_viewer.SIDES" title="Permalink to this definition">¶</a></dt>
-<dd><p>Dictionary containing key-names for the sides in the database, as well as their corresponding full names/colors.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>dict</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="data">
-<dt id="results_viewer.TEMPERATURE_OPS">
-<code class="sig-prename descclassname">results_viewer.</code><code class="sig-name descname">TEMPERATURE_OPS</code><em class="property"> = ['intake', 'outtake', 'ambient']</em><a class="headerlink" href="#results_viewer.TEMPERATURE_OPS" title="Permalink to this definition">¶</a></dt>
-<dd><p>List of valid temperature keys (aka options).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>list of str</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="data">
-<dt id="results_viewer.DB">
-<code class="sig-prename descclassname">results_viewer.</code><code class="sig-name descname">DB</code><em class="property"> = &lt;Database(mysql://guest:*****&#64;localhost/test_results)&gt;</em><a class="headerlink" href="#results_viewer.DB" title="Permalink to this definition">¶</a></dt>
-<dd><p>Database containing results from all tests.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Database</span></code></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="data">
-<dt id="results_viewer.TEST_DATA_GRAPHS">
-<code class="sig-prename descclassname">results_viewer.</code><code class="sig-name descname">TEST_DATA_GRAPHS</code><em class="property"> = {'DD_TEST': ['SDA'], 'FIBER_FPGA_TEMP': ['2.5', '3.5'], 'HDPARM': ['cached', 'buffered disk'], 'IPERF': ['bandwidth', 'loss_percentage', 'out_of_order_datagrams', 'lost_datagrams'], 'IPMITOOL': ['CPU Temp', 'FAN1', 'FAN2', 'FANA', '5VCC', '5VSB', '3.3VCC', '3.3VSB', '12V'], 'PING_TEST': ['packet_loss', 'total_time', 'average'], 'STREAM_C': ['Add', 'Copy'], 'STRESS_NG': ['Instructions', 'CPU Cycles'], 'TAMPER_STATUS': ['voltage'], 'UPTIME': ['load_avg'], 'USB_PASSMARK': ['error counter', 'Read', 'Write']}</em><a class="headerlink" href="#results_viewer.TEST_DATA_GRAPHS" title="Permalink to this definition">¶</a></dt>
-<dd><p>Dictionary containing the names of tests to be auto-graphed, and the corresponding list of options to be graphed for each test.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>dict</p>
-</dd>
-</dl>
-</dd></dl>
-
-</div>
-<div class="section" id="selection-functions">
-<h3>Selection Functions<a class="headerlink" href="#selection-functions" title="Permalink to this headline">¶</a></h3>
-<dl class="function">
-<dt>
-<code class="sig-prename descclassname">results_viewer.</code><code class="sig-name descname">test_run_select</code><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
-<dd><p>Allows the user to select test run that they wish to generate graphs for.</p>
-<p>If the user enters ‘o’ or ‘options’, returns the list of test runs stored
-in the <em>TESTS</em> table of <a class="reference internal" href="#results_viewer.DB" title="results_viewer.DB"><code class="xref py py-const docutils literal notranslate"><span class="pre">DB</span></code></a>, along with their start and end times.</p>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<code class="sig-prename descclassname">results_viewer.</code><code class="sig-name descname">test_select</code><span class="sig-paren">(</span><em class="sig-param">start_time</em>, <em class="sig-param">end_time</em><span class="sig-paren">)</span></dt>
-<dd><p>Allows the user the select the test for which they wish to view data.</p>
-<p>If the user enters ‘o’ or ‘options’, returns the list of available tests,
-along with a numerical shorthand they can be entered as.</p>
-<p>Has additional options.  One is to run <code class="xref py py-func docutils literal notranslate"><span class="pre">autogenerate_graphs()</span></code> by
-entering ‘s’ or ‘save’, allowing the user to automatically generate
-a preset selection of graphs for their selected test run. The other
-allows the user to generate a graph of temperature vs. time, by
-entering ‘t’</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>start_time</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code>) – The time at which the current test run began.</p></li>
-<li><p><strong>end_time</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code>) – The time at which the current test run ended.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<code class="sig-prename descclassname">results_viewer.</code><code class="sig-name descname">graph_select</code><span class="sig-paren">(</span><em class="sig-param">test_key</em>, <em class="sig-param">start_time</em>, <em class="sig-param">end_time</em><span class="sig-paren">)</span></dt>
-<dd><p>Allows the user the select the test option for which they wish to generate a graph.</p>
-<p>If the user enters ‘o’ or ‘options’, returns the list of valid options for the current test.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>test_key</strong> (<a class="reference internal" href="#results_viewer.Test" title="results_viewer.Test"><code class="xref py py-class docutils literal notranslate"><span class="pre">Test</span></code></a>) – The <a class="reference internal" href="#results_viewer.Test" title="results_viewer.Test"><code class="xref py py-class docutils literal notranslate"><span class="pre">Test</span></code></a> which the user has currently selected.</p></li>
-<li><p><strong>start_time</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code>) – The time at which the current test run began.</p></li>
-<li><p><strong>end_time</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code>) – The time at which the current test run ended.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-</div>
-<div class="section" id="data-retrieval-and-graphing-functions">
-<h3>Data Retrieval and Graphing Functions<a class="headerlink" href="#data-retrieval-and-graphing-functions" title="Permalink to this headline">¶</a></h3>
-<dl class="function">
-<dt>
-<code class="sig-prename descclassname">results_viewer.</code><code class="sig-name descname">get_data</code><span class="sig-paren">(</span><em class="sig-param">cur_test</em>, <em class="sig-param">sel_opt</em>, <em class="sig-param">start_time</em>, <em class="sig-param">end_time</em>, <em class="sig-param">where_addendum=''</em><span class="sig-paren">)</span></dt>
-<dd><p>Retrieve test data from the database.</p>
-<p>Get the data associated with the selected test run, from current test’s database,
-limited to only the data specified by the selected option.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>cur_test</strong> (<a class="reference internal" href="#results_viewer.Test" title="results_viewer.Test"><code class="xref py py-class docutils literal notranslate"><span class="pre">Test</span></code></a>) – The <a class="reference internal" href="#results_viewer.Test" title="results_viewer.Test"><code class="xref py py-class docutils literal notranslate"><span class="pre">Test</span></code></a> for which we wish to obtain data.</p></li>
-<li><p><strong>sel_opt</strong> (<em>str</em>) – The user selected option denoting the subset of data we care about.</p></li>
-<li><p><strong>start_time</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code>) – The time at which the currently selected test run began.</p></li>
-<li><p><strong>end_time</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code>) – The time at which the currently selected test run ended.</p></li>
-<li><p><strong>where_addendum</strong> (<em>str</em><em>, </em><em>optional</em>) – An optional string which is used to specify additional constraints for the query to the database.
-Empty by default, and only used by some tests.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><ul class="simple">
-<li><p><strong>x</strong> (<em>dict</em>) – A dictionary containing a list of the desired x-axis data associated with each side</p></li>
-<li><p><strong>y</strong> (<em>dict</em>) – A dictionary containing a list of the desired y-axis data associated with each side</p></li>
-</ul>
-</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<code class="sig-prename descclassname">results_viewer.</code><code class="sig-name descname">determine_units</code><span class="sig-paren">(</span><em class="sig-param">cur_test</em>, <em class="sig-param">sel_opt</em><span class="sig-paren">)</span></dt>
-<dd><p>Returns to appropriate units for the selected test and option.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>cur_test</strong> (<a class="reference internal" href="#results_viewer.Test" title="results_viewer.Test"><code class="xref py py-class docutils literal notranslate"><span class="pre">Test</span></code></a>) – The <a class="reference internal" href="#results_viewer.Test" title="results_viewer.Test"><code class="xref py py-class docutils literal notranslate"><span class="pre">Test</span></code></a> for which we wish to obtain data.</p></li>
-<li><p><strong>sel_opt</strong> (<em>str</em>) – The user selected option denoting the subset of
-test data that we care about.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><strong>units</strong> – The units of the data in the selected subset.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>str</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<code class="sig-prename descclassname">results_viewer.</code><code class="sig-name descname">map_time2temp</code><span class="sig-paren">(</span><em class="sig-param">times</em>, <em class="sig-param">data</em><span class="sig-paren">)</span></dt>
-<dd><p>Maps a list of time stamps and a list data to a list of temperatures and a list of data at the corresponding times.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>times</strong> (list of <code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code>) – The list of time stamps to find corresponding temperature values for.</p></li>
-<li><p><strong>data</strong> (<em>list</em>) – List of values, where the index of each value corresponds to an index in <code class="docutils literal notranslate"><span class="pre">times</span></code>.
-Included to ensure that the number of data points in the x and y axes are not misaligned.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><ul class="simple">
-<li><p><strong>temps_list</strong> (<em>list of float</em>) – List of the temperature values corresponding to the time stamps in <code class="docutils literal notranslate"><span class="pre">times</span></code>.</p></li>
-<li><p><strong>temp_data</strong> (<em>list</em>) – List of values, where the index of each value corresponds to an index in <code class="docutils literal notranslate"><span class="pre">temps_list</span></code>.</p></li>
-</ul>
-</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<code class="sig-prename descclassname">results_viewer.</code><code class="sig-name descname">generate_graph</code><span class="sig-paren">(</span><em class="sig-param">cur_test</em>, <em class="sig-param">sel_opt</em>, <em class="sig-param">start_time</em>, <em class="sig-param">end_time</em>, <em class="sig-param">max_y=None</em>, <em class="sig-param">where_addendum=''</em>, <em class="sig-param">sub_title=''</em>, <em class="sig-param">save_to_file=False</em>, <em class="sig-param">graph_type='plot'</em><span class="sig-paren">)</span></dt>
-<dd><p>Performs the steps necessary to generate a graph for the selected subset of data.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>cur_test</strong> (<a class="reference internal" href="#results_viewer.Test" title="results_viewer.Test"><code class="xref py py-class docutils literal notranslate"><span class="pre">Test</span></code></a>) – The <a class="reference internal" href="#results_viewer.Test" title="results_viewer.Test"><code class="xref py py-class docutils literal notranslate"><span class="pre">Test</span></code></a> for which we wish to obtain data.</p></li>
-<li><p><strong>sel_opt</strong> (<em>str</em>) – The user selected option denoting the subset of
-test data that we care about.</p></li>
-<li><p><strong>start_time</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code>) – The time at which the currently selected test run began.</p></li>
-<li><p><strong>end_time</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code>) – The time at which the currently selected test run ended.</p></li>
-<li><p><strong>max_y</strong> (<em>int</em><em>, </em><em>optional</em>) – The value to use for the max y value on the graphs.</p></li>
-<li><p><strong>where_addendum</strong> (<em>str</em><em>, </em><em>optional</em>) – An optional string which is used to specify additional constraints for the query to the database.
-Empty by default, and only used by some tests.</p></li>
-<li><p><strong>sub_title</strong> (<em>str</em><em>, </em><em>optional</em>) – The subtitle to append to the figure title. By default an empty string.</p></li>
-<li><p><strong>save_to_file</strong> (<em>bool</em>) – A boolean telling the function if the figures should be saved to a file
-instead of displayed on screen. <code class="docutils literal notranslate"><span class="pre">False</span></code> by default.</p></li>
-<li><p><strong>graph_type</strong> (<em>str</em>) – The type of graph to generate.  Set to ‘plot’ by default.
-Valid options are ‘plot’ to generate a normal plot, or
-‘hist’ to generate a histogram.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<code class="sig-prename descclassname">results_viewer.</code><code class="sig-name descname">gen_IPERF_graph</code><span class="sig-paren">(</span><em class="sig-param">sel_opt</em>, <em class="sig-param">start_time</em>, <em class="sig-param">end_time</em>, <em class="sig-param">stf=False</em><span class="sig-paren">)</span></dt>
-<dd><p>Variant function for generating a graph of IPERF values, calls <code class="xref py py-func docutils literal notranslate"><span class="pre">generate_graph()</span></code> with additional parameters specific to IPERF</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>sel_opt</strong> (<em>str</em>) – The user selected option denoting the subset of
-test data that we care about.</p></li>
-<li><p><strong>start_time</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code>) – The time at which the currently selected test run began.</p></li>
-<li><p><strong>end_time</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code>) – The time at which the currently selected test run ended.</p></li>
-<li><p><strong>stf</strong> (<em>bool</em>) – A boolean telling the function if the figures should be saved to a file
-instead of displayed on screen. <code class="docutils literal notranslate"><span class="pre">False</span></code> by default.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<code class="sig-prename descclassname">results_viewer.</code><code class="sig-name descname">gen_temp_graph</code><span class="sig-paren">(</span><em class="sig-param">start_time</em>, <em class="sig-param">end_time</em><span class="sig-paren">)</span></dt>
-<dd><p>Generate a graph of the temperature data vs. time.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>start_time</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code>) – The time at which the currently selected test run began.</p></li>
-<li><p><strong>end_time</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code>) – The time at which the currently selected test run ended.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<code class="sig-prename descclassname">results_viewer.</code><code class="sig-name descname">autogenerate_graphs</code><span class="sig-paren">(</span><em class="sig-param">start_time</em>, <em class="sig-param">end_time</em><span class="sig-paren">)</span></dt>
-<dd><p>Generate a set of predetermined graphs and save them as pngs.</p>
-<p>The graphs are determined by the constant <a class="reference internal" href="#results_viewer.TEST_DATA_GRAPHS" title="results_viewer.TEST_DATA_GRAPHS"><code class="xref py py-const docutils literal notranslate"><span class="pre">TEST_DATA_GRAPHS</span></code></a></p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>start_time</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code>) – The time at which the currently selected test run began.</p></li>
-<li><p><strong>end_time</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code>) – The time at which the currently selected test run ended.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-</div>
-<div class="section" id="graph-helper-functions">
-<h3>Graph Helper Functions<a class="headerlink" href="#graph-helper-functions" title="Permalink to this headline">¶</a></h3>
-<dl class="function">
-<dt>
-<code class="sig-prename descclassname">results_viewer.</code><code class="sig-name descname">one_and_three_fig</code><span class="sig-paren">(</span><em class="sig-param">upperx</em>, <em class="sig-param">uppery</em>, <em class="sig-param">upper_info</em>, <em class="sig-param">lowerx</em>, <em class="sig-param">lowery</em>, <em class="sig-param">lower_info</em>, <em class="sig-param">fig_info</em><span class="sig-paren">)</span></dt>
-<dd><p>Generate a figure with one large upper graph of data vs time, and three smaller lower graphs of data vs temperature.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>upperx</strong> (<em>dict</em>) – Dictionary containing lists of x-axis data that correspond to each side in <a class="reference internal" href="#results_viewer.SIDES" title="results_viewer.SIDES"><code class="xref py py-const docutils literal notranslate"><span class="pre">SIDES</span></code></a>.</p></li>
-<li><p><strong>uppery</strong> (<em>dict</em>) – Dictionary containing lists of y-axis data that correspond to each side in <a class="reference internal" href="#results_viewer.SIDES" title="results_viewer.SIDES"><code class="xref py py-const docutils literal notranslate"><span class="pre">SIDES</span></code></a>.</p></li>
-<li><p><strong>upper_info</strong> (<em>dict</em>) – Dictionary contain information used when generating the upper graph, such as the
-graph format, the y limit, and various labels and titles.</p></li>
-<li><p><strong>lowerx</strong> (<em>dict</em>) – Dictionary containing dictionaries that correspond to each side in <a class="reference internal" href="#results_viewer.SIDES" title="results_viewer.SIDES"><code class="xref py py-const docutils literal notranslate"><span class="pre">SIDES</span></code></a>,
-which in turn contain lists of x-axis data that correspond to each of three keys.</p></li>
-<li><p><strong>lowery</strong> (<em>dict</em>) – Dictionary containing dictionaries that correspond to each side in <a class="reference internal" href="#results_viewer.SIDES" title="results_viewer.SIDES"><code class="xref py py-const docutils literal notranslate"><span class="pre">SIDES</span></code></a>,
-which in turn contain lists of y-axis data that correspond to each of three keys.</p></li>
-<li><p><strong>lower_info</strong> (<em>dict</em>) – Dictionary contain information used when generating the lower graph, such as the
-graph format, the y limit, and various labels and titles.</p></li>
-<li><p><strong>fig_info</strong> (<em>dict</em>) – Dictionary containing more general info that applies the the figure as a whole.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<code class="sig-prename descclassname">results_viewer.</code><code class="sig-name descname">tricolor_fig</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">y</em>, <em class="sig-param">info</em>, <em class="sig-param">fig_info</em><span class="sig-paren">)</span></dt>
-<dd><p>Generate a figure with one large graph, with data graphed in three different colors.</p>
-<p>That is, three colors per side, for a total of six colors.  Each color corresponds to one
-side and key.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>x</strong> (<em>dict</em>) – Dictionary containing dictionaries that correspond to each side in <a class="reference internal" href="#results_viewer.SIDES" title="results_viewer.SIDES"><code class="xref py py-const docutils literal notranslate"><span class="pre">SIDES</span></code></a>,
-which in turn contain lists of x-axis data that correspond to each of three keys.</p></li>
-<li><p><strong>y</strong> (<em>dict</em>) – Dictionary containing dictionaries that correspond to each side in <a class="reference internal" href="#results_viewer.SIDES" title="results_viewer.SIDES"><code class="xref py py-const docutils literal notranslate"><span class="pre">SIDES</span></code></a>,
-which in turn contain lists of y-axis data that correspond to each of three keys.</p></li>
-<li><p><strong>info</strong> (<em>dict</em>) – Dictionary contain information used when generating the graph, such as the
-graph format, the y limit, and various labels and titles.</p></li>
-<li><p><strong>fig_info</strong> (<em>dict</em>) – Dictionary containing more general info that applies the the figure as a whole.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<code class="sig-prename descclassname">results_viewer.</code><code class="sig-name descname">my_plotter</code><span class="sig-paren">(</span><em class="sig-param">ax</em>, <em class="sig-param">xdata</em>, <em class="sig-param">ydata</em>, <em class="sig-param">fmt</em>, <em class="sig-param">param_dict</em><span class="sig-paren">)</span></dt>
-<dd><p>Plot <code class="docutils literal notranslate"><span class="pre">xdata</span></code> and <code class="docutils literal notranslate"><span class="pre">ydata</span></code>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>ax</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">axis</span></code>) – The <code class="xref py py-class docutils literal notranslate"><span class="pre">axis</span></code> on which to plot the data.</p></li>
-<li><p><strong>xdata</strong> (<em>list</em>) – The list of data for the x-axis.</p></li>
-<li><p><strong>ydata</strong> (<em>list</em>) – The list of data for the y-axis.</p></li>
-<li><p><strong>fmt</strong> (<em>str</em>) – The format string for the plot.</p></li>
-<li><p><strong>param_dict</strong> (<em>dict</em>) – Additional parameters.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-</div>
-<div class="section" id="id2">
-<h3>Test<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
-<blockquote>
-<div><dl class="class">
-<dt id="results_viewer.Test">
-<em class="property">class </em><code class="sig-prename descclassname">results_viewer.</code><code class="sig-name descname">Test</code><span class="sig-paren">(</span><em class="sig-param">json_file_name</em><span class="sig-paren">)</span><a class="headerlink" href="#results_viewer.Test" title="Permalink to this definition">¶</a></dt>
-<dd><p>An object which represents all of the information regarding a single test.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>json_file_name</strong> (<em>str</em>) – The filename of the json file from which test information should be loaded.</p>
-</dd>
-</dl>
-<dl class="attribute">
-<dt id="results_viewer.Test.tag">
-<code class="sig-name descname">tag</code><a class="headerlink" href="#results_viewer.Test.tag" title="Permalink to this definition">¶</a></dt>
-<dd><p>The tag associated with the test (also used as the name of the test,
-and the name of the table containing the test data).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>str</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="results_viewer.Test.data_key">
-<code class="sig-name descname">data_key</code><a class="headerlink" href="#results_viewer.Test.data_key" title="Permalink to this definition">¶</a></dt>
-<dd><p>The name of the column which contains the names of the different
-subsets of data the user can choose from when generating a graph.
-Use is mutually exclusive with <a class="reference internal" href="#results_viewer.Test.key_list" title="results_viewer.Test.key_list"><code class="xref py py-attr docutils literal notranslate"><span class="pre">key_list</span></code></a>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>str</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="results_viewer.Test.data_info">
-<code class="sig-name descname">data_info</code><a class="headerlink" href="#results_viewer.Test.data_info" title="Permalink to this definition">¶</a></dt>
-<dd><p>A dictionary with keys corresponding to the names of the data columns
-in the test’s table, and values corresponding to the type of each column.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>dict</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="results_viewer.Test.data_tag">
-<code class="sig-name descname">data_tag</code><a class="headerlink" href="#results_viewer.Test.data_tag" title="Permalink to this definition">¶</a></dt>
-<dd><p>The name of the column in which the desired data is stored, not used
-by all tests.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>str</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="results_viewer.Test.key_list">
-<code class="sig-name descname">key_list</code><a class="headerlink" href="#results_viewer.Test.key_list" title="Permalink to this definition">¶</a></dt>
-<dd><p>A list of the names of different subsets of data the user can choose
-from when generating a graph. Use is mutually exclusive with <a class="reference internal" href="#results_viewer.Test.data_key" title="results_viewer.Test.data_key"><code class="xref py py-attr docutils literal notranslate"><span class="pre">data_key</span></code></a>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>list of str</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="results_viewer.Test.units_key">
-<code class="sig-name descname">units_key</code><a class="headerlink" href="#results_viewer.Test.units_key" title="Permalink to this definition">¶</a></dt>
-<dd><p>The name of the column which contains the units of the data stored in
-the current row of the table. Not present for all tests.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>str</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="results_viewer.Test.units_dict">
-<code class="sig-name descname">units_dict</code><a class="headerlink" href="#results_viewer.Test.units_dict" title="Permalink to this definition">¶</a></dt>
-<dd><p>A dictionary matching the options from <a class="reference internal" href="#results_viewer.Test.key_list" title="results_viewer.Test.key_list"><code class="xref py py-attr docutils literal notranslate"><span class="pre">key_list</span></code></a> with the
-appropriate units. Present when <a class="reference internal" href="#results_viewer.Test.units_key" title="results_viewer.Test.units_key"><code class="xref py py-attr docutils literal notranslate"><span class="pre">units_key</span></code></a> is not.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>dict</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-</div></blockquote>
-</div>
-<div class="section" id="id3">
-<h3>Other Functions<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
-<dl class="function">
-<dt>
-<code class="sig-prename descclassname">results_viewer.</code><code class="sig-name descname">return_options</code><span class="sig-paren">(</span><em class="sig-param">options_list</em>, <em class="sig-param">sep_char</em><span class="sig-paren">)</span></dt>
-<dd><p>Return the options listed in <code class="docutils literal notranslate"><span class="pre">options_list</span></code>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>options_list</strong> (<em>list of str</em>) – The list of the options to return.</p></li>
-<li><p><strong>sep_char</strong> (<em>str</em>) – The character to use when separating the options.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A string listing the available options, with each option separated
-by the character defined by <code class="docutils literal notranslate"><span class="pre">sep_char</span></code>.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>str</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<code class="sig-prename descclassname">results_viewer.</code><code class="sig-name descname">return_help</code><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
-<dd><p>Return the standard help message.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>The standard help message, listing valid user inputs.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>str</p>
-</dd>
-</dl>
 </dd></dl>
 
 </div>
