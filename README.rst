@@ -38,7 +38,7 @@ Results Viewer
 
 Constants
 ---------
-.. autodata:: MESSAGE_TAGS
+.. autodata:: results_viewer.MESSAGE_TAGS
 
 .. autodata:: SIDES
 
