@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# This script will grep red-side results from file in order of test (Stress-ng, DD, IPERF, IPMI Tool)
+# This script will grep results from file in order of test (Stress-ng, DD, IPERF, IPMI Tool)
 
 #echo $(date)
 
