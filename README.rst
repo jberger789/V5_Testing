@@ -28,10 +28,8 @@ Other Functions
 ---------------
 .. automodule:: optimized_parsing
 	:noindex:
-	:members: make_datetime, return_or, rowvals4SQLquery, rowvals4SQLmany, rowcols4SQLquery
+	:members: make_datetime, return_or, rowvals4SQLquery, rowvals4SQLmany, rowcols4SQLquery, insert_ignore_many_query
 
-.. autofunction:: insert_ignore_many_query
-	
 Results Viewer
 ==============
 .. automodule:: results_viewer
