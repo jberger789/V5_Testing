@@ -38,7 +38,7 @@ Results Viewer
 
 Constants
 ---------
-.. autodata:: results_viewer.MESSAGE_TAGS
+.. autodata:: MESSAGE_TAGS
 
 .. autodata:: SIDES
 
@@ -51,7 +51,6 @@ Constants
 Selection Functions
 -------------------
 .. automodule:: results_viewer
-	:noindex:
 	:members: test_run_select, test_select, graph_select
 
 Data Retrieval and Graphing Functions
