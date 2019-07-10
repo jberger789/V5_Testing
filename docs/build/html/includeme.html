@@ -1,0 +1,1258 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Post Processing &#8212; V5_Testing Scripts  documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Welcome to V5_Testing Scripts’s documentation!" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="post-processing">
+<h1>Post Processing<a class="headerlink" href="#post-processing" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-optimized_parsing">
+<span id="parser"></span><h2>Parser<a class="headerlink" href="#module-optimized_parsing" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="constants">
+<h3>Constants<a class="headerlink" href="#constants" title="Permalink to this headline">¶</a></h3>
+<dl class="data">
+<dt id="optimized_parsing.SIDES">
+<code class="sig-prename descclassname">optimized_parsing.</code><code class="sig-name descname">SIDES</code><em class="property"> = {'black': 'BLK', 'red': 'RED'}</em><a class="headerlink" href="#optimized_parsing.SIDES" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dictionary containing names of the sides, as well as their corresponding strings for table entry</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="data">
+<dt id="optimized_parsing.MESSAGE_TAGS">
+<code class="sig-prename descclassname">optimized_parsing.</code><code class="sig-name descname">MESSAGE_TAGS</code><em class="property"> = ['STRESS_NG', 'IPMITOOL', 'STREAM_C', 'DD_TEST', 'HDPARM', 'IPERF', 'USB_PASSMARK', 'TAMPER_STATUS', 'FIBER_FPGA_TEMP', 'PING_TEST', 'UPTIME']</em><a class="headerlink" href="#optimized_parsing.MESSAGE_TAGS" title="Permalink to this definition">¶</a></dt>
+<dd><p>List containing tags of the tests used during the current test run.  Set manually.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>list of str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="data">
+<dt id="optimized_parsing.PREFIX_COLS">
+<code class="sig-prename descclassname">optimized_parsing.</code><code class="sig-name descname">PREFIX_COLS</code><em class="property"> = ['time_stamp', 'unit', 'side']</em><a class="headerlink" href="#optimized_parsing.PREFIX_COLS" title="Permalink to this definition">¶</a></dt>
+<dd><p>List containing names of the prefix columns</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>list of str</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="test">
+<h3>Test<a class="headerlink" href="#test" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><dl class="class">
+<dt id="optimized_parsing.Test">
+<em class="property">class </em><code class="sig-prename descclassname">optimized_parsing.</code><code class="sig-name descname">Test</code><span class="sig-paren">(</span><em class="sig-param">json_file_name=None</em><span class="sig-paren">)</span><a class="headerlink" href="#optimized_parsing.Test" title="Permalink to this definition">¶</a></dt>
+<dd><p>An object which represents all of the information regarding a single test.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>json_file_name</strong> (<em>str</em>) – The filename of the json file from which test information should be loaded.</p>
+</dd>
+</dl>
+<dl class="attribute">
+<dt id="optimized_parsing.Test.tag">
+<code class="sig-name descname">tag</code><a class="headerlink" href="#optimized_parsing.Test.tag" title="Permalink to this definition">¶</a></dt>
+<dd><p>The tag associated with the test (also used as the name of the test,
+and the name of the table containing the test data).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="optimized_parsing.Test.re">
+<code class="sig-name descname">re</code><a class="headerlink" href="#optimized_parsing.Test.re" title="Permalink to this definition">¶</a></dt>
+<dd><p>The regular expression used for parsing log messages from the test.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">re.Pattern</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="optimized_parsing.Test.key_tag">
+<code class="sig-name descname">key_tag</code><a class="headerlink" href="#optimized_parsing.Test.key_tag" title="Permalink to this definition">¶</a></dt>
+<dd><p>The name of the variable by which test data is separated.  Not used
+in all tests.  An example is sensor for IPMI_TOOL, since every sensor
+has the same data fields, and thus are stored in separate rows.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="optimized_parsing.Test.data_info">
+<code class="sig-name descname">data_info</code><a class="headerlink" href="#optimized_parsing.Test.data_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>A dictionary with keys corresponding to the names of the data columns
+in the test’s table, and values corresponding to the type of each column.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="optimized_parsing.Test.num_lines">
+<code class="sig-name descname">num_lines</code><a class="headerlink" href="#optimized_parsing.Test.num_lines" title="Permalink to this definition">¶</a></dt>
+<dd><p>The number of lines of log messages that contain data for a single test result.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="optimized_parsing.Test.num_extra_lines">
+<code class="sig-name descname">num_extra_lines</code><a class="headerlink" href="#optimized_parsing.Test.num_extra_lines" title="Permalink to this definition">¶</a></dt>
+<dd><p>The number of additional lines of log messages that <em>may</em> contain data for
+a single test result, often in a separate format.</p>
+<p>Set to <strong>0</strong> if not present in the test’s information file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="optimized_parsing.Test.extra_re">
+<code class="sig-name descname">extra_re</code><a class="headerlink" href="#optimized_parsing.Test.extra_re" title="Permalink to this definition">¶</a></dt>
+<dd><p>The regular expression used for recognizing the data in extra lines. Only used by some tests.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">re.Pattern</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="optimized_parsing.Test.extra_data">
+<code class="sig-name descname">extra_data</code><a class="headerlink" href="#optimized_parsing.Test.extra_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>The list containing the names of the data present in extra lines. Only used by some_tests.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>list of str</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div></blockquote>
+</div>
+<div class="section" id="log">
+<h3>Log<a class="headerlink" href="#log" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><dl class="class">
+<dt id="optimized_parsing.Log">
+<em class="property">class </em><code class="sig-prename descclassname">optimized_parsing.</code><code class="sig-name descname">Log</code><span class="sig-paren">(</span><em class="sig-param">filename</em>, <em class="sig-param">units</em><span class="sig-paren">)</span><a class="headerlink" href="#optimized_parsing.Log" title="Permalink to this definition">¶</a></dt>
+<dd><p>An object associated with a log messages file.</p>
+<p>Contains details about what units and tests are
+expected to have results in the log.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<em>str</em>) – The name of the log file.</p></li>
+<li><p><strong>units</strong> (<em>list of str</em>) – The list containing the units with results in the log.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="attribute">
+<dt id="optimized_parsing.Log.message_file_name">
+<code class="sig-name descname">message_file_name</code><a class="headerlink" href="#optimized_parsing.Log.message_file_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>The name of the log messages file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="optimized_parsing.Log.log_file">
+<code class="sig-name descname">log_file</code><a class="headerlink" href="#optimized_parsing.Log.log_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>The log file itself.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>file</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="optimized_parsing.Log.units">
+<code class="sig-name descname">units</code><a class="headerlink" href="#optimized_parsing.Log.units" title="Permalink to this definition">¶</a></dt>
+<dd><p>The list of units associated with this log.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>list of str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="optimized_parsing.Log.tests">
+<code class="sig-name descname">tests</code><a class="headerlink" href="#optimized_parsing.Log.tests" title="Permalink to this definition">¶</a></dt>
+<dd><p>A dictionary containing the name (tags) of tests
+associated with this log as keys, with the values
+as the corresponding <a class="reference internal" href="#optimized_parsing.Test" title="optimized_parsing.Test"><code class="xref py py-class docutils literal notranslate"><span class="pre">Test</span></code></a> objects.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="optimized_parsing.Log.line_count">
+<code class="sig-name descname">line_count</code><a class="headerlink" href="#optimized_parsing.Log.line_count" title="Permalink to this definition">¶</a></dt>
+<dd><p>The number of lines in the log file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="optimized_parsing.Log.cur_line_num">
+<code class="sig-name descname">cur_line_num</code><a class="headerlink" href="#optimized_parsing.Log.cur_line_num" title="Permalink to this definition">¶</a></dt>
+<dd><p>The current line number.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="optimized_parsing.Log.re_prefix">
+<code class="sig-name descname">re_prefix</code><a class="headerlink" href="#optimized_parsing.Log.re_prefix" title="Permalink to this definition">¶</a></dt>
+<dd><p>The regular expression associated with the prefixes
+of the messages in this log.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">re.Match</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="optimized_parsing.Log.add_test">
+<code class="sig-name descname">add_test</code><span class="sig-paren">(</span><em class="sig-param">test</em><span class="sig-paren">)</span><a class="headerlink" href="#optimized_parsing.Log.add_test" title="Permalink to this definition">¶</a></dt>
+<dd><p>Associate a new test with this log.</p>
+<p>Attempts to set up a new table in the database for
+storing data from this test. After it has done so, or
+if such a table already exists, this method adds the
+new test to the test dictionary <a class="reference internal" href="#optimized_parsing.Log.tests" title="optimized_parsing.Log.tests"><code class="xref py py-attr docutils literal notranslate"><span class="pre">tests</span></code></a>, where the
+key is the string equivalent to this test’s tag (<a class="reference internal" href="#optimized_parsing.Test.tag" title="optimized_parsing.Test.tag"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Test.tag</span></code></a>).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>test</strong> (<a class="reference internal" href="#optimized_parsing.Test" title="optimized_parsing.Test"><code class="xref py py-class docutils literal notranslate"><span class="pre">Test</span></code></a>) – The <a class="reference internal" href="#optimized_parsing.Test" title="optimized_parsing.Test"><code class="xref py py-class docutils literal notranslate"><span class="pre">Test</span></code></a> to be added to this log.</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>May raise errors when attempting to create a
+new table, as there is no available way to
+specify the length of an SQL string type.</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="optimized_parsing.Log.extract_data">
+<code class="sig-name descname">extract_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#optimized_parsing.Log.extract_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extracts test results from the log file.</p>
+<p>For each line in the log file, checks if it has a relevant <cite>prefix</cite>.
+If it does, then it calls <a class="reference internal" href="#optimized_parsing.Log.parse_line" title="optimized_parsing.Log.parse_line"><code class="xref py py-meth docutils literal notranslate"><span class="pre">parse_line()</span></code></a> on the line to attempt to
+convert data from the line into a row to be inserted into the database.</p>
+<p>When it recieves the list of rows to be inserted, it then attempts to insert
+them into the corresponding test table in the database, using a query string
+generated by <a class="reference internal" href="#optimized_parsing.insert_ignore_many_query" title="optimized_parsing.insert_ignore_many_query"><code class="xref py py-func docutils literal notranslate"><span class="pre">insert_ignore_many_query()</span></code></a>, in order to ensure
+that duplicate entries are not inserted.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="optimized_parsing.Log.get_line_count">
+<code class="sig-name descname">get_line_count</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#optimized_parsing.Log.get_line_count" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the number of lines in the log file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The number of lines in the file with the name attr:<cite>message_file_name</cite>.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>float</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><strong>IOError</strong> – The file with the name attr:<cite>message_file_name</cite> could not be opened.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="optimized_parsing.Log.parse_line">
+<code class="sig-name descname">parse_line</code><span class="sig-paren">(</span><em class="sig-param">line</em>, <em class="sig-param">cur_test</em>, <em class="sig-param">recur_count=0</em><span class="sig-paren">)</span><a class="headerlink" href="#optimized_parsing.Log.parse_line" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts data from a log message into a row to insert into an SQL table.</p>
+<p>Given a log message line and the test the line is associated with, attempts
+to interpret the data in the line into a row dictionary.</p>
+<p>The exact interpretation process is dependant on the individual test, but in
+general it attemps to match the line to a regular expression corresponding
+to the current test’s output format, and then uses the groups found by the
+regular expression, along with the variables specified in the test’s
+<a class="reference internal" href="#optimized_parsing.Test.data_info" title="optimized_parsing.Test.data_info"><code class="xref py py-attr docutils literal notranslate"><span class="pre">data_info</span></code></a> attribute to populate a row dictionary with the data.</p>
+<p>For tests that do (or may) have multiple lines of data for a single test result
+(and thus a single row of data), will also check and attempt to parse the
+following lines as specified by the attributes of <code class="docutils literal notranslate"><span class="pre">cur_test</span></code>.</p>
+<p>After successfully filling a dictionary for a full row of data for the
+current test, will call itself recursively on the next line in the log file,
+under the assumption that the next line also belongs to the same test.  This
+continues until it either reaches the end of the lines associated with the
+current test, or it exceeds python’s recursion limit. This allows it to return
+a list of rows to be inserted into a single table with one query, which is
+much faster than inserting each row individually.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>line</strong> (<em>str</em>) – A string containing a single line from the log file, which presumable contains
+a log message generated by the test denoted in <code class="docutils literal notranslate"><span class="pre">cur_test</span></code>.</p></li>
+<li><p><strong>cur_test</strong> (<a class="reference internal" href="#optimized_parsing.Test" title="optimized_parsing.Test"><code class="xref py py-class docutils literal notranslate"><span class="pre">Test</span></code></a>) – The <a class="reference internal" href="#optimized_parsing.Test" title="optimized_parsing.Test"><code class="xref py py-class docutils literal notranslate"><span class="pre">Test</span></code></a> that is expected to
+correspond to the test results contained in line.</p></li>
+<li><p><strong>recur_count</strong> (<em>int</em>) – Stores current recursion depth, to avoid raising an error if the limit is reached.
+Set to <code class="docutils literal notranslate"><span class="pre">0</span></code> by default if no value is specified.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of <cite>row</cite> dictionaries.  Every row in the list is associated with the same test.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="optimized_parsing.Log.set_re_prefix">
+<code class="sig-name descname">set_re_prefix</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#optimized_parsing.Log.set_re_prefix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set up the regular expression for the <cite>prefix</cite>.</p>
+<p>The <cite>prefix</cite> is the part of the log message that contains
+the time stamp, the unit and side, and the test tag.
+The regular expression for matching the <cite>prefix</cite> is as
+such dependent on which units were tested and which
+tests were performed during the test run that the log
+file contains results from. The <cite>prefix</cite> makes it possible
+to determine if a log message came from a test or not,
+thus quickly ruling out some irrelevant log messages,
+and making it possible to determine which test the log
+messsage may have come from.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="optimized_parsing.Log.show_progress">
+<code class="sig-name descname">show_progress</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#optimized_parsing.Log.show_progress" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print the current progress in parsing the log file.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div></blockquote>
+</div>
+<div class="section" id="other-functions">
+<h3>Other Functions<a class="headerlink" href="#other-functions" title="Permalink to this headline">¶</a></h3>
+<dl class="function">
+<dt>
+<code class="sig-prename descclassname">optimized_parsing.</code><code class="sig-name descname">make_datetime</code><span class="sig-paren">(</span><em class="sig-param">match_obj</em><span class="sig-paren">)</span></dt>
+<dd><p>Given a match object that contains groups with date/time info, return a corresponding python datetime object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>match_obj</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">re.Match</span></code>) – A match object which contains time stamp information, and corresponding groups.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A datetime object containing the time stamp information in <code class="docutils literal notranslate"><span class="pre">match_obj</span></code>.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="sig-prename descclassname">optimized_parsing.</code><code class="sig-name descname">return_or</code><span class="sig-paren">(</span><em class="sig-param">val_list</em><span class="sig-paren">)</span></dt>
+<dd><p>Return the contents of <em>val_list</em> in as a regex <cite>or</cite> statement.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>val_list</strong> (<em>list</em>) – A list of values <code class="docutils literal notranslate"><span class="pre">[v1,...,vn]</span></code></p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The string <code class="docutils literal notranslate"><span class="pre">&quot;((v1)|...|(vn))&quot;</span></code>, which is formatted appropriately
+for use in an <cite>or</cite> statement in a regular expression</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">return_or</span><span class="p">([</span><span class="s1">&#39;tea&#39;</span><span class="p">,</span><span class="s1">&#39;milk&#39;</span><span class="p">,</span><span class="s1">&#39;coffee&#39;</span><span class="p">]))</span>
+<span class="go">&quot;((tea)|(milk)|(coffee))&quot;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="sig-prename descclassname">optimized_parsing.</code><code class="sig-name descname">rowvals4SQLquery</code><span class="sig-paren">(</span><em class="sig-param">row, col_info, pre_cols=['time_stamp', 'unit', 'side']</em><span class="sig-paren">)</span></dt>
+<dd><p>Generates a string representation of the values in a row.</p>
+<p>Given a row dictionary, and a dictionary containing column info
+for the correspoding test, returns a string representation of
+the corresponding values in rows for every column of the table.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>row</strong> (<em>dictionary</em>) – A dictionary containing the data for a single row of an SQL
+table. The keys are the names of columns, with the values as
+the corresponding values.</p></li>
+<li><p><strong>col_info</strong> (<em>dicitionary</em>) – A dictionary containing the columns unique to a specific test as keys,
+with the corresponding values as the data types of the columns.</p></li>
+<li><p><strong>pre_cols</strong> (<em>list</em>) – <p>A list containing the names of columns which are not contained
+in <code class="docutils literal notranslate"><span class="pre">col_info</span></code>.</p>
+<p>This parameter is set to <a class="reference internal" href="#optimized_parsing.PREFIX_COLS" title="optimized_parsing.PREFIX_COLS"><code class="xref py py-const docutils literal notranslate"><span class="pre">PREFIX_COLS</span></code></a> by default, since the
+columns for <cite>time_stamp</cite>, <cite>unit</cite>, and <cite>side</cite> are those which
+are not unique to any single test, and thus are not contained
+within <code class="docutils literal notranslate"><span class="pre">col_info</span></code>.</p>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A string representing all the column data in <code class="docutils literal notranslate"><span class="pre">row</span></code> (with all data
+formatted as appropriate, and empty columns rendered as “NULL”),
+with data separated by commas and enclosed in parentheses.
+Suitable for use in an SQL <em>INSERT</em> query.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="sig-prename descclassname">optimized_parsing.</code><code class="sig-name descname">rowvals4SQLmany</code><span class="sig-paren">(</span><em class="sig-param">row_list</em>, <em class="sig-param">col_info</em><span class="sig-paren">)</span></dt>
+<dd><p>Generates a string representation of the values in many rows.</p>
+<p>Given a list of row dicitonaries, and dictionary containing column info
+for the corresponding test, returns a string representation of the row data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>row_list</strong> (<em>list</em>) – <p>A list containing the rows (as dictionaries) to be inserted.</p>
+<p>Assumes every row dictionary contains corresponding values for
+every data column in the table.</p>
+</p></li>
+<li><p><strong>col_info</strong> (<em>dictionary</em>) – A dictionary containing the columns unique to a specific test as keys,
+with the corresponding values as the data types of the columns.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A string representing the data in all of the rows in <code class="docutils literal notranslate"><span class="pre">row_list</span></code>,
+with each row’s data string separated by commas. Suitable for
+use in an SQL <em>INSERT</em> query for many rows of data.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="sig-prename descclassname">optimized_parsing.</code><code class="sig-name descname">rowcols4SQLquery</code><span class="sig-paren">(</span><em class="sig-param">cols, pre_cols=['time_stamp', 'unit', 'side']</em><span class="sig-paren">)</span></dt>
+<dd><p>Generates a string representation column names for a table.</p>
+<p>The output is formatted for use in an SQL query
+(where the values of <code class="docutils literal notranslate"><span class="pre">cols</span></code> are the column names of the table).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cols</strong> (<em>list</em>) – A list of strings representing the names of the columns
+unique to a specific test table.</p></li>
+<li><p><strong>pre_cols</strong> (<em>list</em>) – <p>A list containing the names of columns which are not contained
+in the row dictionary.</p>
+<p>This parameter is set to <a class="reference internal" href="#optimized_parsing.PREFIX_COLS" title="optimized_parsing.PREFIX_COLS"><code class="xref py py-const docutils literal notranslate"><span class="pre">PREFIX_COLS</span></code></a> by default, since the
+columns for <cite>time_stamp</cite>, <cite>unit</cite>, and <cite>side</cite> are those which
+would not usually be contained in the row dicitionary, as
+they are not unique to a specific test table, and thus their
+values are extracted separately from those corresponding
+to the columns in <code class="docutils literal notranslate"><span class="pre">cols</span></code>.</p>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A string containing comma separated values from <code class="docutils literal notranslate"><span class="pre">pre_cols</span></code> and <code class="docutils literal notranslate"><span class="pre">cols</span></code>,
+enclosed in parentheses. Suitable for use when naming the columns in
+an SQL <em>INSERT</em> query.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="optimized_parsing.insert_ignore_many_query">
+<code class="sig-prename descclassname">optimized_parsing.</code><code class="sig-name descname">insert_ignore_many_query</code><span class="sig-paren">(</span><em class="sig-param">test</em>, <em class="sig-param">rows</em><span class="sig-paren">)</span><a class="headerlink" href="#optimized_parsing.insert_ignore_many_query" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a string for an SQL <em>INSERT IGNORE</em> query for multiple rows of data.</p>
+<p>Given a <a class="reference internal" href="#optimized_parsing.Test" title="optimized_parsing.Test"><code class="xref py py-class docutils literal notranslate"><span class="pre">Test</span></code></a> object and a list of rows, generate an SQL query string
+for inserting all of the rows in <code class="docutils literal notranslate"><span class="pre">rows</span></code> into the table corresponding
+to <code class="docutils literal notranslate"><span class="pre">test</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>test</strong> (<a class="reference internal" href="#optimized_parsing.Test" title="optimized_parsing.Test"><code class="xref py py-class docutils literal notranslate"><span class="pre">Test</span></code></a>) – The <a class="reference internal" href="#optimized_parsing.Test" title="optimized_parsing.Test"><code class="xref py py-class docutils literal notranslate"><span class="pre">Test</span></code></a> that corresponds to the data contained in <code class="docutils literal notranslate"><span class="pre">rows</span></code>.</p></li>
+<li><p><strong>rows</strong> (<em>list</em>) – A list of row dictionaries to be inserted into the table
+corresponding to <code class="docutils literal notranslate"><span class="pre">test</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A string that, when executed as an SQL query, will
+perform an <em>INSERT IGNORE</em> of the rows in <code class="docutils literal notranslate"><span class="pre">rows</span></code>
+into the table corresponding to <code class="docutils literal notranslate"><span class="pre">test</span></code></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Because this code was created for internal use (and ideally automated use),
+it makes no attempt at data sanitization, meaning it could, in theory, allow
+a malicious actor with arbitrary access to this code to perform an SQL injection
+attack. However, if they only have access to the log file, it is unlikely that
+they would be able to embed arbitrary SQL queries that would still be recognized by
+the regular expressions that parse the line (assuming they cannot create arbitrary tests)</p>
+</div>
+</dd></dl>
+
+</div>
+</div>
+<div class="section" id="module-results_viewer">
+<span id="results-viewer"></span><h2>Results Viewer<a class="headerlink" href="#module-results_viewer" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id1">
+<h3>Constants<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<dl class="data">
+<dt id="results_viewer.MESSAGE_TAGS">
+<code class="sig-prename descclassname">results_viewer.</code><code class="sig-name descname">MESSAGE_TAGS</code><em class="property"> = {1: 'STRESS_NG', 2: 'IPMITOOL', 3: 'STREAM_C', 4: 'DD_TEST', 5: 'HDPARM', 6: 'IPERF', 7: 'USB_PASSMARK', 8: 'TAMPER_STATUS', 9: 'FIBER_FPGA_TEMP', 10: 'PING_TEST', 11: 'UPTIME'}</em><a class="headerlink" href="#results_viewer.MESSAGE_TAGS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dictionary containing shorthand numerical ids and the corresponding test names for each.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="data">
+<dt id="results_viewer.SIDES">
+<code class="sig-prename descclassname">results_viewer.</code><code class="sig-name descname">SIDES</code><em class="property"> = {'BLK': 'black', 'RED': 'red'}</em><a class="headerlink" href="#results_viewer.SIDES" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dictionary containing key-names for the sides in the database, as well as their corresponding full names/colors.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="data">
+<dt id="results_viewer.TEMPERATURE_OPS">
+<code class="sig-prename descclassname">results_viewer.</code><code class="sig-name descname">TEMPERATURE_OPS</code><em class="property"> = ['intake', 'outtake', 'ambient']</em><a class="headerlink" href="#results_viewer.TEMPERATURE_OPS" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of valid temperature keys (aka options).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>list of str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="data">
+<dt id="results_viewer.DB">
+<code class="sig-prename descclassname">results_viewer.</code><code class="sig-name descname">DB</code><em class="property"> = &lt;Database(mysql://guest:*****&#64;localhost/test_results)&gt;</em><a class="headerlink" href="#results_viewer.DB" title="Permalink to this definition">¶</a></dt>
+<dd><p>Database containing results from all tests.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Database</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="data">
+<dt id="results_viewer.TEST_DATA_GRAPHS">
+<code class="sig-prename descclassname">results_viewer.</code><code class="sig-name descname">TEST_DATA_GRAPHS</code><em class="property"> = {'DD_TEST': ['SDA'], 'FIBER_FPGA_TEMP': ['2.5', '3.5'], 'HDPARM': ['cached', 'buffered disk'], 'IPERF': ['bandwidth', 'loss_percentage', 'out_of_order_datagrams', 'lost_datagrams'], 'IPMITOOL': ['CPU Temp', 'FAN1', 'FAN2', 'FANA', '5VCC', '5VSB', '3.3VCC', '3.3VSB', '12V'], 'PING_TEST': ['packet_loss', 'total_time', 'average'], 'STREAM_C': ['Add', 'Copy'], 'STRESS_NG': ['Instructions', 'CPU Cycles'], 'TAMPER_STATUS': ['voltage'], 'UPTIME': ['load_avg'], 'USB_PASSMARK': ['error counter', 'Read', 'Write']}</em><a class="headerlink" href="#results_viewer.TEST_DATA_GRAPHS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dictionary containing the names of tests to be auto-graphed, and the corresponding list of options to be graphed for each test.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="selection-functions">
+<h3>Selection Functions<a class="headerlink" href="#selection-functions" title="Permalink to this headline">¶</a></h3>
+<dl class="function">
+<dt>
+<code class="sig-prename descclassname">results_viewer.</code><code class="sig-name descname">test_run_select</code><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
+<dd><p>Allows the user to select test run that they wish to generate graphs for.</p>
+<p>If the user enters ‘o’ or ‘options’, returns the list of test runs stored
+in the <em>TESTS</em> table of <a class="reference internal" href="#results_viewer.DB" title="results_viewer.DB"><code class="xref py py-const docutils literal notranslate"><span class="pre">DB</span></code></a>, along with their start and end times.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="sig-prename descclassname">results_viewer.</code><code class="sig-name descname">test_select</code><span class="sig-paren">(</span><em class="sig-param">start_time</em>, <em class="sig-param">end_time</em><span class="sig-paren">)</span></dt>
+<dd><p>Allows the user the select the test for which they wish to view data.</p>
+<p>If the user enters ‘o’ or ‘options’, returns the list of available tests,
+along with a numerical shorthand they can be entered as.</p>
+<p>Has additional options.  One is to run <code class="xref py py-func docutils literal notranslate"><span class="pre">autogenerate_graphs()</span></code> by
+entering ‘s’ or ‘save’, allowing the user to automatically generate
+a preset selection of graphs for their selected test run. The other
+allows the user to generate a graph of temperature vs. time, by
+entering ‘t’</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>start_time</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code>) – The time at which the current test run began.</p></li>
+<li><p><strong>end_time</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code>) – The time at which the current test run ended.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="sig-prename descclassname">results_viewer.</code><code class="sig-name descname">graph_select</code><span class="sig-paren">(</span><em class="sig-param">test_key</em>, <em class="sig-param">start_time</em>, <em class="sig-param">end_time</em><span class="sig-paren">)</span></dt>
+<dd><p>Allows the user the select the test option for which they wish to generate a graph.</p>
+<p>If the user enters ‘o’ or ‘options’, returns the list of valid options for the current test.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>test_key</strong> (<a class="reference internal" href="#results_viewer.Test" title="results_viewer.Test"><code class="xref py py-class docutils literal notranslate"><span class="pre">Test</span></code></a>) – The <a class="reference internal" href="#results_viewer.Test" title="results_viewer.Test"><code class="xref py py-class docutils literal notranslate"><span class="pre">Test</span></code></a> which the user has currently selected.</p></li>
+<li><p><strong>start_time</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code>) – The time at which the current test run began.</p></li>
+<li><p><strong>end_time</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code>) – The time at which the current test run ended.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="data-retrieval-and-graphing-functions">
+<h3>Data Retrieval and Graphing Functions<a class="headerlink" href="#data-retrieval-and-graphing-functions" title="Permalink to this headline">¶</a></h3>
+<dl class="function">
+<dt>
+<code class="sig-prename descclassname">results_viewer.</code><code class="sig-name descname">get_data</code><span class="sig-paren">(</span><em class="sig-param">cur_test</em>, <em class="sig-param">sel_opt</em>, <em class="sig-param">start_time</em>, <em class="sig-param">end_time</em>, <em class="sig-param">where_addendum=''</em><span class="sig-paren">)</span></dt>
+<dd><p>Retrieve test data from the database.</p>
+<p>Get the data associated with the selected test run, from current test’s database,
+limited to only the data specified by the selected option.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cur_test</strong> (<a class="reference internal" href="#results_viewer.Test" title="results_viewer.Test"><code class="xref py py-class docutils literal notranslate"><span class="pre">Test</span></code></a>) – The <a class="reference internal" href="#results_viewer.Test" title="results_viewer.Test"><code class="xref py py-class docutils literal notranslate"><span class="pre">Test</span></code></a> for which we wish to obtain data.</p></li>
+<li><p><strong>sel_opt</strong> (<em>str</em>) – The user selected option denoting the subset of data we care about.</p></li>
+<li><p><strong>start_time</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code>) – The time at which the currently selected test run began.</p></li>
+<li><p><strong>end_time</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code>) – The time at which the currently selected test run ended.</p></li>
+<li><p><strong>where_addendum</strong> (<em>str</em><em>, </em><em>optional</em>) – An optional string which is used to specify additional constraints for the query to the database.
+Empty by default, and only used by some tests.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>x</strong> (<em>dict</em>) – A dictionary containing a list of the desired x-axis data associated with each side</p></li>
+<li><p><strong>y</strong> (<em>dict</em>) – A dictionary containing a list of the desired y-axis data associated with each side</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="sig-prename descclassname">results_viewer.</code><code class="sig-name descname">determine_units</code><span class="sig-paren">(</span><em class="sig-param">cur_test</em>, <em class="sig-param">sel_opt</em><span class="sig-paren">)</span></dt>
+<dd><p>Returns to appropriate units for the selected test and option.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cur_test</strong> (<a class="reference internal" href="#results_viewer.Test" title="results_viewer.Test"><code class="xref py py-class docutils literal notranslate"><span class="pre">Test</span></code></a>) – The <a class="reference internal" href="#results_viewer.Test" title="results_viewer.Test"><code class="xref py py-class docutils literal notranslate"><span class="pre">Test</span></code></a> for which we wish to obtain data.</p></li>
+<li><p><strong>sel_opt</strong> (<em>str</em>) – The user selected option denoting the subset of
+test data that we care about.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>units</strong> – The units of the data in the selected subset.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="sig-prename descclassname">results_viewer.</code><code class="sig-name descname">map_time2temp</code><span class="sig-paren">(</span><em class="sig-param">times</em>, <em class="sig-param">data</em><span class="sig-paren">)</span></dt>
+<dd><p>Maps a list of time stamps and a list data to a list of temperatures and a list of data at the corresponding times.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>times</strong> (list of <code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code>) – The list of time stamps to find corresponding temperature values for.</p></li>
+<li><p><strong>data</strong> (<em>list</em>) – List of values, where the index of each value corresponds to an index in <code class="docutils literal notranslate"><span class="pre">times</span></code>.
+Included to ensure that the number of data points in the x and y axes are not misaligned.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>temps_list</strong> (<em>list of float</em>) – List of the temperature values corresponding to the time stamps in <code class="docutils literal notranslate"><span class="pre">times</span></code>.</p></li>
+<li><p><strong>temp_data</strong> (<em>list</em>) – List of values, where the index of each value corresponds to an index in <code class="docutils literal notranslate"><span class="pre">temps_list</span></code>.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="sig-prename descclassname">results_viewer.</code><code class="sig-name descname">generate_graph</code><span class="sig-paren">(</span><em class="sig-param">cur_test</em>, <em class="sig-param">sel_opt</em>, <em class="sig-param">start_time</em>, <em class="sig-param">end_time</em>, <em class="sig-param">max_y=None</em>, <em class="sig-param">where_addendum=''</em>, <em class="sig-param">sub_title=''</em>, <em class="sig-param">save_to_file=False</em>, <em class="sig-param">graph_type='plot'</em><span class="sig-paren">)</span></dt>
+<dd><p>Performs the steps necessary to generate a graph for the selected subset of data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cur_test</strong> (<a class="reference internal" href="#results_viewer.Test" title="results_viewer.Test"><code class="xref py py-class docutils literal notranslate"><span class="pre">Test</span></code></a>) – The <a class="reference internal" href="#results_viewer.Test" title="results_viewer.Test"><code class="xref py py-class docutils literal notranslate"><span class="pre">Test</span></code></a> for which we wish to obtain data.</p></li>
+<li><p><strong>sel_opt</strong> (<em>str</em>) – The user selected option denoting the subset of
+test data that we care about.</p></li>
+<li><p><strong>start_time</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code>) – The time at which the currently selected test run began.</p></li>
+<li><p><strong>end_time</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code>) – The time at which the currently selected test run ended.</p></li>
+<li><p><strong>max_y</strong> (<em>int</em><em>, </em><em>optional</em>) – The value to use for the max y value on the graphs.</p></li>
+<li><p><strong>where_addendum</strong> (<em>str</em><em>, </em><em>optional</em>) – An optional string which is used to specify additional constraints for the query to the database.
+Empty by default, and only used by some tests.</p></li>
+<li><p><strong>sub_title</strong> (<em>str</em><em>, </em><em>optional</em>) – The subtitle to append to the figure title. By default an empty string.</p></li>
+<li><p><strong>save_to_file</strong> (<em>bool</em>) – A boolean telling the function if the figures should be saved to a file
+instead of displayed on screen. <code class="docutils literal notranslate"><span class="pre">False</span></code> by default.</p></li>
+<li><p><strong>graph_type</strong> (<em>str</em>) – The type of graph to generate.  Set to ‘plot’ by default.
+Valid options are ‘plot’ to generate a normal plot, or
+‘hist’ to generate a histogram.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="sig-prename descclassname">results_viewer.</code><code class="sig-name descname">gen_IPERF_graph</code><span class="sig-paren">(</span><em class="sig-param">sel_opt</em>, <em class="sig-param">start_time</em>, <em class="sig-param">end_time</em>, <em class="sig-param">stf=False</em><span class="sig-paren">)</span></dt>
+<dd><p>Variant function for generating a graph of IPERF values, calls <code class="xref py py-func docutils literal notranslate"><span class="pre">generate_graph()</span></code> with additional parameters specific to IPERF</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sel_opt</strong> (<em>str</em>) – The user selected option denoting the subset of
+test data that we care about.</p></li>
+<li><p><strong>start_time</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code>) – The time at which the currently selected test run began.</p></li>
+<li><p><strong>end_time</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code>) – The time at which the currently selected test run ended.</p></li>
+<li><p><strong>stf</strong> (<em>bool</em>) – A boolean telling the function if the figures should be saved to a file
+instead of displayed on screen. <code class="docutils literal notranslate"><span class="pre">False</span></code> by default.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="sig-prename descclassname">results_viewer.</code><code class="sig-name descname">gen_temp_graph</code><span class="sig-paren">(</span><em class="sig-param">start_time</em>, <em class="sig-param">end_time</em><span class="sig-paren">)</span></dt>
+<dd><p>Generate a graph of the temperature data vs. time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>start_time</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code>) – The time at which the currently selected test run began.</p></li>
+<li><p><strong>end_time</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code>) – The time at which the currently selected test run ended.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="sig-prename descclassname">results_viewer.</code><code class="sig-name descname">autogenerate_graphs</code><span class="sig-paren">(</span><em class="sig-param">start_time</em>, <em class="sig-param">end_time</em><span class="sig-paren">)</span></dt>
+<dd><p>Generate a set of predetermined graphs and save them as pngs.</p>
+<p>The graphs are determined by the constant <a class="reference internal" href="#results_viewer.TEST_DATA_GRAPHS" title="results_viewer.TEST_DATA_GRAPHS"><code class="xref py py-const docutils literal notranslate"><span class="pre">TEST_DATA_GRAPHS</span></code></a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>start_time</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code>) – The time at which the currently selected test run began.</p></li>
+<li><p><strong>end_time</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code>) – The time at which the currently selected test run ended.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="graph-helper-functions">
+<h3>Graph Helper Functions<a class="headerlink" href="#graph-helper-functions" title="Permalink to this headline">¶</a></h3>
+<dl class="function">
+<dt>
+<code class="sig-prename descclassname">results_viewer.</code><code class="sig-name descname">one_and_three_fig</code><span class="sig-paren">(</span><em class="sig-param">upperx</em>, <em class="sig-param">uppery</em>, <em class="sig-param">upper_info</em>, <em class="sig-param">lowerx</em>, <em class="sig-param">lowery</em>, <em class="sig-param">lower_info</em>, <em class="sig-param">fig_info</em><span class="sig-paren">)</span></dt>
+<dd><p>Generate a figure with one large upper graph of data vs time, and three smaller lower graphs of data vs temperature.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>upperx</strong> (<em>dict</em>) – Dictionary containing lists of x-axis data that correspond to each side in <a class="reference internal" href="#results_viewer.SIDES" title="results_viewer.SIDES"><code class="xref py py-const docutils literal notranslate"><span class="pre">SIDES</span></code></a>.</p></li>
+<li><p><strong>uppery</strong> (<em>dict</em>) – Dictionary containing lists of y-axis data that correspond to each side in <a class="reference internal" href="#results_viewer.SIDES" title="results_viewer.SIDES"><code class="xref py py-const docutils literal notranslate"><span class="pre">SIDES</span></code></a>.</p></li>
+<li><p><strong>upper_info</strong> (<em>dict</em>) – Dictionary contain information used when generating the upper graph, such as the
+graph format, the y limit, and various labels and titles.</p></li>
+<li><p><strong>lowerx</strong> (<em>dict</em>) – Dictionary containing dictionaries that correspond to each side in <a class="reference internal" href="#results_viewer.SIDES" title="results_viewer.SIDES"><code class="xref py py-const docutils literal notranslate"><span class="pre">SIDES</span></code></a>,
+which in turn contain lists of x-axis data that correspond to each of three keys.</p></li>
+<li><p><strong>lowery</strong> (<em>dict</em>) – Dictionary containing dictionaries that correspond to each side in <a class="reference internal" href="#results_viewer.SIDES" title="results_viewer.SIDES"><code class="xref py py-const docutils literal notranslate"><span class="pre">SIDES</span></code></a>,
+which in turn contain lists of y-axis data that correspond to each of three keys.</p></li>
+<li><p><strong>lower_info</strong> (<em>dict</em>) – Dictionary contain information used when generating the lower graph, such as the
+graph format, the y limit, and various labels and titles.</p></li>
+<li><p><strong>fig_info</strong> (<em>dict</em>) – Dictionary containing more general info that applies the the figure as a whole.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="sig-prename descclassname">results_viewer.</code><code class="sig-name descname">tricolor_fig</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">y</em>, <em class="sig-param">info</em>, <em class="sig-param">fig_info</em><span class="sig-paren">)</span></dt>
+<dd><p>Generate a figure with one large graph, with data graphed in three different colors.</p>
+<p>That is, three colors per side, for a total of six colors.  Each color corresponds to one
+side and key.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>dict</em>) – Dictionary containing dictionaries that correspond to each side in <a class="reference internal" href="#results_viewer.SIDES" title="results_viewer.SIDES"><code class="xref py py-const docutils literal notranslate"><span class="pre">SIDES</span></code></a>,
+which in turn contain lists of x-axis data that correspond to each of three keys.</p></li>
+<li><p><strong>y</strong> (<em>dict</em>) – Dictionary containing dictionaries that correspond to each side in <a class="reference internal" href="#results_viewer.SIDES" title="results_viewer.SIDES"><code class="xref py py-const docutils literal notranslate"><span class="pre">SIDES</span></code></a>,
+which in turn contain lists of y-axis data that correspond to each of three keys.</p></li>
+<li><p><strong>info</strong> (<em>dict</em>) – Dictionary contain information used when generating the graph, such as the
+graph format, the y limit, and various labels and titles.</p></li>
+<li><p><strong>fig_info</strong> (<em>dict</em>) – Dictionary containing more general info that applies the the figure as a whole.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="sig-prename descclassname">results_viewer.</code><code class="sig-name descname">my_plotter</code><span class="sig-paren">(</span><em class="sig-param">ax</em>, <em class="sig-param">xdata</em>, <em class="sig-param">ydata</em>, <em class="sig-param">fmt</em>, <em class="sig-param">param_dict</em><span class="sig-paren">)</span></dt>
+<dd><p>Plot <code class="docutils literal notranslate"><span class="pre">xdata</span></code> and <code class="docutils literal notranslate"><span class="pre">ydata</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ax</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">axis</span></code>) – The <code class="xref py py-class docutils literal notranslate"><span class="pre">axis</span></code> on which to plot the data.</p></li>
+<li><p><strong>xdata</strong> (<em>list</em>) – The list of data for the x-axis.</p></li>
+<li><p><strong>ydata</strong> (<em>list</em>) – The list of data for the y-axis.</p></li>
+<li><p><strong>fmt</strong> (<em>str</em>) – The format string for the plot.</p></li>
+<li><p><strong>param_dict</strong> (<em>dict</em>) – Additional parameters.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="id2">
+<h3>Test<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><dl class="class">
+<dt id="results_viewer.Test">
+<em class="property">class </em><code class="sig-prename descclassname">results_viewer.</code><code class="sig-name descname">Test</code><span class="sig-paren">(</span><em class="sig-param">json_file_name</em><span class="sig-paren">)</span><a class="headerlink" href="#results_viewer.Test" title="Permalink to this definition">¶</a></dt>
+<dd><p>An object which represents all of the information regarding a single test.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>json_file_name</strong> (<em>str</em>) – The filename of the json file from which test information should be loaded.</p>
+</dd>
+</dl>
+<dl class="attribute">
+<dt id="results_viewer.Test.tag">
+<code class="sig-name descname">tag</code><a class="headerlink" href="#results_viewer.Test.tag" title="Permalink to this definition">¶</a></dt>
+<dd><p>The tag associated with the test (also used as the name of the test,
+and the name of the table containing the test data).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="results_viewer.Test.data_key">
+<code class="sig-name descname">data_key</code><a class="headerlink" href="#results_viewer.Test.data_key" title="Permalink to this definition">¶</a></dt>
+<dd><p>The name of the column which contains the names of the different
+subsets of data the user can choose from when generating a graph.
+Use is mutually exclusive with <a class="reference internal" href="#results_viewer.Test.key_list" title="results_viewer.Test.key_list"><code class="xref py py-attr docutils literal notranslate"><span class="pre">key_list</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="results_viewer.Test.data_info">
+<code class="sig-name descname">data_info</code><a class="headerlink" href="#results_viewer.Test.data_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>A dictionary with keys corresponding to the names of the data columns
+in the test’s table, and values corresponding to the type of each column.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="results_viewer.Test.data_tag">
+<code class="sig-name descname">data_tag</code><a class="headerlink" href="#results_viewer.Test.data_tag" title="Permalink to this definition">¶</a></dt>
+<dd><p>The name of the column in which the desired data is stored, not used
+by all tests.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="results_viewer.Test.key_list">
+<code class="sig-name descname">key_list</code><a class="headerlink" href="#results_viewer.Test.key_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>A list of the names of different subsets of data the user can choose
+from when generating a graph. Use is mutually exclusive with <a class="reference internal" href="#results_viewer.Test.data_key" title="results_viewer.Test.data_key"><code class="xref py py-attr docutils literal notranslate"><span class="pre">data_key</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>list of str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="results_viewer.Test.units_key">
+<code class="sig-name descname">units_key</code><a class="headerlink" href="#results_viewer.Test.units_key" title="Permalink to this definition">¶</a></dt>
+<dd><p>The name of the column which contains the units of the data stored in
+the current row of the table. Not present for all tests.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="results_viewer.Test.units_dict">
+<code class="sig-name descname">units_dict</code><a class="headerlink" href="#results_viewer.Test.units_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>A dictionary matching the options from <a class="reference internal" href="#results_viewer.Test.key_list" title="results_viewer.Test.key_list"><code class="xref py py-attr docutils literal notranslate"><span class="pre">key_list</span></code></a> with the
+appropriate units. Present when <a class="reference internal" href="#results_viewer.Test.units_key" title="results_viewer.Test.units_key"><code class="xref py py-attr docutils literal notranslate"><span class="pre">units_key</span></code></a> is not.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div></blockquote>
+</div>
+<div class="section" id="id3">
+<h3>Other Functions<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<dl class="function">
+<dt>
+<code class="sig-prename descclassname">results_viewer.</code><code class="sig-name descname">return_options</code><span class="sig-paren">(</span><em class="sig-param">options_list</em>, <em class="sig-param">sep_char</em><span class="sig-paren">)</span></dt>
+<dd><p>Return the options listed in <code class="docutils literal notranslate"><span class="pre">options_list</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>options_list</strong> (<em>list of str</em>) – The list of the options to return.</p></li>
+<li><p><strong>sep_char</strong> (<em>str</em>) – The character to use when separating the options.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A string listing the available options, with each option separated
+by the character defined by <code class="docutils literal notranslate"><span class="pre">sep_char</span></code>.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="sig-prename descclassname">results_viewer.</code><code class="sig-name descname">return_help</code><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
+<dd><p>Return the standard help message.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The standard help message, listing valid user inputs.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</div>
+<div class="section" id="module-temp_data_shifter">
+<span id="temperature-data-shifter"></span><h2>Temperature Data Shifter<a class="headerlink" href="#module-temp_data_shifter" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id4">
+<h3>Constants<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<dl class="data">
+<dt id="temp_data_shifter.RESULTS_DB">
+<code class="sig-prename descclassname">temp_data_shifter.</code><code class="sig-name descname">RESULTS_DB</code><em class="property"> = &lt;Database(mysql://guest:*****&#64;localhost/test_results)&gt;</em><a class="headerlink" href="#temp_data_shifter.RESULTS_DB" title="Permalink to this definition">¶</a></dt>
+<dd><p>Database containing results from all tests.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Database</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="data">
+<dt id="temp_data_shifter.TEMPS_DB">
+<code class="sig-prename descclassname">temp_data_shifter.</code><code class="sig-name descname">TEMPS_DB</code><em class="property"> = &lt;Database(sqlite:///../Results/DAQTEMPS.db)&gt;</em><a class="headerlink" href="#temp_data_shifter.TEMPS_DB" title="Permalink to this definition">¶</a></dt>
+<dd><p>Database containing temperature data collected during the test run.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Database</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="important-functions">
+<h3>Important Functions<a class="headerlink" href="#important-functions" title="Permalink to this headline">¶</a></h3>
+<dl class="function">
+<dt>
+<code class="sig-prename descclassname">temp_data_shifter.</code><code class="sig-name descname">temp_shifter</code><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
+<dd><p>Shifts temperature data from <a class="reference internal" href="#temp_data_shifter.TEMPS_DB" title="temp_data_shifter.TEMPS_DB"><code class="xref py py-const docutils literal notranslate"><span class="pre">TEMPS_DB</span></code></a> to <a class="reference internal" href="#temp_data_shifter.RESULTS_DB" title="temp_data_shifter.RESULTS_DB"><code class="xref py py-const docutils literal notranslate"><span class="pre">RESULTS_DB</span></code></a>.</p>
+<p>Takes in temperature data from <a class="reference internal" href="#temp_data_shifter.TEMPS_DB" title="temp_data_shifter.TEMPS_DB"><code class="xref py py-const docutils literal notranslate"><span class="pre">TEMPS_DB</span></code></a>, rounds their time stamps
+to the nearest ten seconds, formats them as rows split by side, and inserts
+the rows into the <em>TEMPERATURES</em> table in <a class="reference internal" href="#temp_data_shifter.RESULTS_DB" title="temp_data_shifter.RESULTS_DB"><code class="xref py py-const docutils literal notranslate"><span class="pre">RESULTS_DB</span></code></a></p>
+<dl class="simple">
+<dt>Assumes:</dt><dd><ul class="simple">
+<li><p>Both databases exist as defined</p></li>
+<li><p>The row in <em>TESTS</em> with the time interval containing the data to be shifted exists</p></li>
+<li><p>The tables in both databases exist and are formatted as expected</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="sig-prename descclassname">temp_data_shifter.</code><code class="sig-name descname">convert_row</code><span class="sig-paren">(</span><em class="sig-param">row</em><span class="sig-paren">)</span></dt>
+<dd><p>Converts a row from <a class="reference internal" href="#temp_data_shifter.TEMPS_DB" title="temp_data_shifter.TEMPS_DB"><code class="xref py py-const docutils literal notranslate"><span class="pre">TEMPS_DB</span></code></a> to two rows for <a class="reference internal" href="#temp_data_shifter.RESULTS_DB" title="temp_data_shifter.RESULTS_DB"><code class="xref py py-const docutils literal notranslate"><span class="pre">RESULTS_DB</span></code></a>.</p>
+<p>Takes in a single row of temperature data from <a class="reference internal" href="#temp_data_shifter.TEMPS_DB" title="temp_data_shifter.TEMPS_DB"><code class="xref py py-const docutils literal notranslate"><span class="pre">TEMPS_DB</span></code></a> and converts it
+into two rows of temperature data to be inserted into <em>TEMPERATURES</em> in <a class="reference internal" href="#temp_data_shifter.RESULTS_DB" title="temp_data_shifter.RESULTS_DB"><code class="xref py py-const docutils literal notranslate"><span class="pre">RESULTS_DB</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>row</strong> (<em>dict</em>) – A dictionary representing the row retrieved from <a class="reference internal" href="#temp_data_shifter.TEMPS_DB" title="temp_data_shifter.TEMPS_DB"><code class="xref py py-const docutils literal notranslate"><span class="pre">TEMPS_DB</span></code></a>.
+Assumes the row was retrieved successfully.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>out_rows</strong> – A list containing the two newly generated rows.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="id5">
+<h3>Other Functions<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<dl class="function">
+<dt>
+<code class="sig-prename descclassname">temp_data_shifter.</code><code class="sig-name descname">round_time</code><span class="sig-paren">(</span><em class="sig-param">tm_str</em><span class="sig-paren">)</span></dt>
+<dd><p>Generates a <code class="xref py py-class docutils literal notranslate"><span class="pre">datetime.datetime</span></code> object containing a rounded version of a time stamp string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>tm_str</strong> (<em>str</em>) – <p>A string containing a representation of a <code class="xref py py-class docutils literal notranslate"><span class="pre">datetime.datetime</span></code> object in standard format.</p>
+<p>Standard format is defined as <code class="docutils literal notranslate"><span class="pre">&quot;YYYY-MM-DD</span> <span class="pre">hh:mm:ss[:msecs]&quot;</span></code></p>
+</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A <code class="xref py py-class docutils literal notranslate"><span class="pre">datetime.datetime</span></code> object, containing the timestamp from <code class="docutils literal notranslate"><span class="pre">tm_str</span></code> rounded to the nearest ten second mark</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">datetime.datetime</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="sig-prename descclassname">temp_data_shifter.</code><code class="sig-name descname">rowvals4SQLquery</code><span class="sig-paren">(</span><em class="sig-param">row</em><span class="sig-paren">)</span></dt>
+<dd><p>Generates a string representation of the values in <code class="docutils literal notranslate"><span class="pre">row</span></code>, formatted for an SQL query.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>row</strong> (<em>dict</em>) – The dictionary representing the row.
+Assumes <code class="docutils literal notranslate"><span class="pre">row</span></code> contains corresponding values for every data column in the table</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A string containing comma separated values from <code class="docutils literal notranslate"><span class="pre">row</span></code>, enclosed in parentheses</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="sig-prename descclassname">temp_data_shifter.</code><code class="sig-name descname">rowvals4SQLmany</code><span class="sig-paren">(</span><em class="sig-param">row_list</em><span class="sig-paren">)</span></dt>
+<dd><p>Generates a string representation of the values in many rows, formatted for an SQL query.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>row_list</strong> (<em>list of dict</em>) – A list containing the row dictionaries to be inserted. Assumes every row
+dictionary contains corresponding values for every data column in the table.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A string containing strings generated by <code class="xref py py-meth docutils literal notranslate"><span class="pre">rowwvals4SQLquery()</span></code> for each row in <code class="docutils literal notranslate"><span class="pre">row_list</span></code>, separated by commas.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="sig-prename descclassname">temp_data_shifter.</code><code class="sig-name descname">insert_ignore_many_query</code><span class="sig-paren">(</span><em class="sig-param">table</em>, <em class="sig-param">rows</em><span class="sig-paren">)</span></dt>
+<dd><p>Generate an appropriate string for inserting potentially duplicate rows into an SQL table.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>table</strong> (<em>str</em>) – The name of an SQL table in the current database.
+Assumes a table with that name exists in <a class="reference internal" href="#temp_data_shifter.RESULTS_DB" title="temp_data_shifter.RESULTS_DB"><code class="xref py py-const docutils literal notranslate"><span class="pre">RESULTS_DB</span></code></a>.</p></li>
+<li><p><strong>rows</strong> (<em>list of dict</em>) – A list of rows to insert into <code class="docutils literal notranslate"><span class="pre">table</span></code>.
+Assumes every row dictionary contains corresponding
+values for every data column in the table.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A string representing an SQL statement that, if executed, performs an <em>INSERT IGNORE</em> of every row in <code class="docutils literal notranslate"><span class="pre">rows</span></code> into <code class="docutils literal notranslate"><span class="pre">table</span></code>.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">V5_Testing Scripts</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Post Processing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#module-optimized_parsing">Parser</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-results_viewer">Results Viewer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-temp_data_shifter">Temperature Data Shifter</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">Welcome to V5_Testing Scripts’s documentation!</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Joshua Berger, Jack Tillman, Gabe Sauvageau.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.1.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/includeme.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
