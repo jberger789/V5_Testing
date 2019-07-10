@@ -36,6 +36,9 @@ Results Viewer
 
 Constants
 ---------
+.. automodule:: results_viewer
+	:noindex:
+
 .. autodata:: MESSAGE_TAGS
 
 .. autodata:: SIDES
