@@ -27,7 +27,7 @@ PySocks==1.7.0
 python-dateutil==2.8.0
 python-editor==1.0.4
 pytz==2019.1
-PyYAML==5.1.1
+PyYAML==5.4
 Sphinx==2.1.1
 sphinxcontrib-applehelp==1.0.1
 sphinxcontrib-devhelp==1.0.1
